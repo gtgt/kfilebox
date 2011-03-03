@@ -1,0 +1,177 @@
+# , 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:22+0200\n"
+"PO-Revision-Date: 2010-06-18 17:00+0200\n"
+"Last-Translator: \n"
+"Language-Team: French <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "Fichier extrait"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Préférences de Dropbox"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Paramètres de compte pour cet ordinateur"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Déconnecter cet ordinateur..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Emplacement du dossier Dropbox"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Déplacer..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Intégration au Bureau"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Afficher les notifications dans la boîte à miniatures"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Démarrer Dropbox à l'ouverture de session"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "Général"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "Gestionnaire de Fichiers"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Navigateur"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Divers"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "OK"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Appliquer"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "Annuler"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Dossier Dropbox"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+"Le serveur n'a pas été trouvé. Veuillez vérifier que l'installation du démon "
+"Dropbox est correcte."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"Connection refusée par le pair. Vérifiez que le démon Dropbox est lancé et "
+"que ses paramètres sont corrects."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "L'erreur suivante s'est produite: %1."
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Dossier Dropbox"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "Impossible de démarrer le démon Dropbox"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Ouvrir le Dossier Dropbox"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Centre d'Aide"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Visite"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Forums"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Préférences..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Démarrer Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Arrêter Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Aide"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Fichiers récemment modifiés"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "Erreur lors du téléchargement du fichier"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "Installeur du Démon"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "Téléchargement du démon Dropbox..."
+
+#~ msgid "&Exit"
+#~ msgstr "&Quitter"

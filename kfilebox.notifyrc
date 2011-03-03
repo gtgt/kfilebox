@@ -1,0 +1,10 @@
+[Global]
+Comment=Kfilebox
+Name=kfilebox
+IconName=kfilebox
+
+[Event/notify]
+Name=Notification
+Comment=Any notification
+Action=Popup
+

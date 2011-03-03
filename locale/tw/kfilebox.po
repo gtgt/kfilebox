@@ -1,0 +1,125 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-27 21:12+0200\n"
+"PO-Revision-Date: 2010-08-26 07:43+0800\n"
+"Last-Translator: Plesry Li <pspeter9931@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
+"X-Language: zh_TW\n"
+"X-Poedit-Language: Chinese\n"
+"X-Poedit-Country: TAIWAN\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+msgid "Daemon installer"
+msgstr "常駐程式安裝"
+
+msgid "Downloading Dropbox Daemon..."
+msgstr "正在下載 Dropbox 常駐程式..."
+
+msgid "Open Dropbox Folder"
+msgstr "打開 Dropbox 資料夾"
+
+msgid "Help Center"
+msgstr "說明中心"
+
+msgid "Tour"
+msgstr "導覽"
+
+msgid "Forums"
+msgstr "論壇"
+
+msgid "Preferences..."
+msgstr "偏好設定..."
+
+msgid "Start Dropbox"
+msgstr "啟動 Dropbox"
+
+msgid "Stop Dropbox"
+msgstr "停止 Dropbox"
+
+msgid "&Exit"
+msgstr "離開 (&E)"
+
+msgid "Help"
+msgstr "幫助"
+
+msgid "Recently changed files"
+msgstr "最近修改檔案"
+
+msgid "Dropbox folder"
+msgstr "Dropbox 資料夾"
+
+msgid "Dropbox Preferences"
+msgstr "Dropbox 偏好設定"
+
+msgid "General"
+msgstr "一般"
+
+msgid "Account information for this computer"
+msgstr "本機帳號資訊"
+
+msgid "Unlink this computer..."
+msgstr "取消這台電腦的連結..."
+
+msgid "Dropbox folder location"
+msgstr "Dropbox 資料夾位置"
+
+msgid "Move..."
+msgstr "移動..."
+
+msgid "Desktop integration"
+msgstr "桌面整合"
+
+msgid "Show system tray notifications"
+msgstr "在系統匣顯示圖示"
+
+msgid "Start Dropbox on system startup"
+msgstr "開機時啟動 Dropbox"
+
+msgid "Misc"
+msgstr "雜項"
+
+msgid "File Manager"
+msgstr "檔案管理器"
+
+msgid "Browser"
+msgstr "瀏覽器"
+
+msgid "OK"
+msgstr "確定"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Apply"
+msgstr "套用"
+
+#: core::0
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr "無法找到主機。請檢查 Dropbox 常駐程式的安裝過程。"
+
+#: core::0
+msgid "The connection was refused by the peer. Make sure the Dropbox daemon is running, and check that the settings are correct."
+msgstr "連線被對方拒絕。請確認是否已經執行 Dropbox 常駐程式，並檢查設定是否正確。"
+
+#: core::0
+msgid "The following error occurred: %1."
+msgstr "發生下列錯誤：%1。"
+
+#: core::0
+msgid "Unable to start Dropbox daemon"
+msgstr "無法啟動 Dropbox 常駐程式"
+
+#: installer::0
+msgid "File extracted"
+msgstr "檔案已提取"
+
+#: util::0
+msgid "Error downloading file"
+msgstr "下載檔案時發生錯誤"
+

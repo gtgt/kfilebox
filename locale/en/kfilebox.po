@@ -1,0 +1,171 @@
+# Guillermo Amat, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-24 13:24+0200\n"
+"PO-Revision-Date: 2010-09-24 13:24+0200\n"
+"Last-Translator: Guillermo Amat\n"
+"Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "File extracted"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Dropbox Preferences"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Account information for this computer"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Unlink this computer..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Dropbox folder location"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Move..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Desktop integration"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Show system tray notifications"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Start Dropbox on system startup"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "General"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "File Manager"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Browser"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr "dolphin"
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr "konqueror"
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Misc"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "OK"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Apply"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "Cancel"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Dropbox folder"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr "The host was not found. Please check Dropbox daemon installation."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "The following error occurred: %1."
+
+#: core/DropboxClient.cpp:37
+msgid "Dropbox daemon started"
+msgstr "Dropbox daemon started"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "Unable to start Dropbox daemon"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Open Dropbox Folder"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Help Center"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr "Launch Dropbox Website"
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr "Get More Space"
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Tour"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Forums"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Preferences..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Start Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Stop Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Help"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Recently changed files"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "Error downloading file"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "Daemon installer"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "Downloading Dropbox Daemon..."

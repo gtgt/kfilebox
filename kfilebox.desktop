@@ -1,0 +1,16 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=kfilebox
+GenericName=kfilebox
+Comment=KDE front end for Dropbox
+Exec=/usr/bin/kfilebox
+Icon=/usr/share/kfilebox/kfilebox.png
+Terminal=false
+Type=Application
+StartupNotify=false
+Categories=Network;FileTransfer;
+X-KDE-autostart-after=panel
+X-KDE-StartupNotify=false
+X-DBUS-StartupType=Unique
+X-KDE-UniqueApplet=true
+X-KDE-autostart-condition=kfileboxrc:General:AutoStart:false

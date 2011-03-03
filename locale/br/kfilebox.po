@@ -1,0 +1,195 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: kdropbox\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 22:07+0200\n"
+"PO-Revision-Date: 2010-07-13 17:30-0300\n"
+"Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
+"Language-Team: Brazilian Portuguese <kde-i18n-pt_BR@lists.kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-Language: Portuguese\n"
+"X-Poedit-Country: BRAZIL\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "Erro ao baixar o arquivo"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Preferências do Dropbox"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Informação de conta para este computador"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Desvincular este computador..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Localização da pasta do Dropbox"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Mover..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Integração com a área de trabalho"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Exibir as notificações da área de notificação"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Iniciar o Dropbox na inicialização do sistema"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "Geral"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "Gerenciador de arquivos"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Navegador"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Diversos"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "Ok"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Aplicar"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Pasta do Dropbox"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "Arquivo extraído"
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Pasta do Dropbox"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "Não foi posível iniciar o daemon do Dropbox"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+"Servidor não encontrado. Por favor, verifique a instalação do daemon do "
+"Dropbox."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"A conexão foi recusada. Tenha certeza de que o daemon do Dropbox está em "
+"execução e verifique se as configurações estão corretas."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "Ocorreu o seguinte erro: %1."
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Abrir a pasta do Dropbox"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Centro de ajuda"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Tour"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Fóruns"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Preferências..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Iniciar o Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Parar o Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Ajuda"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Arquivos alterados recentemente"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "Instalador do daemon"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "Baixando o daemon do Dropbox..."
+
+#~ msgid "&Exit"
+#~ msgstr "&Sair"
+
+#~ msgid "Dropbox.py location"
+#~ msgstr "Localização do dropbox.py"
+
+#~ msgid "Files (*.py)"
+#~ msgstr "Arquivos (*.py)"
+
+#~ msgid "..."
+#~ msgstr "..."
+
+#~ msgid "Systray"
+#~ msgstr "Área de notificação"
+
+#~ msgid "I couldn't detect any system tray on this system."
+#~ msgstr ""
+#~ "Não foi possível detectar qualquer área de notificação neste sistema."

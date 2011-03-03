@@ -1,0 +1,174 @@
+# Guillermo Amat, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-24 13:24+0200\n"
+"PO-Revision-Date: 2010-10-01 10:47+0300\n"
+"Last-Translator: Marios Zindilis <m.zindilis@dmajor.org>\n"
+"Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "Το αρχείο αποσυμπιέστηκε"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Προτιμήσεις Dropbox"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Πληροφορίες λογαριασμού για αυτόν τον υπολογιστή"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Αποσύνδεση αυτού του υπολογιστή..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Τοποθεσία φακέλου Dropbox"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Μετακίνηση..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Ενσωμάτωση επιφάνειας εργασίας"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Εμφάνιση ειδοποιήσεων στο πλαίσιο συστήματος"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Εκκίνηση Dropbox κατά την εκκίνηση του συστήματος"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "Γενικά"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "Περιηγητής αρχείων"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Περιηγητής"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr "dolphin"
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr "konqueror"
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Διάφορα"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "Εντάξει"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Εφαρμογή"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "Ακύρωση"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Φάκελος Dropbox"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+"Το σύστημα δεν βρέθηκε. Παρακαλώ ελέγξτε την εγκατάσταση της υπηρεσίας "
+"Dropbox."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"Άρνηση σύνδεσης από το άλλο μέρος. Βεβαιωθείτε ότι τρέχει η υπηρεσία "
+"Dropbox και ελέγξτε ότι οι ρυθμίσεις είναι σωστές."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "Παρουσιάστηκε το εξής σφάλμα: %1."
+
+#: core/DropboxClient.cpp:37
+msgid "Dropbox daemon started"
+msgstr "Εκκίνηση υπηρεσίας Dropbox"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "Αδυναμία εκκίνησης υπηρεσίας Dropbox"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Άνοιγμα φακέλου Dropbox"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Κέντρο βοήθειας"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr "Άνοιγμα ιστότοπου Dropbox"
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr "Αγοράστε περισσότερο χώρο"
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Ξενάγηση"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Φόρουμ"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Προτιμήσεις..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Εκκίνηση Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Διακοπή Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Βοήθεια"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Πρόσφατα αλλαγμένα αρχεία"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "Σφάλμα λήψης αρχείου"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "Εγκατάσταση υπηρεσίας"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "Λήψη υπηρεσίας Dropbox..."
+

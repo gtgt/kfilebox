@@ -1,0 +1,20 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>img/default/kfilebox.png</file>
+        <file>img/default/kfilebox_error.png</file>
+        <file>img/default/kfilebox_idle.png</file>
+        <file>img/default/kfilebox_updating.png</file>
+        <file>img/white/kfilebox.png</file>
+        <file>img/white/kfilebox_error.png</file>
+        <file>img/white/kfilebox_idle.png</file>
+        <file>img/white/kfilebox_updating.png</file>
+        <file>img/kfilebox.png</file>
+        <file>img/monochrome/kfilebox.png</file>
+        <file>img/monochrome/kfilebox_error.png</file>
+        <file>img/monochrome/kfilebox_idle.png</file>
+        <file>img/monochrome/kfilebox_updating.png</file>
+        <file>img/default/kfileboxapp.png</file>
+        <file>img/white/kfileboxapp.png</file>
+        <file>img/monochrome/kfileboxapp.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,6 @@
+Source install Howto
+====================
+
+$qmake
+$make
+$sudo make install 

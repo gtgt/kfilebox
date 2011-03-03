@@ -1,0 +1,191 @@
+# Pavel Fric, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:22+0200\n"
+"PO-Revision-Date: 2010-07-14 21:01+0200\n"
+"Last-Translator: Pavel Fric\n"
+"Language-Team: Czech <kde-i18n-doc@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "Soubor vytažen"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Nastavení pro Dropbox"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Informace o účtu pro tento počítač"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Odpojit tento počítač..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Umístění složky Dropbox"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Přesunout..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Začlenění do pracovní plochy"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Ukázat oznámení v oznamovací části panelu"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Spustit Dropbox při spuštění systému"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "Obecné"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "Správce souborů"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Prohlížeč"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Různé"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "OK"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Použít"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Složka pro Dropbox"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr "Hostitel nebyl nalezen. Prověřte, prosím, instalaci dropboxova démona."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"Spojení bylo vrstevníkem (rovným, pérem) odmítnuto. Ujistěte se, že "
+"dropboxův démon běží, a ověřte, že nastavení jsou správná."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "Vyskytla se následující chyba: %1."
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Složka pro Dropbox"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "Nelze spustit Dropboxova démona"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Otevřít složku Dropbox"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Středisko s nápovědou"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Prohlídka"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Řečniště"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Nastavení..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Spustit Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Zastavit Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Nápověda"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Naposledy změněné soubory"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "Chyba při stahování souboru"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "Démonův instalační program"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "Stahuje se Dropboxův démon..."
+
+#~ msgid "&Exit"
+#~ msgstr "&Ukončit"
+
+#~ msgid "Dropbox.py location"
+#~ msgstr "Umístění Dropbox.py"
+
+#~ msgid "Files (*.py)"
+#~ msgstr "Soubory (*.py)"
+
+#~ msgid "..."
+#~ msgstr "..."
+
+#~ msgid "Systray"
+#~ msgstr "Oznamovací oblast panelu"
+
+#~ msgid "I couldn't detect any system tray on this system."
+#~ msgstr ""
+#~ "U tohoto systému se nepodařilo zjistit žádnou oznamovací oblast panelu."

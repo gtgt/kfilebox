@@ -1,0 +1,202 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:22+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr ""
+
+#: ui_mainwindow.h:259
+#, fuzzy
+msgid "Dropbox Preferences"
+msgstr "Настройки Dropbox"
+
+#: ui_mainwindow.h:260
+#, fuzzy
+msgid "Account information for this computer"
+msgstr "Учетная запись"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr ""
+
+#: ui_mainwindow.h:262
+#, fuzzy
+msgid "Dropbox folder location"
+msgstr "Расположение каталога Dropbox"
+
+#: ui_mainwindow.h:263
+#, fuzzy
+msgid "Move..."
+msgstr "..."
+
+#: ui_mainwindow.h:264
+#, fuzzy
+msgid "Desktop integration"
+msgstr "Интеграция с рабочим окружением"
+
+#: ui_mainwindow.h:265
+#, fuzzy
+msgid "Show system tray notifications"
+msgstr "Показывать уведомления"
+
+#: ui_mainwindow.h:266
+#, fuzzy
+msgid "Start Dropbox on system startup"
+msgstr "Запуск вуместе с системой"
+
+#: ui_mainwindow.h:267
+#, fuzzy
+msgid "General"
+msgstr "Основное"
+
+#: ui_mainwindow.h:268
+#, fuzzy
+msgid "File Manager"
+msgstr "Файловый менеджер"
+
+#: ui_mainwindow.h:269
+#, fuzzy
+msgid "Browser"
+msgstr "Браузер"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+#, fuzzy
+msgid "Misc"
+msgstr "Дополнительно"
+
+#: ui_mainwindow.h:276
+#, fuzzy
+msgid "OK"
+msgstr "ОК"
+
+#: ui_mainwindow.h:277
+#, fuzzy
+msgid "Apply"
+msgstr "Применить"
+
+#: ui_mainwindow.h:278
+#, fuzzy
+msgid "Cancel"
+msgstr "Отмена"
+
+#: mainwindow.cpp:71
+#, fuzzy
+msgid "Dropbox folder"
+msgstr "Каталог Dropbox"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr ""
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Каталог Dropbox"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr ""
+
+#: core/trayicon.cpp:41
+#, fuzzy
+msgid "Open Dropbox Folder"
+msgstr "Открыть каталог Dropbox"
+
+#: core/trayicon.cpp:44
+#, fuzzy
+msgid "Help Center"
+msgstr "Справка"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+#, fuzzy
+msgid "Tour"
+msgstr "Обзор"
+
+#: core/trayicon.cpp:56
+#, fuzzy
+msgid "Forums"
+msgstr "Форум"
+
+#: core/trayicon.cpp:59
+#, fuzzy
+msgid "Preferences..."
+msgstr "Настройки..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+#, fuzzy
+msgid "Start Dropbox"
+msgstr "Запустить Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+#, fuzzy
+msgid "Stop Dropbox"
+msgstr "Остановить Dropbox"
+
+#: core/trayicon.cpp:77
+#, fuzzy
+msgid "Help"
+msgstr "Помощь"
+
+#: core/trayicon.cpp:82
+#, fuzzy
+msgid "Recently changed files"
+msgstr "Недавно добавленные файлы"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr ""
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr ""
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr ""
+
+#, fuzzy
+#~ msgid "&Exit"
+#~ msgstr "Выход"
+
+#~ msgid "Dropbox.py location"
+#~ msgstr "Расположение Dropbox.py"
+
+#~ msgid "Systray"
+#~ msgstr "Системный лоток"

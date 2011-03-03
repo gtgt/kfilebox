@@ -1,0 +1,179 @@
+# Roberto Rosende Dopazo, 2010.
+# Roberto Rosende Dopazo <roberto.rosende.dopazo@gmail.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:22+0200\n"
+"PO-Revision-Date: 2010-09-08 13:07+0100\n"
+"Last-Translator: Roberto Rosende Dopazo <roberto.rosende.dopazo@gmail.com>\n"
+"Language-Team: Galego <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Language: Galician\n"
+"X-Poedit-Country: SPAIN\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "Arquivo extraido"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Confiración do Dropbox"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Información da conta para este ordenador"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Desunir este ordenador..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Localización do cartafol do Dropbox"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Mover..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Integración co escritorio"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Mostrar notificacións na bandexa do sistema"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Iniciar Dropbox co arranque do sistema"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "Xeral"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "Xestor de arquivos"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Navegador"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Misc"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "OK"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Aplicar"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Cartafol do Dropbox"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+"Non se atopou o anfitrión. Por favor, comprobe o daemon de instalación."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"A conexión foi rexeitada polo outro extremo. Asegures que o daemon de "
+"Dropbox estase a executar, e comprobe que a configuración é correcta."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "Atopouse o seguinte erro: %1."
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Cartafol do Dropbox"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "Imposible inciar o daemon de Dropbox"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Abrir Cartafol do Dropbox"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Centro de Axuda"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Xira"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Foros"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Configuración..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Iniciar Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Parar Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Axuda"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Arquivos cambiados recentemente"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "Erro descargando o arquivo"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "Daemon de instalación"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "Descargando o Daemon de Dropbox"
+
+#~ msgid "&Exit"
+#~ msgstr "&Sair"
