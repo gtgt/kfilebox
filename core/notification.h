@@ -3,19 +3,17 @@
 
 #include <QObject>
 
-#include "knotification.h"
-#include "model/Configuration.h"
+//#include "knotification.h"
+
 
 class Notification : public QObject
 {
 public:
     Notification();
-    void notify(QString msg);
-    void setConfiguration(Configuration *);
+    static void send(QString msg);
 
 private:
-    KNotification *notificator;
-    Configuration *conf;
+//    KNotification *notificator;
 };
 
 #endif // NOTIFICATION_H

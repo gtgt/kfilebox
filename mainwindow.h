@@ -30,7 +30,7 @@ private:
     SystemCall *caller;
     TrayIcon *trayIcon;
 
-private Q_SLOTS:
+private slots:
     void on_pbApplyPrefs_clicked();
     void on_pbSavePrefs_clicked();
     void on_toolButton_clicked();

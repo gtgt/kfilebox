@@ -6,7 +6,6 @@
 #include <QAction>
 #include <kmenu.h>
 #include "util/SystemCall.h"
-#include "model/FileJournal.h"
 #include "DropboxClient.h"
 #include "kicon.h"
 #include "model/Configuration.h"
@@ -19,8 +18,8 @@ class TrayIcon : public QWidget
     Q_OBJECT
 public:
     TrayIcon(Configuration *);
+    ~TrayIcon();
     void setCaller(SystemCall *);
-    void testDaemonStart();
     void loadIcons();
 
 protected:
@@ -58,12 +57,11 @@ private:
     QAction *stopAction;
     QAction *quitAction;
 
-    FileJournal * f_journal;
     SystemCall *caller;
     int pid;
     DropboxClient *dc;
 
-public Q_SLOTS:
+public slots:
     void openFileBrowser(QString path="");
     void openPrefsWindow();
     void openHelpCenterURL();
@@ -74,11 +72,10 @@ public Q_SLOTS:
     void updateTryIcon(QString);
     void trayIconDblClicked(bool, QPoint);
     void prepareLastChangedFiles();
-    void getDropboxStatus();
     void openDropboxWebsiteURL();
     void openGetMoreSpaceURL();
 
- Q_SIGNALS:
+ signals:
     void prefsWindowActionTrigered();
 };
 } /* End of namespace core */

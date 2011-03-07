@@ -1,93 +1,102 @@
 #include "Configuration.h"
-#include "ui_mainwindow.h"
-#include <QDir>
-#include <kconfiggroup.h>
-
 
 Configuration::Configuration()
 {
-    settings= new KConfig("kfileboxrc");
+    settings = new KConfig("kfileboxrc");
+    generalGroup = new KConfigGroup(settings, "General");
+
+    if(!generalGroup->hasKey("Browser")) {
+        initConfigurationFile();
+    }
+
+    DB = new ConfigurationDBDriver(this);
 }
 
- void Configuration::writeSetting(QString key, QString value, QString group)
- {
-     KConfigGroup generalGroup( settings, group );
-     generalGroup.writeEntry(key,value);
-     settings->sync();
- }
- 
- void Configuration::writeSetting(QString key, bool value, QString group)
- {
-     KConfigGroup generalGroup( settings, group );
-     generalGroup.writeEntry(key,value);
-     settings->sync();
- }
+Configuration::~Configuration()
+{
+    delete generalGroup;
+    generalGroup = 0;
+    delete settings;
+    settings = 0;
+    delete DB;
+    DB = 0;
+}
 
- void Configuration::readSettings()
- {
-     KConfigGroup generalGroup( settings, "General" );
-     browser=generalGroup.readEntry("Browser");
-     dropboxFolder=generalGroup.readEntry("DropboxFolder");
-     fileManager=generalGroup.readEntry("FileManager");
-     iconset=generalGroup.readEntry("IconSet");
-     showNotifications=QVariant(generalGroup.readEntry("ShowNotifications")).toBool();
-     startDaemon=QVariant(generalGroup.readEntry("StartDaemon")).toBool();
-     autoStart=QVariant(generalGroup.readEntry("AutoStart")).toBool();
+void Configuration::writeSetting(QString key, QString value)
+{
+    generalGroup->writeEntry(key,value);
+    settings->sync();
+}
 
-     if (browser.length()==0)
-           initConfigurationFile();
+void Configuration::writeSetting(QString key, bool value)
+{
+    generalGroup->writeEntry(key,value);
+    settings->sync();
+}
 
- }
+void Configuration::initConfigurationFile()
+{
+    generalGroup->writeEntry("Browser","firefox");
+    generalGroup->writeEntry("FileManager","dolphin");
+    generalGroup->writeEntry("IconSet","default");
+    generalGroup->writeEntry("ShowNotifications",true);
+    generalGroup->writeEntry("AutoStart",true);
+    generalGroup->writeEntry("StartDaemon",true);
+    settings->sync();
 
- void Configuration::initConfigurationFile()
- {
-     KConfigGroup generalGroup( settings, "General" );
-     generalGroup.writeEntry("Browser","firefox");
-     generalGroup.writeEntry("FileManager","dolphin");
-     generalGroup.writeEntry("IconSet","default");
-     generalGroup.writeEntry("DropboxFolder","");
-     generalGroup.writeEntry("ShowNotifications",true);
-     generalGroup.writeEntry("AutoStart",true);
-     generalGroup.writeEntry("StartDaemon",true);
-     settings->sync();
+    emit (initializingFile());
 
-     readSettings();
+}
 
-     emit (initializingFile());
+//! is it good design? {
+
+bool Configuration::hasKey(const QString &key)
+{
+return (generalGroup->hasKey(key) || DB->hasKey(key));
+}
+
+QString Configuration::getValue(const QString &key)
+{
+    if(generalGroup->hasKey(key))
+        return generalGroup->readEntry(key);
+    if(DB->hasKey(key))
+        return DB->getValue(key);
+    return QString();
+}
+
+//! }
 
 
- }
+QString Configuration::getDropboxFolder()
+{
+    return getValue("dropbox_path");
+}
+QString Configuration::getBrowser()
+{
+    return generalGroup->readEntry("Browser");
+}
 
- QString Configuration::getDropboxFolder()
- {
-    return dropboxFolder;
- }
- QString Configuration::getBrowser()
- {
-    return browser;
- }
+QString Configuration::getFileManager()
+{
+    return generalGroup->readEntry("FileManager");
+}
 
- QString Configuration::getFileManager()
- {
-    return fileManager;
- }
+QString Configuration::getIconSet()
+{
+    return generalGroup->readEntry("IconSet");
+}
 
- QString Configuration::getIconSet()
- {
-    return iconset;
- }
+bool Configuration::getShowNotifications()
+{
+    return QVariant(generalGroup->readEntry("ShowNotifications")).toBool();
+}
 
- bool Configuration::getShowNotifications()
- {
-    return showNotifications;
- }
+bool Configuration::getStartDaemon()
+{
+    return QVariant(generalGroup->readEntry("StartDaemon")).toBool();
+}
 
- bool Configuration::getStartDaemon()
- {
-    return startDaemon;
- }
-
- bool Configuration::getAutoStart()
- {
-    return autoStart;
- }
+bool Configuration::getAutoStart()
+{
+    return QVariant(generalGroup->readEntry("AutoStart")).toBool();
+}

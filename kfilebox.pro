@@ -13,7 +13,6 @@ SOURCES += main.cpp \
     util/SystemCall.cpp \
     model/FileJournal.cpp \
     core/DropboxClient.cpp \
-    core/DaemonConnection.cpp \
     util/Downloader.cpp \
     installer/Daemoninstaller.cpp \
     installer/installerform.cpp \
@@ -21,13 +20,13 @@ SOURCES += main.cpp \
     core/notification.cpp \
     core/filebrowser.cpp \
     core/dolphin.cpp \
-    core/konqueror.cpp
+    core/konqueror.cpp \
+    model/configurationdbdriver.cpp
 HEADERS += mainwindow.h \
     model/Configuration.h \
     util/SystemCall.h \
     model/FileJournal.h \
     core/DropboxClient.h \
-    core/DaemonConnection.h \
     util/Downloader.h \
     installer/Daemoninstaller.h \
     installer/installerform.h \
@@ -35,7 +34,8 @@ HEADERS += mainwindow.h \
     core/notification.h \
     core/filebrowser.h \
     core/dolphin.h \
-    core/konqueror.h
+    core/konqueror.h \
+    model/configurationdbdriver.h
 RESOURCES += DropboxIcons.qrc
 
 FORMS += mainwindow.ui \

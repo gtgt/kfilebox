@@ -2,18 +2,29 @@
 #define CONFIGURATION_H
 
 #include <QObject>
-#include <kconfig.h>
+#include <QDebug>
+#include <QVariant>
 
+#include <kconfig.h>
+#include <kconfiggroup.h>
+
+#include "configurationdbdriver.h"
+
+//! I bad people cause I keep connection to configuration files: users can loose their data
+//! I hope will fix this issue
 class Configuration: public QObject
 {
     Q_OBJECT
 public:
-    KConfig *settings;
     Configuration();
-    void initConfigurationFile();
-    void writeSetting(QString key, QString value, QString group="General");
-    void writeSetting(QString key, bool value, QString group="General");
-    void readSettings();
+    ~Configuration();
+
+    void writeSetting(QString key, QString value);
+    void writeSetting(QString key, bool value);
+
+    bool hasKey(const QString &key);
+    QString getValue(const QString &key);
+
     QString getDropboxFolder();
     QString getBrowser();
     QString getFileManager();
@@ -23,19 +34,14 @@ public:
     bool getShowNotifications();
 
 private:
-    QString organization;
-    QString application;
+    void initConfigurationFile();
 
-    QString dropboxFolder;
-    QString browser;
-    QString fileManager;
-    QString iconset;
-    bool showNotifications;
-    bool startDaemon;
-    bool autoStart;
-    //QString dropboxPyLocation;
+    KConfig* settings;
+    KConfigGroup* generalGroup;
 
-Q_SIGNALS:
+    ConfigurationDBDriver* DB;
+
+signals:
     void initializingFile();
 
 };

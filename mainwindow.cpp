@@ -2,7 +2,6 @@
 
 #include <QFileInfo>
 #include <QFile>
-#include <QTimer>
 #include <QDebug>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -17,15 +16,15 @@ MainWindow::MainWindow(QWidget *parent) :
     caller= new SystemCall();
     ui->setupUi(this);
 
-    QDir *dropbox_dist= new QDir(QDir::homePath().append(QDir::separator()).append(".dropbox-dist"));
-    if (!dropbox_dist->exists(dropbox_dist->path())){
-        using namespace installer;
-        Daemoninstaller *di=new Daemoninstaller();
+    QFile* dropbox_dist = new QFile(QDir::homePath().append("/.dropbox-dist"));
+    if (!dropbox_dist->exists()){
+        //        using namespace installer;
+        installer::Daemoninstaller *di=new installer::Daemoninstaller();
         di->downloadDaemon();
+        delete di;
     }
     else {
         conf=new Configuration();
-        conf->readSettings();
         trayIcon= new TrayIcon(conf);
         connect(trayIcon,SIGNAL(prefsWindowActionTrigered()),this,SLOT(openPrefsWindow()));
         connect(conf,SIGNAL(initializingFile()),trayIcon,SLOT(openPrefsWindow()));
@@ -43,17 +42,18 @@ MainWindow::MainWindow(QWidget *parent) :
         setIcons();
         caller->set_browser(conf->getBrowser());
         trayIcon->setCaller(caller);
-        trayIcon->testDaemonStart();
 
-        QTimer *timer= new QTimer(this);
-        connect(timer, SIGNAL(timeout()), trayIcon, SLOT(getDropboxStatus()));
-
-        timer->start(500);
+//        ui->displayVersion->setText("Dropbox v1.0.20"); // searching
+        ui->displayAccount->setText(conf->getValue("email"));
     }
+    delete dropbox_dist;
 }
 
 MainWindow::~MainWindow()
 {
+    delete conf;
+    delete caller;
+    delete trayIcon;
     delete ui;
 }
 
@@ -77,7 +77,7 @@ void MainWindow::changeEvent(QEvent *e)
     }
 }
 
-
+//! moveDropboxFolder
 void MainWindow::on_toolButton_clicked()
 {
     QString fileName = QFileDialog::getExistingDirectory(this,tr("Dropbox folder"), ui->leDropboxFolferLocation->text());
@@ -100,7 +100,7 @@ void MainWindow::on_pbApplyPrefs_clicked()
     conf->writeSetting("ShowNotifications",ui->chkNotifications->isChecked());
     conf->writeSetting("StartDaemon",ui->chkStartDropbox->isChecked());
     conf->writeSetting("AutoStart",ui->chkStartDropbox->isChecked());
-    conf->readSettings();
+
     trayIcon->loadIcons();
 
     caller->set_browser(conf->getBrowser());

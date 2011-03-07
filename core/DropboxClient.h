@@ -2,42 +2,42 @@
 #define core_DropboxClient_h
 
 #include <QDir>
+#include <QLocalSocket>
+#include <QProcess>
+#include <QString>
 #include <QTextStream>
+#include <QTimer>
 
-#include "util/SystemCall.h"
-#include "DaemonConnection.h"
 #include "notification.h"
-#include "model/Configuration.h"
+
 
 namespace core {
 
-    class DropboxClient: public QObject {
- Q_OBJECT
- public:
-
+class DropboxClient: public QObject {
+    Q_OBJECT
+public:
     DropboxClient();
+    ~DropboxClient();
+    void sendCommand(QString command);
 
-    bool start();
-
-    bool stop();
+    void start();
+    void stop();
 
     bool is_running();
 
-    QString status();
-
- public:
-    int pid;
+    // /*proxy from strings to inline functions*/ void getStatus(){sendCommand("get_dropbox_status");}
 
 private:
-    DaemonConnection *daemon;
-    Notification *notif;
-    Configuration *conf;
+    QLocalSocket* m_socket;
+    QString m_socketPath;
+    QTimer* timer;
 
-public Q_SLOTS:
-    void processMessage(QString);
-    void setConfiguration(Configuration *);
+private slots:
+    void readMsg();
+    void displayError(QLocalSocket::LocalSocketError socketError);
+    void getDropboxStatus();
 
-Q_SIGNALS:
+signals:
     void messageProcessed(QString);
 
 };

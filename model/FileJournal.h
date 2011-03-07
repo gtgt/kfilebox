@@ -1,26 +1,19 @@
-#include <QSqlDatabase>
 #include <QDir>
-#include <QSqlRecord>
-#include <QList>
 #include <QString>
 #include <QStringList>
+#include <QSqlDatabase>
+#include <QSqlRecord>
 #include <QSqlQuery>
 #include <QVariant>
 
-class FileJournal {
-    /* {src_lang=cpp}*/
-
-
- public:
-
+class FileJournal: public QObject{
+    Q_OBJECT
+public:
     FileJournal();
-
-    QList <QString> lastChangedFiles();
-
     ~FileJournal();
+    QStringList lastChangedFiles();
 
-
- private:
-    QSqlDatabase db;
+private:
+    QSqlDatabase* db;
 };
 

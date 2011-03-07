@@ -19,9 +19,8 @@ TrayIcon::TrayIcon(Configuration *c)
 {
     dc = new DropboxClient();    
     conf=c;
-    this->dc->setConfiguration(conf);
     connect(dc, SIGNAL(messageProcessed(QString)), this, SLOT(updateTryIcon(QString)));
-
+    if(conf->getStartDaemon() && !dc->is_running()) dc->start();
 
     trayIcon = new KStatusNotifierItem();
     loadIcons();
@@ -30,11 +29,15 @@ TrayIcon::TrayIcon(Configuration *c)
     pid=-1;
 
     //caller= new SystemCall();
-    f_journal = new FileJournal();
     createActions();
     createTrayIcon();
 }
 
+TrayIcon::~TrayIcon()
+{
+    //! delete openDir..
+    delete dc;
+}
 
 void TrayIcon::createActions()
 {
@@ -109,6 +112,8 @@ void TrayIcon::createTrayIcon()
     trayIconMenu->addAction(openGetMoreSpace);
     trayIconMenu->addAction(openPrefs);
 
+    trayIconMenu->addAction(stopAction);
+    startAction->setVisible(false);
     trayIconMenu->addAction(startAction);
 
     trayIcon->setStatus(KStatusNotifierItem::Active);
@@ -130,45 +135,21 @@ void TrayIcon::openFileBrowser(QString path)
 
     delete dir;
     dir=0;
-    qDebug() << "20: " << conf->getDropboxFolder();
 
-    if (conf->getFileManager().toLower().compare("dolphin")==0)
+    /*if (conf->getFileManager().toLower().compare("dolphin")==0)
         fbrowser= new Dolphin();
     else
-        fbrowser= new Konqueror(caller);
+        fbrowser= new Konqueror(caller);*/
 
-    if (pid==-1) //Open the window
-    {
-        //qt_message_output(QtWarningMsg,"Opening a filebrowser...");
+    //        pid=fbrowser->openNewWindow(path);
+    QString command=conf->getFileManager()+" \""+path+"\"";
+    QProcess::startDetached(command);
 
-
-        pid=fbrowser->openNewWindow(path);
-
-        //If failed opening the window we assume the program isn't running; we try to run the program
-        if (pid==-1){
-            //qt_message_output(QtWarningMsg,"It was impossible to open a new window. Trying to launch the filebrowser");
-            QString command=conf->getFileManager()+" \""+path+"\"";
-            pid=caller->execute(command).toInt();
-            if (conf->getFileManager().toLower().compare("dolphin")==0)
-                pid=0;
-            //qt_message_output(QtWarningMsg,"Execution pid is "+QString::number(pid).toLatin1());
-
-        }
-    }
-    else //Closing the window
-    {
-        fbrowser->setPid(pid);
-        pid=-1;
-        if (fbrowser->closeWindow()==false){ //Already closed: user wants to open
-            //qt_message_output(QtWarningMsg,"Already closed");
-            openFileBrowser();
-        }
-    }
 }
 
 void TrayIcon::openHelpCenterURL()
 {
-   caller->openURL("https://www.dropbox.com/help");
+    caller->openURL("https://www.dropbox.com/help");
 }
 
 void TrayIcon::openTourURL()
@@ -201,11 +182,13 @@ void TrayIcon::stopDropboxDaemon()
 }
 
 void TrayIcon::trayIconDblClicked(bool active, QPoint point){
+    Q_UNUSED(point);
     if (active)
         openFileBrowser();
 
 }
 
+//! @FIXME
 void TrayIcon::openPrefsWindow()
 {
     emit prefsWindowActionTrigered();
@@ -215,26 +198,17 @@ void TrayIcon::openPrefsWindow()
 
 void TrayIcon::updateTryIcon( QString result)
 {
-
-
     if (result.trimmed().length()>0){
-
         if(result.contains("isn't")){
-            if (trayIconMenu->actions().contains(stopAction)){
-                trayIconMenu->removeAction(startAction);
-                startAction = new QAction(tr("Start Dropbox"), this);
-                connect(startAction, SIGNAL(triggered()), this, SLOT(startDropboxDaemon()));
-                trayIconMenu->insertAction(stopAction,startAction);
-                trayIconMenu->removeAction(stopAction);
+            if(stopAction->isVisible()) {
+                startAction->setVisible(true);
+                stopAction->setVisible(false);
             }
         }
         else{
-            if (trayIconMenu->actions().contains(startAction)){
-                trayIconMenu->removeAction(stopAction);
-                stopAction = new QAction(tr("Stop Dropbox"), this);
-                connect(stopAction, SIGNAL(triggered()), this, SLOT(stopDropboxDaemon()));
-                trayIconMenu->insertAction(startAction,stopAction);
-                trayIconMenu->removeAction(startAction);
+            if (startAction->isVisible()){
+                startAction->setVisible(false);
+                stopAction->setVisible(true);
             }
         }
 
@@ -291,7 +265,7 @@ void TrayIcon::updateTryIcon( QString result)
         }
     }
 
-        //qt_message_output(QtDebugMsg,result.toLatin1());
+    //qt_message_output(QtDebugMsg,result.toLatin1());
 
 }
 
@@ -304,9 +278,20 @@ void TrayIcon::prepareLastChangedFiles(){
         chFiles->removeAction(a);
     }
 
-    QList <QString> files=f_journal->lastChangedFiles();
-    QSignalMapper *sm= new QSignalMapper(this);
 
+    QStringList files;
+    foreach (QString elem, conf->getValue("recently_changed3").split("\n")) {
+        QStringList list = elem.split(":");
+        if(list.length()>1)
+        {
+            files.append(list.value(1).trimmed());
+        }
+    }
+    if( files.size() == 0 )
+        files.append("File list is empty:(");
+
+
+    QSignalMapper *sm= new QSignalMapper(this);
 
     for (int i = 0; i < files.size(); ++i) {
         file_relative_path=files.at(i).split(":/");
@@ -320,26 +305,13 @@ void TrayIcon::prepareLastChangedFiles(){
         }
         sm->setMapping(chFiles->actions().at(i),str_path);
         //qt_message_output(QtDebugMsg,str_path.toLatin1());
-     }
-     connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
+    }
+    connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
 }
 
+//! stub - to remove
 void TrayIcon::setCaller(SystemCall *c){
     this->caller=c;
-}
-
-void TrayIcon::testDaemonStart(){
-    if (conf->getStartDaemon() && !dc->is_running())
-        dc->start();
-}
-
-
-void TrayIcon::getDropboxStatus(){
-    if (dc->is_running())
-        dc->status();
-    else
-        dc->processMessage("ok\nstatus\tDropbox isn't running\ndone");
-
 }
 
 } /* End of namespace core */

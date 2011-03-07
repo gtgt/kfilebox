@@ -75,7 +75,9 @@ void Daemoninstaller::preventGtkGuiExecution()
     SystemCall *sc = new SystemCall();
     //sc->setWorkingDirectory(QDir::home().path());
     form->hide();
-    form->~InstallerForm();
+    delete form;
+    form = 0;
+
     sleep(5);
     QString path=QDir::home().path().append(QDir::separator());
     sc->executeDetached("mv "+path+".dropbox-dist/wx._controls_.so "+path+".dropbox-dist/wx._controls_orig.so");

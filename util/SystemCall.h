@@ -9,7 +9,7 @@ class SystemCall : public QProcess {
     /* {src_lang=cpp}*/
 
 
- public:
+public:
 
     /** simple access function to set the attribute command by function
       * @param value value to set for the attribute command
@@ -34,11 +34,10 @@ class SystemCall : public QProcess {
 
     void openURL(QString url);
 
- public:
     QString browser;
     /* {set=public}*/
 
- private:
+private:
     QString command;
     /* {set=public}*/
     QString output;
