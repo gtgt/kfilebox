@@ -269,7 +269,6 @@ void TrayIcon::updateTryIcon( QString result)
 
 }
 
-
 void TrayIcon::prepareLastChangedFiles(){
     QStringList file_name, file_relative_path;
     QString str_path;
@@ -284,7 +283,24 @@ void TrayIcon::prepareLastChangedFiles(){
         QStringList list = elem.split(":");
         if(list.length()>1)
         {
-            files.append(list.value(1).trimmed());
+            //! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
+            //! convert to `снимок38.png'
+            //! hope somebody will find normal solution)
+            QString humanResult;
+            QStringList toHumanable = list.value(1).split("\\u");
+            if(toHumanable.length()>1)
+            {
+                humanResult = toHumanable.first();
+                for(int i=1; i<toHumanable.length(); i++ )
+                {
+                    if(toHumanable.at(i).length()!=4)
+                        humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
+                    else
+                        humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
+                }
+                files.append(humanResult);
+            } else
+                files.append(list.value(1).trimmed());
         }
     }
     if( files.size() == 0 )
