@@ -1,5 +1,8 @@
 #include "Configuration.h"
 
+#include <QVariantMap>
+//#include <QMapIterator>
+
 Configuration::Configuration()
 {
     settings = new KConfig("kfileboxrc");
@@ -10,6 +13,10 @@ Configuration::Configuration()
     }
 
     DB = new ConfigurationDBDriver(this);
+
+
+//    QVariantMap conf;
+//    QVariantMap::const_iterator i = conf.find();
 }
 
 Configuration::~Configuration()

@@ -10,9 +10,9 @@
 
 #include "configurationdbdriver.h"
 
-//! I bad people cause I keep connection to configuration files: users can loose their data
+//! I bad people cause I keeping connection to configuration files: users can loose their data..
 //! I hope will fix this issue
-//! And I droping connection to sqlite db every time - crazy..
+//! @todo create QVariantMap of conf::values - increase memory usage, increase safety. If i understand - need to create ConfigurationFSDriver (
 class Configuration: public QObject
 {
     Q_OBJECT
@@ -20,13 +20,16 @@ public:
     Configuration();
     ~Configuration();
 
+    //! @todo remove. But before play with: typename T
     void writeSetting(QString key, QString value);
     void writeSetting(QString key, bool value);
 
+    //! key type is QString, value type is QVariant - as we know we cant create 2 functions with only different return type
     bool hasKey(const QString &key);
     QString getValue(const QString &key);
     void setValue(const QString &key, const QString &value);
 
+    //! @todo replace in code with getValue("key")
     QString getDropboxFolder();
     QString getBrowser();
     QString getFileManager();
