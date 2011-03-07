@@ -1,29 +1,47 @@
 #include "configurationdbdriver.h"
 
-//#include <QMap>
-
 ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     QObject(parent)
 {
-//    yeap it was a local test
-//    QMap<QString, QString> map;
-//    map.insert("config", "config.db");
+    dbFilename = QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/config.db");
+    if(QFile().exists(dbFilename))
+    {
+        dbVersion = DROPBOX_DB;
+        // config.db, can be upgraded, lets check schema
+        {
+            QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE","DROPBOX_CONF");
+            db.setDatabaseName(dbFilename);
+            if (!db.open())
+                return;
 
+            QSqlQuery query = db.exec("SELECT value FROM `config` WHERE `key`='config_schema_version'");
+            if (query.next()) {
+                if(query.value(0).toInt() == 1)
+                    dbVersion = CONFIG_DB;
+            }
+        }
+        QSqlDatabase::removeDatabase("DROPBOX_CONF");
+
+
+    } else if (QFile(QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/dropbox.db")).exists())
+    {
+        // dropbox.db, old-style
+        dbFilename = QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/dropbox.db");
+        dbVersion = DROPBOX_DB;
+    } else
+    {
+        dbFilename = "";
+        dbVersion = UNKNOWN;
+        qDebug() << "no one version is installed";
+    }
 }
 
-/*QString getPath(QString key)
-{
-     return key; //map.at(key);
-}
-*/
-bool ConfigurationDBDriver::hasKey(QString key)
+bool ConfigurationDBDriver::hasKey(const QString &key)
 {
     bool ret = false;
     {
-        //! синхронизировать код с FileManager
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE","DROPBOX_CONF");
-
-        db.setDatabaseName(QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/config.db"));
+        db.setDatabaseName(dbFilename);
         if (!db.open())
             return false;
 
@@ -37,12 +55,12 @@ bool ConfigurationDBDriver::hasKey(QString key)
     return ret;
 }
 
-QString ConfigurationDBDriver::getValue(QString key)
+QString ConfigurationDBDriver::getValue(const QString &key)
 {
     QString ret = "";
     {
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE","DROPBOX_CONF");
-        db.setDatabaseName(QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/config.db"));
+        db.setDatabaseName(dbFilename);
         if (!db.open())
             return ret;
 
@@ -55,16 +73,17 @@ QString ConfigurationDBDriver::getValue(QString key)
     return ret;
 }
 
-void ConfigurationDBDriver::setValue(QString key, QString value)
+// This function should only be called when dropbox is stopped
+void ConfigurationDBDriver::setValue(const QString &key, const QString &value)
 {
     // "oops: this function was not tested yeat";
     {
         QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE","DROPBOX_CONF");
-        db.setDatabaseName(QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/config.db"));
+        db.setDatabaseName(dbFilename);
         if (!db.open())
             return;
 
-        db.exec("INSERT INTO `config` (`value`) VALUES ('"+value+"') WHERE `key`='"+key+"'");
+        db.exec("UPDATE `config` SET `value`='"+value+"' WHERE `key`='"+key+"'");
     }
     QSqlDatabase::removeDatabase("DROPBOX_CONF");
 }

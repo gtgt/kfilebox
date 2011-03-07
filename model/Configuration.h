@@ -12,6 +12,7 @@
 
 //! I bad people cause I keep connection to configuration files: users can loose their data
 //! I hope will fix this issue
+//! And I droping connection to sqlite db every time - crazy..
 class Configuration: public QObject
 {
     Q_OBJECT
@@ -24,6 +25,7 @@ public:
 
     bool hasKey(const QString &key);
     QString getValue(const QString &key);
+    void setValue(const QString &key, const QString &value);
 
     QString getDropboxFolder();
     QString getBrowser();

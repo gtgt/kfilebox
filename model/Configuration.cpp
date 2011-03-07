@@ -52,7 +52,7 @@ void Configuration::initConfigurationFile()
 
 bool Configuration::hasKey(const QString &key)
 {
-return (generalGroup->hasKey(key) || DB->hasKey(key));
+    return (generalGroup->hasKey(key) || DB->hasKey(key));
 }
 
 QString Configuration::getValue(const QString &key)
@@ -62,6 +62,15 @@ QString Configuration::getValue(const QString &key)
     if(DB->hasKey(key))
         return DB->getValue(key);
     return QString();
+}
+
+void Configuration::setValue(const QString &key, const QString &value)
+{
+    if(DB->hasKey(key))
+        DB->setValue(key, value);
+    if(!generalGroup->hasKey(key))
+        qDebug() << "created new key" << key << "with value" << value;
+    generalGroup->writeEntry(key, value);
 }
 
 //! }
