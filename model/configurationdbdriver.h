@@ -22,6 +22,7 @@ class ConfigurationDBDriver : public QObject
     Q_OBJECT
 public:
     explicit ConfigurationDBDriver(QObject *parent = 0);
+    ~ConfigurationDBDriver();
 
     bool hasKey(const QString &key);
     QString getValue(const QString &key);
@@ -31,6 +32,7 @@ public:
 private:
     enum DROPBOX_DB_VERSION {DROPBOX_DB, CONFIG_DB, UNKNOWN} dbVersion;
     QString dbFilename;
+    QSqlDatabase* db;
 signals:
 
 public slots:
