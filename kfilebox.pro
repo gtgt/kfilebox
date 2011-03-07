@@ -11,7 +11,6 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     model/Configuration.cpp \
     util/SystemCall.cpp \
-    model/FileJournal.cpp \
     core/DropboxClient.cpp \
     util/Downloader.cpp \
     installer/Daemoninstaller.cpp \
@@ -25,7 +24,6 @@ SOURCES += main.cpp \
 HEADERS += mainwindow.h \
     model/Configuration.h \
     util/SystemCall.h \
-    model/FileJournal.h \
     core/DropboxClient.h \
     util/Downloader.h \
     installer/Daemoninstaller.h \

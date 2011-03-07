@@ -47,7 +47,6 @@ ConfigurationDBDriver::~ConfigurationDBDriver()
 
 bool ConfigurationDBDriver::hasKey(const QString &key)
 {
-    qDebug() << key << " : " << (dbVersion != CONFIG_DB);
     if(dbVersion != CONFIG_DB)
         return false;
 
