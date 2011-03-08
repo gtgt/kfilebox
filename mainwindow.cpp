@@ -16,8 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     caller= new SystemCall();
     ui->setupUi(this);
 
-    QFile* dropbox_dist = new QFile(QDir::homePath().append("/.dropbox-dist"));
-    if (!dropbox_dist->exists()){
+    if (!QFile(QDir::homePath().append("/.dropbox-dist")).exists()){
         //        using namespace installer;
         installer::Daemoninstaller *di=new installer::Daemoninstaller();
         di->downloadDaemon();
@@ -26,8 +25,12 @@ MainWindow::MainWindow(QWidget *parent) :
     else {
         conf=new Configuration();
         trayIcon= new TrayIcon(conf);
-        connect(trayIcon,SIGNAL(prefsWindowActionTrigered()),this,SLOT(openPrefsWindow()));
-        connect(conf,SIGNAL(initializingFile()),trayIcon,SLOT(openPrefsWindow()));
+        connect(ui->saveSettings, SIGNAL(clicked()), this, SLOT(saveSettings()));
+        connect(ui->applySettings, SIGNAL(clicked()), this, SLOT(applySettings()));
+        connect(ui->cancelSettings, SIGNAL(clicked()), this, SLOT(hide()));
+        connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(moveDropboxFolder()));
+
+        connect(trayIcon, SIGNAL(prefsWindowActionTrigered()), this, SLOT(show()));
         //connect(conf)
 
         ui->leDropboxFolferLocation->setText(conf->getDropboxFolder());
@@ -45,8 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 //        ui->displayVersion->setText("Dropbox v1.0.20"); // searching
         ui->displayAccount->setText(conf->getValue("email"));
+
     }
-    delete dropbox_dist;
 }
 
 MainWindow::~MainWindow()
@@ -77,22 +80,31 @@ void MainWindow::changeEvent(QEvent *e)
     }
 }
 
-//! moveDropboxFolder
-void MainWindow::on_toolButton_clicked()
+void MainWindow::moveDropboxFolder()
 {
+    //! dropbox.stop()
+    //! dropbox.settings.folder = newer location
+    //! FS move dropbox folder
+    //! dropbox.start()
+
     QString fileName = QFileDialog::getExistingDirectory(this,tr("Dropbox folder"), ui->leDropboxFolferLocation->text());
     if (fileName.length()>0)
         ui->leDropboxFolferLocation->setText(fileName);
 }
 
-void MainWindow::on_pbSavePrefs_clicked()
+void MainWindow::saveSettings()
 {
-    on_pbApplyPrefs_clicked();
-    this->close();
+    qDebug() << "saveSettings called";
+    return;
+    applySettings();
+    hide();
 }
 
-void MainWindow::on_pbApplyPrefs_clicked()
+void MainWindow::applySettings()
 {
+    qDebug() << "applySettings called";
+    return;
+
     conf->writeSetting("Browser",ui->leBrowser->text());
     conf->writeSetting("FileManager",ui->cmbFileManager->currentText());// leFileManager->text());
     conf->writeSetting("IconSet",ui->cbIconSet->currentText());
@@ -104,9 +116,4 @@ void MainWindow::on_pbApplyPrefs_clicked()
     trayIcon->loadIcons();
 
     caller->set_browser(conf->getBrowser());
-}
-
-void MainWindow::openPrefsWindow()
-{
-    this->show();
 }

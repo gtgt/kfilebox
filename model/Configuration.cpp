@@ -1,8 +1,5 @@
 #include "Configuration.h"
 
-#include <QVariantMap>
-//#include <QMapIterator>
-
 Configuration::Configuration()
 {
     settings = new KConfig("kfileboxrc");
@@ -13,10 +10,6 @@ Configuration::Configuration()
     }
 
     DB = new ConfigurationDBDriver(this);
-
-
-//    QVariantMap conf;
-//    QVariantMap::const_iterator i = conf.find();
 }
 
 Configuration::~Configuration()
@@ -43,20 +36,16 @@ void Configuration::writeSetting(QString key, bool value)
 
 void Configuration::initConfigurationFile()
 {
-    generalGroup->writeEntry("Browser","firefox");
+    generalGroup->writeEntry("Browser","rekonq");
     generalGroup->writeEntry("FileManager","dolphin");
     generalGroup->writeEntry("IconSet","default");
     generalGroup->writeEntry("ShowNotifications",true);
     generalGroup->writeEntry("AutoStart",true);
     generalGroup->writeEntry("StartDaemon",true);
     settings->sync();
-
-    emit (initializingFile());
-
 }
 
-//! is it good design? {
-
+//! frequently
 bool Configuration::hasKey(const QString &key)
 {
     return (generalGroup->hasKey(key) || DB->hasKey(key));
@@ -79,8 +68,6 @@ void Configuration::setValue(const QString &key, const QString &value)
         qDebug() << "created new key" << key << "with value" << value;
     generalGroup->writeEntry(key, value);
 }
-
-//! }
 
 
 QString Configuration::getDropboxFolder()

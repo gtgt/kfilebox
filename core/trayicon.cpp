@@ -127,14 +127,12 @@ void TrayIcon::createTrayIcon()
 
 void TrayIcon::openFileBrowser(QString path)
 {
-    QDir *dir=new QDir(conf->getDropboxFolder());
+    //! path = dropbox.getPathTo(path)
+    QString needed;
     if (path.isNull())
-        path=dir->toNativeSeparators(dir->path());
+        needed=QDir::toNativeSeparators(conf->getDropboxFolder());
     else
-        path=dir->toNativeSeparators(dir->path()+dir->separator()+path);
-
-    delete dir;
-    dir=0;
+        needed=QDir::toNativeSeparators(conf->getDropboxFolder().append(QDir::separator()).append(path));
 
     /*if (conf->getFileManager().toLower().compare("dolphin")==0)
         fbrowser= new Dolphin();
@@ -142,7 +140,7 @@ void TrayIcon::openFileBrowser(QString path)
         fbrowser= new Konqueror(caller);*/
 
     //        pid=fbrowser->openNewWindow(path);
-    QString command=conf->getFileManager()+" \""+path+"\"";
+    QString command=conf->getFileManager()+" \""+needed+"\"";
     QProcess::startDetached(command);
 
 }
@@ -307,12 +305,15 @@ void TrayIcon::prepareLastChangedFiles(){
         files.append("File list is empty:(");
 
 
+    //! @bug memory leak
     QSignalMapper *sm= new QSignalMapper(this);
 
     for (int i = 0; i < files.size(); ++i) {
         file_relative_path=files.at(i).split(":/");
         file_name=file_relative_path.last().split("/");
+        //! @bug memory leak
         chFiles->addAction(new QAction(file_name.last(), this));
+
         connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
         file_name.removeLast();
         str_path=QString();

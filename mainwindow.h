@@ -31,11 +31,10 @@ private:
     TrayIcon *trayIcon;
 
 private slots:
-    void on_pbApplyPrefs_clicked();
-    void on_pbSavePrefs_clicked();
-    void on_toolButton_clicked();
-    void openPrefsWindow();
-    void setIcons();
+    void applySettings();
+    void saveSettings();
+    void moveDropboxFolder();
+    void setIcons(); //! who is it
 };
 
 #endif // MAINWINDOW_H

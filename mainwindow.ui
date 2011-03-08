@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>417</width>
-    <height>501</height>
+    <width>408</width>
+    <height>504</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -69,43 +69,6 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QGroupBox" name="groupBox">
-          <property name="title">
-           <string>Account information for this computer</string>
-          </property>
-          <layout class="QFormLayout" name="formLayout">
-           <item row="0" column="0">
-            <spacer name="horizontalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>180</width>
-               <height>20</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSplitter" name="splitter">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-             <widget class="QPushButton" name="pushButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Unlink this computer...</string>
-              </property>
-             </widget>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
          <widget class="QGroupBox" name="groupBox_2">
           <property name="title">
            <string>Dropbox folder location</string>
@@ -115,7 +78,7 @@
             <widget class="QLineEdit" name="leDropboxFolferLocation"/>
            </item>
            <item row="0" column="1">
-            <widget class="QToolButton" name="toolButton">
+            <widget class="QToolButton" name="moveDropboxFolder">
              <property name="text">
               <string>Move...</string>
              </property>
@@ -150,6 +113,26 @@
              </property>
              <property name="text">
               <string>Start Dropbox on system startup</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="displayP2P">
+             <property name="text">
+              <string>Use p2p</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QCheckBox" name="hideGtkUI">
+             <property name="text">
+              <string>hideGtkUI</string>
              </property>
              <property name="checked">
               <bool>true</bool>
@@ -206,6 +189,43 @@
           </property>
          </widget>
         </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox">
+          <property name="title">
+           <string>Account information for this computer</string>
+          </property>
+          <layout class="QFormLayout" name="formLayout">
+           <item row="0" column="0">
+            <spacer name="horizontalSpacer_2">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>180</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item row="0" column="1">
+            <widget class="QSplitter" name="splitter">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <widget class="QPushButton" name="pushButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Unlink this computer...</string>
+              </property>
+             </widget>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
        </layout>
       </widget>
       <widget class="QWidget" name="network">
@@ -220,7 +240,7 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_4">
            <item>
-            <widget class="QRadioButton" name="titledontLimit">
+            <widget class="QRadioButton" name="downloadDontLimitRate">
              <property name="text">
               <string>Don't limit download rate</string>
              </property>
@@ -230,16 +250,16 @@
             </widget>
            </item>
            <item>
-            <layout class="QHBoxLayout" name="horizontalLayout_3">
+            <layout class="QHBoxLayout" name="networkDownloadLayout">
              <item>
-              <widget class="QRadioButton" name="titleLimitTo">
+              <widget class="QRadioButton" name="downloadLimitRate">
                <property name="text">
                 <string>Limit download rate to:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="displayDownloadLimit">
+              <widget class="QSpinBox" name="downloadLimitValue">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -249,7 +269,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="titleRate">
+              <widget class="QLabel" name="downloadLimitValueFor">
                <property name="text">
                 <string>kB/s</string>
                </property>
@@ -267,14 +287,14 @@
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_6">
            <item>
-            <widget class="QRadioButton" name="titledontLimitUpload">
+            <widget class="QRadioButton" name="uploadDontLimitRate">
              <property name="text">
               <string>Don't limit upload rate</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QRadioButton" name="radioButton">
+            <widget class="QRadioButton" name="uploadAutoLimitRate">
              <property name="text">
               <string>Limit upload rate automatically</string>
              </property>
@@ -286,24 +306,24 @@
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout_4">
              <item>
-              <widget class="QRadioButton" name="titleLimitUploadTo">
+              <widget class="QRadioButton" name="uploadLimitRate">
                <property name="text">
                 <string>Limit upload rate to:</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QSpinBox" name="displayUploadLimit">
+              <widget class="QSpinBox" name="uploadLimitValue">
                <property name="enabled">
                 <bool>false</bool>
                </property>
                <property name="value">
-                <number>50</number>
+                <number>10</number>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLabel" name="titleRateUpload">
+              <widget class="QLabel" name="uploadLimitValueFor">
                <property name="text">
                 <string>kB/s</string>
                </property>
@@ -321,9 +341,9 @@
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_6">
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_7">
+            <layout class="QVBoxLayout" name="networkProxiesFirstLayout">
              <item>
-              <widget class="QRadioButton" name="radioButton_2">
+              <widget class="QRadioButton" name="proxyDontUse">
                <property name="text">
                 <string>No more proxy</string>
                </property>
@@ -333,14 +353,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_3">
+              <widget class="QRadioButton" name="proxyAutoDetect">
                <property name="text">
                 <string>Auto detected</string>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QRadioButton" name="radioButton_4">
+              <widget class="QRadioButton" name="proxySetManually">
                <property name="text">
                 <string>Manually</string>
                </property>
@@ -349,9 +369,9 @@
             </layout>
            </item>
            <item>
-            <layout class="QVBoxLayout" name="verticalLayout_8">
+            <layout class="QVBoxLayout" name="networkProxiesSecondLayout">
              <item>
-              <widget class="QComboBox" name="comboBox">
+              <widget class="QComboBox" name="proxyType">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -379,16 +399,16 @@
               </widget>
              </item>
              <item>
-              <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <layout class="QHBoxLayout" name="networkProxiesThirdLayout">
                <item>
-                <widget class="QLineEdit" name="lineEdit">
+                <widget class="QLineEdit" name="proxyServer">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
                 </widget>
                </item>
                <item>
-                <widget class="QSpinBox" name="spinBox">
+                <widget class="QSpinBox" name="proxyPort">
                  <property name="enabled">
                   <bool>false</bool>
                  </property>
@@ -403,7 +423,7 @@
               </layout>
              </item>
              <item>
-              <widget class="QCheckBox" name="checkBox">
+              <widget class="QCheckBox" name="proxyRequiresAuth">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -413,14 +433,14 @@
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_2">
+              <widget class="QLineEdit" name="proxyUsername">
                <property name="enabled">
                 <bool>false</bool>
                </property>
               </widget>
              </item>
              <item>
-              <widget class="QLineEdit" name="lineEdit_3">
+              <widget class="QLineEdit" name="proxyPassword">
                <property name="enabled">
                 <bool>false</bool>
                </property>
@@ -613,7 +633,7 @@
         </spacer>
        </item>
        <item>
-        <widget class="QPushButton" name="pbSavePrefs">
+        <widget class="QPushButton" name="saveSettings">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -626,7 +646,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pbApplyPrefs">
+        <widget class="QPushButton" name="applySettings">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -639,7 +659,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pbCancelPrefs">
+        <widget class="QPushButton" name="cancelSettings">
          <property name="minimumSize">
           <size>
            <width>0</width>
@@ -662,22 +682,6 @@
   <include location="DropboxIcons.qrc"/>
  </resources>
  <connections>
-  <connection>
-   <sender>pbCancelPrefs</sender>
-   <signal>clicked()</signal>
-   <receiver>MainWindow</receiver>
-   <slot>close()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>418</x>
-     <y>408</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>319</x>
-     <y>449</y>
-    </hint>
-   </hints>
-  </connection>
   <connection>
    <sender>cbIconSet</sender>
    <signal>currentIndexChanged(QString)</signal>

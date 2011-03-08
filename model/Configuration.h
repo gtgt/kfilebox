@@ -10,9 +10,10 @@
 
 #include "configurationdbdriver.h"
 
-//! I bad people cause I keeping connection to configuration files: users can loose their data..
-//! I hope will fix this issue
-//! @todo create QVariantMap of conf::values - increase memory usage, increase safety. If i understand - need to create ConfigurationFSDriver (
+//! @todo remove dynamical configuration from MainWindow, leave only local(into function)
+//! another way: create QVariantMap and store configuration there for fragmentated get configuration TrayIcon
+//! OR in TrayIcon::prepareLastChangedFiles() use ConfigurationDBDriver, another places are called less frequently
+//! ..
 class Configuration: public QObject
 {
     Q_OBJECT
@@ -47,8 +48,6 @@ private:
     ConfigurationDBDriver* DB;
 
 signals:
-    void initializingFile();
-
 };
 
 #endif // CONFIGURATION_H
