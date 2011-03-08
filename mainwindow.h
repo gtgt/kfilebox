@@ -9,6 +9,8 @@
 
 #include "core/trayicon.h"
 
+//! @todo remove SystemCaller
+
 using namespace core;
 
 namespace Ui {
@@ -25,6 +27,8 @@ protected:
     void changeEvent(QEvent *e);
 
 private:
+    void loadSettings();
+
     Ui::MainWindow *ui;
     Configuration *conf;
     SystemCall *caller;
@@ -34,7 +38,12 @@ private slots:
     void applySettings();
     void saveSettings();
     void moveDropboxFolder();
-    void setIcons(); //! who is it
+    void unlinkComputer();
+    void setIcons();
+    void downloadRadioToggle();
+    void uploadRadioToggle();
+    void proxyRadioToggle();
+    void proxyAuthRadioToggle();
 };
 
 #endif // MAINWINDOW_H

@@ -26,7 +26,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
-     <widget class="QTabWidget" name="tabWidget">
+     <widget class="QTabWidget" name="tabs">
       <property name="minimumSize">
        <size>
         <width>400</width>
@@ -63,19 +63,23 @@
       <property name="movable">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="general">
        <attribute name="title">
         <string>General</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QGroupBox" name="groupBox_2">
+         <widget class="QGroupBox" name="filesystem">
           <property name="title">
            <string>Dropbox folder location</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_2">
            <item row="0" column="0">
-            <widget class="QLineEdit" name="leDropboxFolferLocation"/>
+            <widget class="QLineEdit" name="dropboxFolder">
+             <property name="readOnly">
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
            <item row="0" column="1">
             <widget class="QToolButton" name="moveDropboxFolder">
@@ -88,13 +92,13 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox_3">
+         <widget class="QGroupBox" name="generalOptions">
           <property name="title">
            <string>Desktop integration</string>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout_3">
            <item>
-            <widget class="QCheckBox" name="chkNotifications">
+            <widget class="QCheckBox" name="showNotifications">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -107,7 +111,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="chkStartDropbox">
+            <widget class="QCheckBox" name="startDaemon">
              <property name="enabled">
               <bool>true</bool>
              </property>
@@ -120,7 +124,7 @@
             </widget>
            </item>
            <item>
-            <widget class="QCheckBox" name="displayP2P">
+            <widget class="QCheckBox" name="useP2P">
              <property name="text">
               <string>Use p2p</string>
              </property>
@@ -149,6 +153,19 @@
         <string>Account</string>
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout_5">
+        <item>
+         <spacer name="verticalSpacer">
+          <property name="orientation">
+           <enum>Qt::Vertical</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>20</width>
+            <height>40</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
         <item>
          <widget class="QLabel" name="titleVersion">
           <property name="font">
@@ -190,12 +207,12 @@
          </widget>
         </item>
         <item>
-         <widget class="QGroupBox" name="groupBox">
+         <widget class="QGroupBox" name="accountUnlink">
           <property name="title">
            <string>Account information for this computer</string>
           </property>
-          <layout class="QFormLayout" name="formLayout">
-           <item row="0" column="0">
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
             <spacer name="horizontalSpacer_2">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
@@ -208,19 +225,11 @@
              </property>
             </spacer>
            </item>
-           <item row="0" column="1">
-            <widget class="QSplitter" name="splitter">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+           <item>
+            <widget class="QPushButton" name="unlinkComputer">
+             <property name="text">
+              <string>Unlink this computer...</string>
              </property>
-             <widget class="QPushButton" name="pushButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Unlink this computer...</string>
-              </property>
-             </widget>
             </widget>
            </item>
           </layout>
@@ -453,7 +462,7 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="tab">
+      <widget class="QWidget" name="misc">
        <attribute name="title">
         <string>Misc</string>
        </attribute>
@@ -469,7 +478,7 @@
          </widget>
         </item>
         <item row="0" column="1">
-         <widget class="QComboBox" name="cmbFileManager">
+         <widget class="QComboBox" name="fileManager">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -494,12 +503,12 @@
            <string>Browser</string>
           </property>
           <property name="buddy">
-           <cstring>leBrowser</cstring>
+           <cstring>browser</cstring>
           </property>
          </widget>
         </item>
         <item row="1" column="1">
-         <widget class="QLineEdit" name="leBrowser"/>
+         <widget class="QLineEdit" name="browser"/>
         </item>
         <item row="2" column="1">
          <widget class="QGroupBox" name="grIcons">
@@ -681,24 +690,7 @@
  <resources>
   <include location="DropboxIcons.qrc"/>
  </resources>
- <connections>
-  <connection>
-   <sender>cbIconSet</sender>
-   <signal>currentIndexChanged(QString)</signal>
-   <receiver>MainWindow</receiver>
-   <slot>setIcons()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>137</x>
-     <y>114</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>606</x>
-     <y>179</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>openFileBrowser()</slot>
   <slot>setIcons()</slot>
