@@ -6,37 +6,25 @@
 #include <QFile>
 #include <QTimer>
 #include <QDebug>
-#include "util/SystemCall.h"
 #include <QDBusInterface>
 #include <QDBusConnection>
 #include <QDBusReply>
-#include <core/dolphin.h>
-#include <core/konqueror.h>
 
 namespace core {
 
-TrayIcon::TrayIcon(Configuration *c)
+TrayIcon::TrayIcon()
 {
-    dc = new DropboxClient();    
-    conf=c;
-    connect(dc, SIGNAL(messageProcessed(QString)), this, SLOT(updateTryIcon(QString)));
-    if(conf->getStartDaemon() && !dc->is_running()) dc->start();
-
     trayIcon = new KStatusNotifierItem();
-    loadIcons();
     dStatus = TrayIcon::DropboxUnkown;
     currentMessage="";
-    pid=-1;
 
-    //caller= new SystemCall();
     createActions();
     createTrayIcon();
 }
 
 TrayIcon::~TrayIcon()
 {
-    //! delete openDir..
-    delete dc;
+    //! delete menu, destroy each item, baby
 }
 
 void TrayIcon::createActions()
@@ -72,14 +60,8 @@ void TrayIcon::createActions()
     //connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 }
 
-void TrayIcon::loadIcons()
+void TrayIcon::loadIcons(const QString &iconset)
 {
-    QString iconset;
-    if (conf->getIconSet().length()==0)
-        iconset="default";
-    else
-        iconset=conf->getIconSet();
-
     defaultIcon = QIcon(":/icons/img/"+iconset+"/kfilebox.png");
     idleIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_idle.png");
     bussyIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_updating.png");
@@ -127,56 +109,59 @@ void TrayIcon::createTrayIcon()
 
 void TrayIcon::openFileBrowser(QString path)
 {
-    //! path = dropbox.getPathTo(path)
+    //! @todo path = dropbox.getPathTo(path)
+    //! get Dropbox path from ui->dropboxPath
+
+    Configuration conf;
+
     QString needed;
     if (path.isNull())
-        needed=QDir::toNativeSeparators(conf->getDropboxFolder());
+        needed=QDir::toNativeSeparators(conf.getValue("dropbox_path").toString());
     else
-        needed=QDir::toNativeSeparators(conf->getDropboxFolder().append(QDir::separator()).append(path));
+        needed=QDir::toNativeSeparators(conf.getValue("dropbox_path").toString().append(QDir::separator()).append(path));
 
-    /*if (conf->getFileManager().toLower().compare("dolphin")==0)
-        fbrowser= new Dolphin();
-    else
-        fbrowser= new Konqueror(caller);*/
-
-    //        pid=fbrowser->openNewWindow(path);
-    QString command=conf->getFileManager()+" \""+needed+"\"";
-    QProcess::startDetached(command);
+    QProcess::startDetached(conf.getValue("FileManager").toString().append(" \"").append(needed).append("\""));
 
 }
 
+//! @todo get this urls from dropbox daemon
 void TrayIcon::openHelpCenterURL()
 {
-    caller->openURL("https://www.dropbox.com/help");
+    Configuration conf;
+    QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/help"));
 }
 
 void TrayIcon::openTourURL()
 {
-    caller->openURL("https://www.dropbox.com/tour");
+    Configuration conf;
+    QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/tour"));
 }
 
 void TrayIcon::openForumsURL()
 {
-    caller->openURL(" http://forums.dropbox.com/");
+    Configuration conf;
+    QProcess::startDetached(conf.getValue("Browser").toString().append(" http://forums.dropbox.com/"));
 }
 
 void TrayIcon::openDropboxWebsiteURL()
 {
-    caller->openURL("https://www.dropbox.com/home");
+    Configuration conf;
+    QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/home"));
 }
 void TrayIcon::openGetMoreSpaceURL()
 {
-    caller->openURL("https://www.dropbox.com/plans");
+    Configuration conf;
+    QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/plans"));
 }
 
 void TrayIcon::startDropboxDaemon()
 {
-    dc->start();
+    emit startDropbox();
 }
 
 void TrayIcon::stopDropboxDaemon()
 {
-    dc->stop();
+    emit stopDropbox();
 }
 
 void TrayIcon::trayIconDblClicked(bool active, QPoint point){
@@ -277,7 +262,8 @@ void TrayIcon::prepareLastChangedFiles(){
 
 
     QStringList files;
-    foreach (QString elem, conf->getValue("recently_changed3").split("\n")) {
+    Configuration conf;
+    foreach (QString elem, conf.getValue("recently_changed3").toString().split("\n")) {
         QStringList list = elem.split(":");
         if(list.length()>1)
         {
@@ -324,11 +310,6 @@ void TrayIcon::prepareLastChangedFiles(){
         //qt_message_output(QtDebugMsg,str_path.toLatin1());
     }
     connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
-}
-
-//! stub - to remove
-void TrayIcon::setCaller(SystemCall *c){
-    this->caller=c;
 }
 
 } /* End of namespace core */

@@ -1,17 +1,20 @@
 #ifndef installer_Daemoninstaller_h
 #define installer_Daemoninstaller_h
 
-#include <QString>
+#include <QDir>
 #include <QObject>
+#include <QString>
+#include <QProcess>
+
+#include "util/Downloader.h"
+
 #include "installerform.h"
-
-
 
 namespace installer {
 
-    class Daemoninstaller: public QObject {
- Q_OBJECT
- public:
+class Daemoninstaller: public QObject {
+    Q_OBJECT
+public:
 
     Daemoninstaller();
 
@@ -28,7 +31,7 @@ public Q_SLOTS:
     void onFileExtracted(int);
     void onDownloadProgressChange(int);
 
- private:
+private:
     QString daemonUrl;
     QString downloadPath;
     InstallerForm *form;

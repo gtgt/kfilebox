@@ -24,10 +24,10 @@ public:
     explicit ConfigurationDBDriver(QObject *parent = 0);
     ~ConfigurationDBDriver();
 
-    // listKeys()
+    QStringList listKeys();
     bool hasKey(const QString &key);
-    QString getValue(const QString &key);
-    void setValue(const QString &key, const QString &value);
+    QVariant getValue(const QString &key);
+    void setValue(const QString &key, const QVariant &value);
     void deleteValue(const QString &key);
 
 private:

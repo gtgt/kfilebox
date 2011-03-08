@@ -5,22 +5,21 @@
 #include <kstatusnotifieritem.h>
 #include <QAction>
 #include <kmenu.h>
-#include "util/SystemCall.h"
 #include "DropboxClient.h"
 #include "kicon.h"
 #include "model/Configuration.h"
 #include "core/notification.h"
-#include <core/filebrowser.h>
+
+#include <QProcess>
 
 namespace core {
 class TrayIcon : public QWidget
 {
     Q_OBJECT
 public:
-    TrayIcon(Configuration *);
+    TrayIcon();
     ~TrayIcon();
-    void setCaller(SystemCall *);
-    void loadIcons();
+    void loadIcons(const QString &iconset);
 
 protected:
     //void changeEvent(QEvent *e);
@@ -33,7 +32,6 @@ private:
     KMenu *trayIconMenu;
     KMenu *chFiles;
     Configuration *conf;
-    FileBrowser *fbrowser;
 
     enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading, DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
     DropboxStatus dStatus;
@@ -57,8 +55,6 @@ private:
     QAction *stopAction;
     QAction *quitAction;
 
-    SystemCall *caller;
-    int pid;
     DropboxClient *dc;
 
 public slots:
@@ -77,6 +73,8 @@ public slots:
 
  signals:
     void prefsWindowActionTrigered();
+    void startDropbox();
+    void stopDropbox();
 };
 } /* End of namespace core */
 #endif // TRAYICON_H

@@ -1,5 +1,7 @@
 #include "configurationdbdriver.h"
 
+#include <QSqlError>
+
 ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     QObject(parent)
 {
@@ -18,7 +20,8 @@ ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
             if(query.value(0).toInt() != 1)
             {
                 dbVersion = DROPBOX_DB;
-                //! and change connection to another type .. :(
+                //! destroy this connection :(
+                //! create new connection to old-style db
             }
         }
 
@@ -31,7 +34,7 @@ ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     {
         dbFilename = "";
         dbVersion = UNKNOWN;
-        qDebug() << "no one version is installed";
+        qDebug() << "~/.dropbox/[config.db,dropbox.db] not founded";
     }
 }
 
@@ -58,24 +61,27 @@ bool ConfigurationDBDriver::hasKey(const QString &key)
     return false;
 }
 
-QString ConfigurationDBDriver::getValue(const QString &key)
+QVariant ConfigurationDBDriver::getValue(const QString &key)
 {
     if(dbVersion != CONFIG_DB)
-        return QString();
+        return QVariant();
 
     QSqlQuery query = db->exec("SELECT `value` FROM `config` WHERE `key`='"+key+"' LIMIT 1");
     if (query.next()) {
-        return query.value(0).toString();
+        return query.value(0);
     }
-    return QString();
+    return QVariant();
 }
 
 //! This function should only be called when dropbox is stopped
 //! was not properly tested yeat
-void ConfigurationDBDriver::setValue(const QString &key, const QString &value)
+void ConfigurationDBDriver::setValue(const QString &key, const QVariant &value)
 {
     if(dbVersion != CONFIG_DB)
         return;
 
-    db->exec("UPDATE `config` SET `value`='"+value+"' WHERE `key`='"+key+"'");
+    db->exec("UPDATE `config` SET `value`='"+value.toString()+"' WHERE `key`='"+key+"'");
+    if(db->lastError().isValid())
+        qDebug() << db->lastError();
+
 }

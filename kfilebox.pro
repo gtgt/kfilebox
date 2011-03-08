@@ -10,29 +10,21 @@ TEMPLATE = app
 SOURCES += main.cpp \
     mainwindow.cpp \
     model/Configuration.cpp \
-    util/SystemCall.cpp \
     core/DropboxClient.cpp \
     util/Downloader.cpp \
     installer/Daemoninstaller.cpp \
     installer/installerform.cpp \
     core/trayicon.cpp \
     core/notification.cpp \
-    core/filebrowser.cpp \
-    core/dolphin.cpp \
-    core/konqueror.cpp \
     model/configurationdbdriver.cpp
 HEADERS += mainwindow.h \
     model/Configuration.h \
-    util/SystemCall.h \
     core/DropboxClient.h \
     util/Downloader.h \
     installer/Daemoninstaller.h \
     installer/installerform.h \
     core/trayicon.h \
     core/notification.h \
-    core/filebrowser.h \
-    core/dolphin.h \
-    core/konqueror.h \
     model/configurationdbdriver.h
 RESOURCES += DropboxIcons.qrc
 

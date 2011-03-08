@@ -5,11 +5,11 @@
 #include <QAction>
 #include <QFileInfo>
 #include "model/Configuration.h"
-#include "util/SystemCall.h"
+
 
 #include "core/trayicon.h"
 
-//! @todo remove SystemCaller
+//! @todo Configuration may be created and used locally only in two functions[loadSettings, applySettings], REMOVE TrayIcon relations to it
 
 using namespace core;
 
@@ -24,20 +24,19 @@ public:
     ~MainWindow();
 
 protected:
-    void changeEvent(QEvent *e);
+    void changeEvent(QEvent* e);
 
 private:
     void loadSettings();
 
-    Ui::MainWindow *ui;
-    Configuration *conf;
-    SystemCall *caller;
-    TrayIcon *trayIcon;
+    Ui::MainWindow* ui;
+    TrayIcon* trayIcon;
+    DropboxClient* dc;
 
 private slots:
     void applySettings();
     void saveSettings();
-    void moveDropboxFolder();
+    void changeDropboxFolder();
     void unlinkComputer();
     void setIcons();
     void downloadRadioToggle();

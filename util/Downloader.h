@@ -11,9 +11,9 @@
 
 namespace util {
 
-    class Downloader: public QObject {
- Q_OBJECT
- public:
+class Downloader: public QObject {
+    Q_OBJECT
+public:
 
     /** simple access function to set the attribute url by function
       * @param value value to set for the attribute url
@@ -46,17 +46,17 @@ namespace util {
 
     Downloader();
 
- Q_SIGNALS:
+Q_SIGNALS:
     void fileDownloaded();
     void downloadProgress(int);
 
- private:
+private:
     QFile file;
     QNetworkReply *reply;
     QUrl url;
-    /* {set=public, get=public}*/
+
     QString filename;
-    /* {get=public, set=public}*/
+
 
     QString downloadpath;
 

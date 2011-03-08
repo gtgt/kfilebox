@@ -12,7 +12,7 @@ Notification::Notification()
 void Notification::send(QString msg)
 {
     system(QString("notify-send KFileBox '"+msg+"'").toStdString().c_str());
-    /*if (conf->getShowNotifications()==true){
+    /*if (conf->getValue("ShowNotifications").toBool()==true){
         notificator= new KNotification("notify",KNotification::Persistent);
         notificator->setTitle("Kfilebox");
         //notificator->setPixmap(QIcon(":/img/white/kfileboxapp.png").pixmap(48,48));

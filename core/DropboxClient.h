@@ -19,18 +19,16 @@ public:
     DropboxClient();
     ~DropboxClient();
     void sendCommand(QString command);
-
-    void start();
-    void stop();
-
     bool is_running();
-
-    // /*proxy from strings to inline functions*/ void getStatus(){sendCommand("get_dropbox_status");}
 
 private:
     QLocalSocket* m_socket;
     QString m_socketPath;
     QTimer* timer;
+
+public slots:
+    void start();
+    void stop();
 
 private slots:
     void readMsg();
