@@ -25,7 +25,7 @@ void InstallerForm::changeEvent(QEvent *e)
     }
 }
 
-void InstallerForm::setProgressValue(int i){
-    ui->progressBar->setValue(i);
 
+void InstallerForm::setProgressValue(qint64 bytesReceived, qint64 bytesTotal){
+    ui->progressBar->setValue(100*bytesReceived/bytesTotal);
 }

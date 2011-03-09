@@ -2,11 +2,11 @@
 
 namespace installer {
 
-using namespace util;
+//using namespace util;
 
 Daemoninstaller::Daemoninstaller()
 {
-    downloadPath=QDir::home().path().append(QDir::separator());
+    downloadPath=QDir::homePath().append(QDir::separator());
     //downloadPath.append("tmp").append(QDir::separator());
 
     if(QSysInfo::WordSize==64)
@@ -16,15 +16,37 @@ Daemoninstaller::Daemoninstaller()
 
 }
 
+Daemoninstaller::~Daemoninstaller()
+{
+    delete form;
+    form = 0;
+}
+
 void Daemoninstaller::downloadDaemon()
 {
-    Downloader *d= new Downloader(this->daemonUrl,"daemon.tar.gz");
-    d->set_downloadpath(downloadPath);
-    connect(d,SIGNAL(fileDownloaded()),this,SLOT(onFileDownloaded()));
     form = new InstallerForm();
     form->show();
-    connect(d,SIGNAL(downloadProgress(int)),this,SLOT(onDownloadProgressChange(int)));
-    d->download();
+
+    QString filename = "daemon.tar.gz";
+
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+
+    if (downloadPath.length()>0)
+        filename=downloadPath+filename;
+    file.setFileName(filename);
+    file.open(QIODevice::WriteOnly);
+    QNetworkRequest* request = new QNetworkRequest(QUrl(daemonUrl));
+    request->setRawHeader("User-Agent", "Kfilebox");
+    reply = manager->get(*request);
+
+
+    connect(reply, SIGNAL(finished()), SLOT(downloadFinished()));
+    connect(reply, SIGNAL(readyRead()), SLOT(downloadReadyRead()));
+
+    connect(reply,SIGNAL(downloadProgress(qint64,qint64)), form, SLOT(setProgressValue(qint64,qint64)));
+    connect(reply,SIGNAL(error(QNetworkReply::NetworkError)), SLOT(displayError(QNetworkReply::NetworkError)));
+
+
 }
 
 void Daemoninstaller::extract()
@@ -36,7 +58,6 @@ void Daemoninstaller::extract()
 
     sc.execute("tar -xf "+downloadPath);
     sc.waitForFinished();
-    sc.close();
     executeWizzard();
 
 }
@@ -47,34 +68,49 @@ void Daemoninstaller::executeWizzard()
     sc.startDetached(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
     sc.waitForStarted();
     preventGtkGuiExecution();
-    //sc->close();
 }
 
 void Daemoninstaller::preventGtkGuiExecution()
 {
     form->hide();
-    delete form;
-    form = 0;
 
     sleep(5);
     QProcess sc;
     sc.startDetached("mv "+QDir::homePath()+"/.dropbox-dist/wx._controls_.so "+QDir::homePath()+"/.dropbox-dist/wx._controls_orig.so");
     sc.startDetached("rm "+ downloadPath);
-    //sc->close();
-    quick_exit(1);
+    quick_exit(1); //! ??
 }
 
-void Daemoninstaller::onFileDownloaded(){
-    extract();
+
+
+void Daemoninstaller::downloadFinished()
+{
+    file.close();
+    QVariant possible_redirect=reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+    if (!possible_redirect.toUrl().toString().isEmpty() && possible_redirect.toUrl()!=url){
+        url=possible_redirect.toUrl().toString();
+//        download(); .. construct?
+    }
+    else
+    {
+        reply->close();
+        delete reply;
+        extract();
+    }
 }
 
-void Daemoninstaller::onFileExtracted(int i){
-    qt_message_output(QtWarningMsg,tr("File extracted").toLatin1());
+void Daemoninstaller::downloadReadyRead()
+{
+    file.write(reply->readAll());
 }
 
-void Daemoninstaller::onDownloadProgressChange(int i){
-    form->setProgressValue(i);
-
+void Daemoninstaller::displayError(QNetworkReply::NetworkError err){
+    qt_message_output(QtWarningMsg,tr("Error downloading file").toLatin1());
 }
+
+
+
+
+
 
 } /* End of namespace installer */

@@ -10,17 +10,12 @@
 
 #include "configurationdbdriver.h"
 
-//! @todo remove dynamical configuration from MainWindow, leave only local(into function)
 class Configuration: public QObject
 {
     Q_OBJECT
 public:
     Configuration();
     ~Configuration();
-
-    //! @todo remove. But before play with: typename T
-    void writeSetting(QString key, QString value) {setValue(key, value);}
-    void writeSetting(QString key, bool value){setValue(key, value);}
 
     QStringList listKeys();
     bool hasKey(const QString &key);
@@ -33,7 +28,6 @@ private:
 
     KConfig* settings;
     KConfigGroup* generalGroup;
-
     ConfigurationDBDriver* DB;
 
 signals:

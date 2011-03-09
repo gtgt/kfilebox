@@ -52,6 +52,9 @@ QVariant Configuration::getValue(const QString &key)
 
 void Configuration::setValue(const QString &key, const QVariant &value)
 {
+    if(getValue(key)==value)
+        return;
+
     if(DB->hasKey(key))
         DB->setValue(key, value);
     else

@@ -1,15 +1,5 @@
 #include "trayicon.h"
 
-#include <QtGui>
-
-#include <QFileInfo>
-#include <QFile>
-#include <QTimer>
-#include <QDebug>
-#include <QDBusInterface>
-#include <QDBusConnection>
-#include <QDBusReply>
-
 namespace core {
 
 TrayIcon::TrayIcon()
@@ -18,13 +8,16 @@ TrayIcon::TrayIcon()
     dStatus = TrayIcon::DropboxUnkown;
     currentMessage="";
 
+    sm= new QSignalMapper(this);
+
     createActions();
     createTrayIcon();
 }
 
 TrayIcon::~TrayIcon()
 {
-    //! delete menu, destroy each item, baby
+    //! @todo delete all elements
+    delete sm;
 }
 
 void TrayIcon::createActions()
@@ -48,13 +41,13 @@ void TrayIcon::createActions()
     connect(openForums, SIGNAL(triggered()), this, SLOT(openForumsURL()));
 
     openPrefs = new QAction(tr("Preferences..."), this);
-    connect(openPrefs, SIGNAL(triggered()), this, SLOT(openPrefsWindow()));
+    connect(openPrefs, SIGNAL(triggered()), this, SIGNAL(prefsWindowActionTrigered()));
 
     startAction = new QAction(tr("Start Dropbox"), this);
-    connect(startAction, SIGNAL(triggered()), this, SLOT(startDropboxDaemon()));
+    connect(startAction, SIGNAL(triggered()), this, SIGNAL(startDropbox()));
 
     stopAction = new QAction(tr("Stop Dropbox"), this);
-    connect(stopAction, SIGNAL(triggered()), this, SLOT(stopDropboxDaemon()));
+    connect(stopAction, SIGNAL(triggered()), this, SIGNAL(stopDropbox()));
 
     //quitAction = new QAction(tr("&Exit"), this);
     //connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -104,23 +97,18 @@ void TrayIcon::createTrayIcon()
     trayIcon->setToolTipIconByPixmap(appIcon);
     trayIcon->setToolTipTitle("Kfilebox");
 
-    connect(trayIcon, SIGNAL(activateRequested(bool,QPoint)), this,SLOT(trayIconDblClicked(bool,QPoint)));
+    connect(trayIcon, SIGNAL(activateRequested(bool,QPoint)), this,SLOT(openFileBrowser()));
 }
 
-void TrayIcon::openFileBrowser(QString path)
+void TrayIcon::openFileBrowser(const QString &path)
 {
-    //! @todo path = dropbox.getPathTo(path)
-    //! get Dropbox path from ui->dropboxPath
+    //! @todo pathToFile = dropbox.getPathTo(file)
+    //! get variables[FileManager, DropboxPath] from ui->dropboxPath
 
     Configuration conf;
-
-    QString needed;
-    if (path.isNull())
-        needed=QDir::toNativeSeparators(conf.getValue("dropbox_path").toString());
-    else
-        needed=QDir::toNativeSeparators(conf.getValue("dropbox_path").toString().append(QDir::separator()).append(path));
-
-    QProcess::startDetached(conf.getValue("FileManager").toString().append(" \"").append(needed).append("\""));
+    QProcess::startDetached(conf.getValue("FileManager").toString().append(" \"")
+                            .append(QDir::toNativeSeparators(conf.getValue("dropbox_path").toString().append(path)))
+                            .append("\""));
 
 }
 
@@ -154,32 +142,9 @@ void TrayIcon::openGetMoreSpaceURL()
     QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/plans"));
 }
 
-void TrayIcon::startDropboxDaemon()
-{
-    emit startDropbox();
-}
-
-void TrayIcon::stopDropboxDaemon()
-{
-    emit stopDropbox();
-}
-
-void TrayIcon::trayIconDblClicked(bool active, QPoint point){
-    Q_UNUSED(point);
-    if (active)
-        openFileBrowser();
-
-}
-
-//! @FIXME
-void TrayIcon::openPrefsWindow()
-{
-    emit prefsWindowActionTrigered();
-}
-
-
-
-void TrayIcon::updateTryIcon( QString result)
+//! @todo state may be stored in DropboxClient
+//! on state change better call SLOT
+void TrayIcon::updateTrayIcon(const QString &result)
 {
     if (result.trimmed().length()>0){
         if(result.contains("isn't")){
@@ -252,62 +217,46 @@ void TrayIcon::updateTryIcon( QString result)
 
 }
 
+
 void TrayIcon::prepareLastChangedFiles(){
-    QStringList file_name, file_relative_path;
-    QString str_path;
 
     foreach (QAction *a, chFiles->actions()){
         chFiles->removeAction(a);
     }
 
-
-    QStringList files;
+    QString file;
     Configuration conf;
+    QString dropboxPath = conf.getValue("dropbox_path").toString();
     foreach (QString elem, conf.getValue("recently_changed3").toString().split("\n")) {
         QStringList list = elem.split(":");
-        if(list.length()>1)
-        {
-            //! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
-            //! convert to `снимок38.png'
-            //! hope somebody will find normal solution)
-            QString humanResult;
-            QStringList toHumanable = list.value(1).split("\\u");
-            if(toHumanable.length()>1)
-            {
-                humanResult = toHumanable.first();
-                for(int i=1; i<toHumanable.length(); i++ )
-                {
-                    if(toHumanable.at(i).length()!=4)
-                        humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
-                    else
-                        humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
-                }
-                files.append(humanResult);
-            } else
-                files.append(list.value(1).trimmed());
-        }
-    }
-    if( files.size() == 0 )
-        files.append("File list is empty:(");
+        if(list.length()<=1) continue;
+
+        //! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
+        //! convert to `снимок38.png'
+        //! hope somebody will find normal solution)
+        QString humanResult;
+        QStringList toHumanable = list.value(1).split("\\u");
+        if(toHumanable.length()>1) {
+            humanResult = toHumanable.first();
+            for(int i=1; i<toHumanable.length(); i++ ) {
+                if(toHumanable.at(i).length()!=4)
+                    humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
+                else
+                    humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
+            }
+            file = humanResult;
+        } else
+            file = list.value(1);
+
+        //! @bug memory leak?
+        chFiles->addAction(new QAction(file.split("/").last(), this));
+        chFiles->actions().last()->setEnabled(QFile(dropboxPath+file).exists());
+
+        connect(chFiles->actions().last(), SIGNAL(triggered()), sm, SLOT(map()));
+
+        sm->setMapping(chFiles->actions().last(), file);
 
 
-    //! @bug memory leak
-    QSignalMapper *sm= new QSignalMapper(this);
-
-    for (int i = 0; i < files.size(); ++i) {
-        file_relative_path=files.at(i).split(":/");
-        file_name=file_relative_path.last().split("/");
-        //! @bug memory leak
-        chFiles->addAction(new QAction(file_name.last(), this));
-
-        connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-        file_name.removeLast();
-        str_path=QString();
-        foreach (QString str,file_name){
-            str_path+="/"+str;
-        }
-        sm->setMapping(chFiles->actions().at(i),str_path);
-        //qt_message_output(QtDebugMsg,str_path.toLatin1());
     }
     connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
 }

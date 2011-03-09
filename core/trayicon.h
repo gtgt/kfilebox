@@ -2,15 +2,16 @@
 #define TRAYICON_H
 
 #include <QObject>
-#include <kstatusnotifieritem.h>
 #include <QAction>
-#include <kmenu.h>
-#include "DropboxClient.h"
-#include "kicon.h"
-#include "model/Configuration.h"
-#include "core/notification.h"
-
 #include <QProcess>
+#include <QSignalMapper>
+
+#include <kstatusnotifieritem.h>
+#include <kmenu.h>
+#include "kicon.h"
+
+#include "core/notification.h"
+#include "model/Configuration.h"
 
 namespace core {
 class TrayIcon : public QWidget
@@ -31,7 +32,6 @@ private:
     KStatusNotifierItem *trayIcon;
     KMenu *trayIconMenu;
     KMenu *chFiles;
-    Configuration *conf;
 
     enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading, DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
     DropboxStatus dStatus;
@@ -55,18 +55,14 @@ private:
     QAction *stopAction;
     QAction *quitAction;
 
-    DropboxClient *dc;
+    QSignalMapper* sm;
 
 public slots:
-    void openFileBrowser(QString path="");
-    void openPrefsWindow();
+    void openFileBrowser(const QString &path="");
     void openHelpCenterURL();
     void openTourURL();
     void openForumsURL();
-    void startDropboxDaemon();
-    void stopDropboxDaemon();
-    void updateTryIcon(QString);
-    void trayIconDblClicked(bool, QPoint);
+    void updateTrayIcon(const QString &result);
     void prepareLastChangedFiles();
     void openDropboxWebsiteURL();
     void openGetMoreSpaceURL();

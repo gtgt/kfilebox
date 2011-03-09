@@ -4,7 +4,7 @@
 #include <QDialog>
 
 namespace Ui {
-    class InstallerForm;
+class InstallerForm;
 }
 
 class InstallerForm : public QDialog {
@@ -13,7 +13,8 @@ public:
     InstallerForm(QWidget *parent = 0);
     ~InstallerForm();
 
-    void setProgressValue(int);
+public slots:
+    void setProgressValue(qint64, qint64);
 
 protected:
     void changeEvent(QEvent *e);

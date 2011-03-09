@@ -4,9 +4,12 @@ namespace core {
 
 DropboxClient::DropboxClient(){
     m_socket = new QLocalSocket(this);
-    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),this, SLOT(displayError(QLocalSocket::LocalSocketError)));
-
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
+
+    if(isRunning())
+        m_socket->connectToServer(m_socketPath);
+    connect(m_socket, SIGNAL(readyRead()), this, SLOT(readMsg()));
+    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),this, SLOT(displayError(QLocalSocket::LocalSocketError)));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
@@ -24,7 +27,7 @@ DropboxClient::~DropboxClient()
 
 /**
   * change algorithm to
-  * if(currentStatus == "stoped" && newStatus == "running") { Notification::send(tr("Dropbox daemon started")); }
+  * if(currentStatus == "stoped" && newStatus == "running") { emit TrayIcon.ChangeState(Running); }
   * and hardcode it in trayIcon .. :(
   */
 void DropboxClient::start()
@@ -41,7 +44,7 @@ void DropboxClient::stop()
     sendCommand("tray_action_hard_exit");
 }
 
-bool DropboxClient::is_running()
+bool DropboxClient::isRunning()
 {
     QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/dropbox.pid")));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -51,16 +54,11 @@ bool DropboxClient::is_running()
     QTextStream in(&file);
     in >> pid;
 
-
-    if (QFile(QString("/proc/"+QString::number(pid)+"/cmdline")).open(QIODevice::ReadOnly | QIODevice::Text))
-        return true;
-
-    return false;
-
+    return QFile(QString("/proc/"+QString::number(pid)+"/cmdline")).open(QIODevice::ReadOnly | QIODevice::Text);
 }
 
 void DropboxClient::getDropboxStatus(){
-    if (is_running())
+    if (isRunning())
         sendCommand("get_dropbox_status");
     else
         emit messageProcessed("Dropbox isn't running");
@@ -129,6 +127,27 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
         //                                  .arg(s->errorString()).toLatin1());
     }
 
+}
+
+bool DropboxClient::isInstalled()
+{
+    return QDir(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/"))).exists();
+}
+
+void DropboxClient::hideGtkUi()
+{
+    if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_.so")).exists())
+        QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"));
+    else
+        qDebug() << "Failed to hide gui /.dropbox-dist/wx._controls_.so";
+}
+
+void DropboxClient::showGtkUi()
+{
+    if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so")).exists())
+        QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_.so"));
+    else
+        qDebug() << "Failed to show gui";
 }
 
 } /* End of namespace core */

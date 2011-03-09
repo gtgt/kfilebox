@@ -2,6 +2,7 @@
 
 #include <QSqlError>
 
+//! @todo play with old dropbox if need
 ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     QObject(parent)
 {
@@ -80,7 +81,7 @@ void ConfigurationDBDriver::setValue(const QString &key, const QVariant &value)
     if(dbVersion != CONFIG_DB)
         return;
 
-    db->exec("UPDATE `config` SET `value`='"+value.toString()+"' WHERE `key`='"+key+"'");
+    db->exec("INSERT INTO `config` (`key`, `value`) VALUES ('"+key+"', '"+value.toString()+"')");
     if(db->lastError().isValid())
         qDebug() << db->lastError();
 

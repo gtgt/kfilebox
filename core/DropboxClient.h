@@ -19,7 +19,12 @@ public:
     DropboxClient();
     ~DropboxClient();
     void sendCommand(QString command);
-    bool is_running();
+    bool isRunning();
+
+    //! This functions not strongly related to client..
+    void static hideGtkUi();
+    void static showGtkUi();
+    bool isInstalled();
 
 private:
     QLocalSocket* m_socket;

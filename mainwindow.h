@@ -4,12 +4,15 @@
 #include <QMainWindow>
 #include <QAction>
 #include <QFileInfo>
+#include <QtGui>
+#include <QFileInfo>
+#include <QFile>
+#include <QDebug>
+
 #include "model/Configuration.h"
-
-
+#include "installer/Daemoninstaller.h"
+#include "core/DropboxClient.h"
 #include "core/trayicon.h"
-
-//! @todo Configuration may be created and used locally only in two functions[loadSettings, applySettings], REMOVE TrayIcon relations to it
 
 using namespace core;
 
@@ -38,7 +41,7 @@ private slots:
     void saveSettings();
     void changeDropboxFolder();
     void unlinkComputer();
-    void setIcons();
+    void setIcons();    // select icon themes
     void downloadRadioToggle();
     void uploadRadioToggle();
     void proxyRadioToggle();
