@@ -57,6 +57,7 @@ bool DropboxClient::isRunning()
     return QFile(QString("/proc/"+QString::number(pid)+"/cmdline")).open(QIODevice::ReadOnly | QIODevice::Text);
 }
 
+// loop..
 void DropboxClient::getDropboxStatus(){
     if (isRunning())
         sendCommand("get_dropbox_status");

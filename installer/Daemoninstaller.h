@@ -41,8 +41,6 @@ private:
 
     QFile file;
     QNetworkReply *reply;
-    QUrl url;
-
 
 };
 

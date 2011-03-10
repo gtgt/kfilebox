@@ -146,74 +146,74 @@ void TrayIcon::openGetMoreSpaceURL()
 //! on state change better call SLOT
 void TrayIcon::updateTrayIcon(const QString &result)
 {
-    if (result.trimmed().length()>0){
-        if(result.contains("isn't")){
-            if(stopAction->isVisible()) {
-                startAction->setVisible(true);
-                stopAction->setVisible(false);
-            }
-        }
-        else{
-            if (startAction->isVisible()){
-                startAction->setVisible(false);
-                stopAction->setVisible(true);
-            }
-        }
+    if (result.trimmed().length()==0)
+        qDebug() << "(TrayIcon::updateTrayIcon) Error: empty message received";
 
-        //Icon update
-        if (result.contains("connecting") && dStatus!= TrayIcon::DropboxBussy){
-            trayIcon->setIconByPixmap(defaultIcon);
-            dStatus=TrayIcon::DropboxBussy;
-            trayIcon->setToolTipSubTitle(result);
+    if(result.contains("isn't")){
+        if(stopAction->isVisible() || !startAction->isVisible()) {
+            startAction->setVisible(true);
+            stopAction->setVisible(false);
         }
-        else if (result.contains("Idle") && dStatus!= TrayIcon::DropboxIdle)
-        {
-            trayIcon->setIconByPixmap(idleIcon);
-            dStatus=TrayIcon::DropboxIdle;
-            trayIcon->setToolTipSubTitle(result);
-        }
-        else if (result.contains("Up")  && dStatus!= TrayIcon::DropboxUploading){
-            if (result.compare(currentMessage)!=0){
-                trayIcon->setIconByPixmap(bussyIcon);
-                dStatus=TrayIcon::DropboxUploading;
-                trayIcon->setToolTipSubTitle(result);
-            }
-        }
-        else if (result.contains("Downloading")) {
-            if (result.compare(currentMessage)!=0){
-                trayIcon->setIconByPixmap(bussyIcon);
-                dStatus=TrayIcon::DropboxDownloading;
-                trayIcon->setToolTipSubTitle(result);
-            }
-        }
-        else if (result.contains("Saving")  && dStatus!= TrayIcon::DropboxSaving) {
-            trayIcon->setIconByPixmap(bussyIcon);
-            dStatus=TrayIcon::DropboxSaving;
-            trayIcon->setToolTipSubTitle(result);
-        }
-        else if (result.contains("Indexing")  && dStatus!= TrayIcon::DropboxIndexing) {
-            trayIcon->setIconByPixmap(bussyIcon);
-            dStatus=TrayIcon::DropboxIndexing;
-            trayIcon->setToolTipSubTitle(result);
-        }
-        else if(result.contains("isn't") && dStatus!= TrayIcon::DropboxStopped) {
-            trayIcon->setIconByPixmap(errorIcon);
-            dStatus=TrayIcon::DropboxStopped;
-            trayIcon->setToolTipSubTitle(result);
-        }
-        else if(result.contains("couldn't") && dStatus!= TrayIcon::DropboxDisconnected){
-            trayIcon->setIconByPixmap(errorIcon);
-            dStatus=TrayIcon::DropboxDisconnected;
-            trayIcon->setToolTipSubTitle(result);
-        }
-        else if(result.contains("dopped") && dStatus!= TrayIcon::DropboxError){
-            trayIcon->setIconByPixmap(errorIcon);
-            dStatus=TrayIcon::DropboxError;
-            trayIcon->setToolTipSubTitle(result);
+    }
+    else{
+        if (!stopAction->isVisible() || startAction->isVisible()){
+            startAction->setVisible(false);
+            stopAction->setVisible(true);
         }
     }
 
-    //qt_message_output(QtDebugMsg,result.toLatin1());
+    //Icon update
+    if (result.contains("connecting") && dStatus!= TrayIcon::DropboxBussy){
+        trayIcon->setIconByPixmap(defaultIcon);
+        dStatus=TrayIcon::DropboxBussy;
+        trayIcon->setToolTipSubTitle(result);
+    }
+    else if (result.contains("Idle") && dStatus!= TrayIcon::DropboxIdle)
+    {
+        trayIcon->setIconByPixmap(idleIcon);
+        dStatus=TrayIcon::DropboxIdle;
+        trayIcon->setToolTipSubTitle(result);
+    }
+    else if (result.contains("Up")  && dStatus!= TrayIcon::DropboxUploading){
+        if (result.compare(currentMessage)!=0){
+
+            trayIcon->setIconByPixmap(bussyIcon);
+            dStatus=TrayIcon::DropboxUploading;
+            trayIcon->setToolTipSubTitle(result);
+        }
+    }
+    else if (result.contains("Downloading")) {
+        if (result.compare(currentMessage)!=0){
+            trayIcon->setIconByPixmap(bussyIcon);
+            dStatus=TrayIcon::DropboxDownloading;
+            trayIcon->setToolTipSubTitle(result);
+        }
+    }
+    else if (result.contains("Saving")  && dStatus!= TrayIcon::DropboxSaving) {
+        trayIcon->setIconByPixmap(bussyIcon);
+        dStatus=TrayIcon::DropboxSaving;
+        trayIcon->setToolTipSubTitle(result);
+    }
+    else if (result.contains("Indexing")  && dStatus!= TrayIcon::DropboxIndexing) {
+        trayIcon->setIconByPixmap(bussyIcon);
+        dStatus=TrayIcon::DropboxIndexing;
+        trayIcon->setToolTipSubTitle(result);
+    }
+    else if(result.contains("isn't") && dStatus!= TrayIcon::DropboxStopped) {
+        trayIcon->setIconByPixmap(errorIcon);
+        dStatus=TrayIcon::DropboxStopped;
+        trayIcon->setToolTipSubTitle(result);
+    }
+    else if(result.contains("couldn't") && dStatus!= TrayIcon::DropboxDisconnected){
+        trayIcon->setIconByPixmap(errorIcon);
+        dStatus=TrayIcon::DropboxDisconnected;
+        trayIcon->setToolTipSubTitle(result);
+    }
+    else if(result.contains("dopped") && dStatus!= TrayIcon::DropboxError){
+        trayIcon->setIconByPixmap(errorIcon);
+        dStatus=TrayIcon::DropboxError;
+        trayIcon->setToolTipSubTitle(result);
+    }
 
 }
 

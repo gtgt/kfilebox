@@ -24,7 +24,7 @@ public:
     //! This functions not strongly related to client..
     void static hideGtkUi();
     void static showGtkUi();
-    bool isInstalled();
+    bool static isInstalled();
 
 private:
     QLocalSocket* m_socket;

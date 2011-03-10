@@ -13,12 +13,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    dc = new DropboxClient();
-
-    if(!dc->isInstalled()) {
-        installer::Daemoninstaller di;
+    if(!DropboxClient::isInstalled()) {
+        installer::Daemoninstaller di; // = new installer::Daemoninstaller();
         di.downloadDaemon();
-    }
+        // waiting for installed
+        qDebug() << "to asyncronous";
+
+    } else {
+
+    dc = new DropboxClient();
 
 
     trayIcon= new TrayIcon();
@@ -54,7 +57,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if(ui->startDaemon->isChecked() && !dc->isRunning())
         dc->start();
-
+}
 }
 
 MainWindow::~MainWindow()
