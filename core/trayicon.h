@@ -6,6 +6,10 @@
 #include <QProcess>
 #include <QSignalMapper>
 
+#include <QDesktopServices>
+#include <QUrl>
+
+
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
 #include "kicon.h"

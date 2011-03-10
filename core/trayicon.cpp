@@ -104,40 +104,33 @@ void TrayIcon::openFileBrowser(const QString &path)
     //! get variables[FileManager, DropboxPath] from ui->dropboxPath
 
     Configuration conf;
-    QProcess::startDetached(conf.getValue("FileManager").toString().append(" \"")
-                            .append(QDir::toNativeSeparators(conf.getValue("dropbox_path").toString().append(path)))
-                            .append("\""));
+    QDesktopServices::openUrl(QUrl(QDir::toNativeSeparators(conf.getValue("dropbox_path").toString().append(path))));
 
 }
 
 //! @todo get this urls from dropbox daemon
 void TrayIcon::openHelpCenterURL()
 {
-    Configuration conf;
-    QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/help"));
+    QDesktopServices::openUrl(QUrl("https://www.dropbox.com/help"));
 }
 
 void TrayIcon::openTourURL()
 {
-    Configuration conf;
-    QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/tour"));
+    QDesktopServices::openUrl(QUrl("https://www.dropbox.com/tour"));
 }
 
 void TrayIcon::openForumsURL()
 {
-    Configuration conf;
-    QProcess::startDetached(conf.getValue("Browser").toString().append(" http://forums.dropbox.com/"));
+    QDesktopServices::openUrl(QUrl("http://forums.dropbox.com/"));
 }
 
 void TrayIcon::openDropboxWebsiteURL()
 {
-    Configuration conf;
-    QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/home"));
+    QDesktopServices::openUrl(QUrl("https://www.dropbox.com/home"));
 }
 void TrayIcon::openGetMoreSpaceURL()
 {
-    Configuration conf;
-    QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/plans"));
+    QDesktopServices::openUrl(QUrl("https://www.dropbox.com/plans"));
 }
 
 void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QString &message)
