@@ -16,6 +16,10 @@ namespace core {
 class DropboxClient: public QObject {
     Q_OBJECT
 public:
+
+    enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
+                        DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
+
     DropboxClient();
     ~DropboxClient();
     void sendCommand(QString command);
@@ -31,6 +35,8 @@ private:
     QString m_socketPath;
     QTimer* timer;
 
+    DropboxStatus m_status;
+
 public slots:
     void start();
     void stop();
@@ -41,7 +47,7 @@ private slots:
     void getDropboxStatus();
 
 signals:
-    void messageProcessed(QString);
+    void updateStatus(DropboxClient::DropboxStatus status, const QString &message);
 
 };
 

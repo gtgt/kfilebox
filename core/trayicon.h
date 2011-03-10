@@ -1,8 +1,8 @@
 #ifndef TRAYICON_H
 #define TRAYICON_H
 
-#include <QObject>
 #include <QAction>
+#include <QObject>
 #include <QProcess>
 #include <QSignalMapper>
 
@@ -10,10 +10,12 @@
 #include <kmenu.h>
 #include "kicon.h"
 
-#include "core/notification.h"
+//#include "core/notification.h"
+#include "core/DropboxClient.h" // for enum DropboxClient
 #include "model/Configuration.h"
 
 namespace core {
+
 class TrayIcon : public QWidget
 {
     Q_OBJECT
@@ -22,10 +24,9 @@ public:
     ~TrayIcon();
     void loadIcons(const QString &iconset);
 
-protected:
-    //void changeEvent(QEvent *e);
-
 private:
+
+
     void createActions();
     void createTrayIcon();
 
@@ -33,10 +34,6 @@ private:
     KMenu *trayIconMenu;
     KMenu *chFiles;
 
-    enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading, DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
-    DropboxStatus dStatus;
-    //bool idle;
-    QString currentMessage;
 
     QIcon defaultIcon;
     QIcon idleIcon;
@@ -58,16 +55,17 @@ private:
     QSignalMapper* sm;
 
 public slots:
+    void updateStatus(DropboxClient::DropboxStatus newStatus, const QString &message);
+
     void openFileBrowser(const QString &path="");
     void openHelpCenterURL();
     void openTourURL();
     void openForumsURL();
-    void updateTrayIcon(const QString &result);
-    void prepareLastChangedFiles();
     void openDropboxWebsiteURL();
     void openGetMoreSpaceURL();
+    void prepareLastChangedFiles();
 
- signals:
+signals:
     void prefsWindowActionTrigered();
     void startDropbox();
     void stopDropbox();

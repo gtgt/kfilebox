@@ -5,8 +5,6 @@ namespace core {
 TrayIcon::TrayIcon()
 {
     trayIcon = new KStatusNotifierItem();
-    dStatus = TrayIcon::DropboxUnkown;
-    currentMessage="";
 
     sm= new QSignalMapper(this);
 
@@ -142,80 +140,51 @@ void TrayIcon::openGetMoreSpaceURL()
     QProcess::startDetached(conf.getValue("Browser").toString().append(" https://www.dropbox.com/plans"));
 }
 
-//! @todo state may be stored in DropboxClient
-//! on state change better call SLOT
-void TrayIcon::updateTrayIcon(const QString &result)
+void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QString &message)
 {
-    if (result.trimmed().length()==0)
-        qDebug() << "(TrayIcon::updateTrayIcon) Error: empty message received";
-
-    if(result.contains("isn't")){
+    if(newStatus == DropboxClient::DropboxStopped){
         if(stopAction->isVisible() || !startAction->isVisible()) {
             startAction->setVisible(true);
             stopAction->setVisible(false);
         }
-    }
-    else{
-        if (!stopAction->isVisible() || startAction->isVisible()){
+    } else{
+        if (!stopAction->isVisible() || startAction->isVisible()) {
             startAction->setVisible(false);
             stopAction->setVisible(true);
         }
     }
 
-    //Icon update
-    if (result.contains("connecting") && dStatus!= TrayIcon::DropboxBussy){
+    trayIcon->setToolTipSubTitle(message);
+
+    switch(newStatus) {
+    case DropboxClient::DropboxBussy:
         trayIcon->setIconByPixmap(defaultIcon);
-        dStatus=TrayIcon::DropboxBussy;
-        trayIcon->setToolTipSubTitle(result);
-    }
-    else if (result.contains("Idle") && dStatus!= TrayIcon::DropboxIdle)
-    {
+        break;
+    case DropboxClient::DropboxIdle:
         trayIcon->setIconByPixmap(idleIcon);
-        dStatus=TrayIcon::DropboxIdle;
-        trayIcon->setToolTipSubTitle(result);
-    }
-    else if (result.contains("Up")  && dStatus!= TrayIcon::DropboxUploading){
-
-        if (result.compare(currentMessage)!=0){
-
-            trayIcon->setIconByPixmap(bussyIcon);
-            dStatus=TrayIcon::DropboxUploading;
-            trayIcon->setToolTipSubTitle(result);
-        }
-    }
-    else if (result.contains("Downloading")) {
-        if (result.compare(currentMessage)!=0){
-            trayIcon->setIconByPixmap(bussyIcon);
-            dStatus=TrayIcon::DropboxDownloading;
-            trayIcon->setToolTipSubTitle(result);
-        }
-    }
-    else if (result.contains("Saving")  && dStatus!= TrayIcon::DropboxSaving) {
+        break;
+    case DropboxClient::DropboxUploading:
         trayIcon->setIconByPixmap(bussyIcon);
-        dStatus=TrayIcon::DropboxSaving;
-        trayIcon->setToolTipSubTitle(result);
-    }
-    else if (result.contains("Indexing")  && dStatus!= TrayIcon::DropboxIndexing) {
+        break;
+    case DropboxClient::DropboxDownloading:
         trayIcon->setIconByPixmap(bussyIcon);
-        dStatus=TrayIcon::DropboxIndexing;
-        trayIcon->setToolTipSubTitle(result);
-    }
-    else if(result.contains("isn't") && dStatus!= TrayIcon::DropboxStopped) {
+        break;
+    case DropboxClient::DropboxSaving:
+        trayIcon->setIconByPixmap(bussyIcon);
+        break;
+    case  DropboxClient::DropboxIndexing:
+        trayIcon->setIconByPixmap(bussyIcon);
+        break;
+    case DropboxClient::DropboxStopped:
         trayIcon->setIconByPixmap(errorIcon);
-        dStatus=TrayIcon::DropboxStopped;
-        trayIcon->setToolTipSubTitle(result);
-    }
-    else if(result.contains("couldn't") && dStatus!= TrayIcon::DropboxDisconnected){
+        break;
+    case DropboxClient::DropboxDisconnected:
         trayIcon->setIconByPixmap(errorIcon);
-        dStatus=TrayIcon::DropboxDisconnected;
-        trayIcon->setToolTipSubTitle(result);
-    }
-    else if(result.contains("dopped") && dStatus!= TrayIcon::DropboxError){
+        break;
+    case DropboxClient::DropboxError:
         trayIcon->setIconByPixmap(errorIcon);
-        dStatus=TrayIcon::DropboxError;
-        trayIcon->setToolTipSubTitle(result);
+        break;
     }
-
 }
 
 //! @bug recent files from shared folders

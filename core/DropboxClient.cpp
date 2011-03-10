@@ -3,6 +3,8 @@
 namespace core {
 
 DropboxClient::DropboxClient(){
+    m_status = DropboxClient::DropboxUnkown;
+
     m_socket = new QLocalSocket(this);
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
 
@@ -59,10 +61,12 @@ bool DropboxClient::isRunning()
 
 // loop..
 void DropboxClient::getDropboxStatus(){
+    // похоже это была не ошибка а упавший инет
+    //    if(m_status!=DropboxClient::DropboxStopped)
     if (isRunning())
         sendCommand("get_dropbox_status");
     else
-        emit messageProcessed("Dropbox isn't running");
+        emit updateStatus(DropboxClient::DropboxStopped, "Dropbox isn't running");
 }
 
 
@@ -99,7 +103,37 @@ void DropboxClient::readMsg()
             else if (list.length()>1 && list[0].trimmed()=="status")
                 message = list[1];
 
-            emit messageProcessed(message);
+            if (message.contains("connecting") && m_status!= DropboxClient::DropboxBussy){
+                m_status=DropboxClient::DropboxBussy;
+            }
+            else if (message.contains("Idle") && m_status!= DropboxClient::DropboxIdle)
+            {
+                m_status=DropboxClient::DropboxIdle;
+            }
+            else if (message.contains("Up")  && m_status!= DropboxClient::DropboxUploading){
+                m_status=DropboxClient::DropboxUploading;
+            }
+            else if (message.contains("Downloading") && m_status!= DropboxClient::DropboxDownloading) {
+                m_status=DropboxClient::DropboxDownloading;
+            }
+            else if (message.contains("Saving")  && m_status!= DropboxClient::DropboxSaving) {
+                m_status=DropboxClient::DropboxSaving;
+            }
+            else if (message.contains("Indexing")  && m_status!= DropboxClient::DropboxIndexing) {
+                m_status=DropboxClient::DropboxIndexing;
+            }
+            else if(message.contains("isn't") && m_status!= DropboxClient::DropboxStopped) {
+                m_status=DropboxClient::DropboxStopped;
+            }
+            else if(message.contains("couldn't") && m_status!= DropboxClient::DropboxDisconnected){
+                m_status=DropboxClient::DropboxDisconnected;
+            }
+            else if(message.contains("dopped") && m_status!= DropboxClient::DropboxError){
+                m_status=DropboxClient::DropboxError;
+            }
+
+            emit updateStatus(m_status, message);
+
         }
     }
 }
@@ -120,6 +154,7 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
         //        Notification::send(tr("The connection was refused by the peer.\nMake sure the Dropbox daemon is running, and check that the settings are correct."));
         break;
     case QLocalSocket::PeerClosedError:
+        //! @todo emit updateStatus(DropboxClient::DropboxStopped, "Dropbox isn't running");
         Notification::send(tr("Dropbox daemon stoped"));
         break;
     default:

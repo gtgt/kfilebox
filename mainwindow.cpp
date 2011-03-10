@@ -11,11 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if(!DropboxClient::isInstalled()) {
 
+        //! @todo   remove new
+        //! @todo add wait for
         InstallerForm* di = new InstallerForm(this);
         di->downloadDaemon();
 
-        //        installer::Daemoninstaller di; // = new installer::Daemoninstaller();
-        //        di.downloadDaemon();
         // waiting for installed
         qDebug() << "too asyncronous";
 
@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(trayIcon, SIGNAL(prefsWindowActionTrigered()), this, SLOT(show()));
     connect(trayIcon, SIGNAL(startDropbox()), dc, SLOT(start()));
     connect(trayIcon, SIGNAL(stopDropbox()), dc, SLOT(stop()));
-    connect(dc, SIGNAL(messageProcessed(QString)), trayIcon, SLOT(updateTrayIcon(QString)));
+    connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), trayIcon, SLOT(updateStatus(DropboxClient::DropboxStatus,QString)));
 
     connect(ui->downloadDontLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
     connect(ui->downloadLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
