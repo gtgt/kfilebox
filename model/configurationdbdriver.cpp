@@ -42,6 +42,9 @@ ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
 
 ConfigurationDBDriver::~ConfigurationDBDriver()
 {
+    if(dbVersion != CONFIG_DB)
+        return;
+
     QString connectionName = db->connectionName();
     db->close();
     delete db;
