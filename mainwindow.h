@@ -10,7 +10,7 @@
 #include <QDebug>
 
 #include "model/Configuration.h"
-#include "installer/Daemoninstaller.h"
+#include "installer/installerform.h"
 #include "core/DropboxClient.h"
 #include "core/trayicon.h"
 

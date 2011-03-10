@@ -175,6 +175,7 @@ void TrayIcon::updateTrayIcon(const QString &result)
         trayIcon->setToolTipSubTitle(result);
     }
     else if (result.contains("Up")  && dStatus!= TrayIcon::DropboxUploading){
+
         if (result.compare(currentMessage)!=0){
 
             trayIcon->setIconByPixmap(bussyIcon);
@@ -217,7 +218,9 @@ void TrayIcon::updateTrayIcon(const QString &result)
 
 }
 
-
+//! @bug recent files from shared folders
+//! in db '/gp/lacrimoza.gp5'
+//! absolute path is '~/Dropbox/shared-folder/' + that file
 void TrayIcon::prepareLastChangedFiles(){
 
     foreach (QAction *a, chFiles->actions()){

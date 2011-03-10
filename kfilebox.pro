@@ -11,7 +11,6 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     model/Configuration.cpp \
     core/DropboxClient.cpp \
-    installer/Daemoninstaller.cpp \
     installer/installerform.cpp \
     core/trayicon.cpp \
     core/notification.cpp \
@@ -19,7 +18,6 @@ SOURCES += main.cpp \
 HEADERS += mainwindow.h \
     model/Configuration.h \
     core/DropboxClient.h \
-    installer/Daemoninstaller.h \
     installer/installerform.h \
     core/trayicon.h \
     core/notification.h \

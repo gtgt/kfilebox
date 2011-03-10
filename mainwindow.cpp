@@ -3,10 +3,6 @@
 
 //! @todo add support of DBus?
 
-
-//! сначала создаем DropBox клиента
-//! если надо дропбокс говорит нам, что надо запускать инсталятор
-//! если всё в порядке, создаем гуи
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -14,12 +10,16 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     if(!DropboxClient::isInstalled()) {
-        installer::Daemoninstaller di; // = new installer::Daemoninstaller();
-        di.downloadDaemon();
-        // waiting for installed
-        qDebug() << "to asyncronous";
 
-    } else {
+        InstallerForm* di = new InstallerForm(this);
+        di->downloadDaemon();
+
+        //        installer::Daemoninstaller di; // = new installer::Daemoninstaller();
+        //        di.downloadDaemon();
+        // waiting for installed
+        qDebug() << "too asyncronous";
+
+    }
 
     dc = new DropboxClient();
 
@@ -58,7 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
     if(ui->startDaemon->isChecked() && !dc->isRunning())
         dc->start();
 }
-}
+
 
 MainWindow::~MainWindow()
 {
@@ -198,7 +198,7 @@ void MainWindow::loadSettings()
         ui->cbIconSet->setCurrentIndex(ui->cbIconSet->findText("default",Qt::MatchCaseSensitive));
     setIcons();
 
-    ui->displayVersion->setText("Dropbox v1.0.20"); // I'll find you :)
+    ui->displayVersion->setText("Dropbox v1.0.20"); // cat ~/.dropbox-dist/VERSION
     ui->displayAccount->setText(conf.getValue("email").toString());
     ui->useP2P->setChecked(conf.getValue("p2p_enabled").toBool());
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
