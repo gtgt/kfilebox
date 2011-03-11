@@ -22,10 +22,12 @@ public:
 
     DropboxClient();
     ~DropboxClient();
-    void sendCommand(QString command);
-    bool isRunning();
+//    void sendCommand(QString command);
+    QString sendCommand(const QString &command);
 
-    //! This functions not strongly related to client..
+    bool isRunning(); // Удалить: >> дай статус << ошибка - значит не запущен :: профит: меньше кода
+
+    //! This functions not strongly related to this class..
     void static hideGtkUi();
     void static showGtkUi();
     bool static isInstalled();
@@ -42,7 +44,7 @@ public slots:
     void stop();
 
 private slots:
-    void readMsg();
+//    void readMsg();
     void displayError(QLocalSocket::LocalSocketError socketError);
     void getDropboxStatus();
 
