@@ -13,9 +13,23 @@ TrayIcon::TrayIcon()
 }
 
 TrayIcon::~TrayIcon()
-{
-    //! @todo delete all elements
-    delete sm;
+{    
+    delete openDir;
+    delete openDropboxWebsite;
+    delete openGetMoreSpace;
+    delete openPrefs;
+    delete openHelpCenter;
+    delete openTour;
+    delete openForums;
+    delete startAction;
+    delete stopAction;
+//    delete quitAction;
+
+//    delete trayIcon;
+//    delete trayIconMenu;
+//    delete chFiles;
+
+    delete  sm;
 }
 
 void TrayIcon::createActions()
@@ -176,6 +190,8 @@ void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QStrin
         break;
     case DropboxClient::DropboxError:
         trayIcon->setIconByPixmap(errorIcon);
+        break;
+    case DropboxClient::DropboxUnkown:
         break;
     }
 }

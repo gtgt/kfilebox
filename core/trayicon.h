@@ -2,13 +2,11 @@
 #define TRAYICON_H
 
 #include <QAction>
+#include <QDesktopServices>
 #include <QObject>
 #include <QProcess>
 #include <QSignalMapper>
-
-#include <QDesktopServices>
 #include <QUrl>
-
 
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>

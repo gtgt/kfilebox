@@ -27,22 +27,18 @@ DropboxClient::~DropboxClient()
     timer = 0;
 }
 
-/**
-  * change algorithm to
-  * if(currentStatus == "stoped" && newStatus == "running") { emit TrayIcon.ChangeState(Running); }
-  * and hardcode it in trayIcon .. :(
-  */
 void DropboxClient::start()
 {
+    m_status=DropboxClient::DropboxUnkown;
     QProcess::startDetached(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
     m_socket->connectToServer(m_socketPath);
     m_socket->waitForConnected(5000);
     connect(m_socket, SIGNAL(readyRead()), this, SLOT(readMsg()));
-
 }
 
 void DropboxClient::stop()
 {
+    m_status = DropboxClient::DropboxStopped; // is it nessesary?
     sendCommand("tray_action_hard_exit");
 }
 
@@ -61,24 +57,23 @@ bool DropboxClient::isRunning()
 
 // loop..
 void DropboxClient::getDropboxStatus(){
-    // похоже это была не ошибка а упавший инет
-    //    if(m_status!=DropboxClient::DropboxStopped)
-    if (isRunning())
+    //    if (isRunning())
+    if(m_status!=DropboxClient::DropboxStopped)
         sendCommand("get_dropbox_status");
-    else
+    else {
         emit updateStatus(DropboxClient::DropboxStopped, "Dropbox isn't running");
+
+    }
+
 }
 
 
 void DropboxClient::sendCommand(QString command)
 {
-    int waitTime = 100;
-
     if(!m_socket->isOpen())
     {
-        //        qDebug() << "DropboxClient::sendCommand()";
         m_socket->connectToServer(m_socketPath);
-        if(!m_socket->waitForConnected(waitTime))
+        if(!m_socket->waitForConnected(100))
             return;
     }
 
@@ -95,8 +90,7 @@ void DropboxClient::readMsg()
     QString msg = m_socket->readAll();
     QString message = "?";
     foreach (QString elem, msg.split("\n")) {
-        if(elem.length()>0 && elem!="ok" && elem !="done")
-        {
+        if(elem.length()>0 && elem!="ok" && elem !="done") {
             QStringList list = elem.split("\t");
             if (list.length()==1 && list[0].trimmed()=="status")
                 message = "Idle";
@@ -154,7 +148,8 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
         //        Notification::send(tr("The connection was refused by the peer.\nMake sure the Dropbox daemon is running, and check that the settings are correct."));
         break;
     case QLocalSocket::PeerClosedError:
-        //! @todo emit updateStatus(DropboxClient::DropboxStopped, "Dropbox isn't running");
+        m_status = DropboxClient::DropboxStopped;
+        emit updateStatus(DropboxClient::DropboxStopped, "Dropbox isn't running");
         Notification::send(tr("Dropbox daemon stoped"));
         break;
     default:

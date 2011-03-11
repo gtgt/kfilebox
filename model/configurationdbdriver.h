@@ -1,14 +1,14 @@
 #ifndef CONFIGURATIONDBDRIVER_H
 #define CONFIGURATIONDBDRIVER_H
 
-#include <QObject>
-#include <QDir>
 #include <QDebug>
+#include <QDir>
 #include <QFile>
-#include <QString>
+#include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlRecord>
+#include <QString>
 #include <QVariant>
 
 // Different ways to get list of recently changed files
@@ -27,7 +27,6 @@ public:
     QStringList listKeys();
     bool hasKey(const QString &key);
     QVariant getValue(const QString &key);
-    //! If save to db would failed change to [setValue(QString, QString), setValue(QString, bool)] Or use template? But we can't do this for getValue - leave it as is
     void setValue(const QString &key, const QVariant &value);
     void deleteValue(const QString &key);
 

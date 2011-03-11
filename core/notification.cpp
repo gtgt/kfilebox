@@ -6,12 +6,13 @@
 
 Notification::Notification()
 {
-   //notificator->setPixmap(QIcon(":/img/kfilebox.png").pixmap(48,48));
+    //notificator->setPixmap(QIcon(":/img/kfilebox.png").pixmap(48,48));
 }
 
-void Notification::send(QString msg)
+void Notification::send(const QString &message)
 {
-    system(QString("notify-send KFileBox '"+msg+"'").toStdString().c_str());
+    QProcess::startDetached("notify-send KFileBox '"+message+"'");
+
     /*if (conf->getValue("ShowNotifications").toBool()==true){
         notificator= new KNotification("notify",KNotification::Persistent);
         notificator->setTitle("Kfilebox");
