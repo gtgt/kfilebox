@@ -1,17 +1,22 @@
 #include "notification.h"
-#include <QIcon>
-#include <QPixmap>
-
-#include <QDebug>
 
 Notification::Notification()
 {
-    //notificator->setPixmap(QIcon(":/img/kfilebox.png").pixmap(48,48));
+    notification = new KStatusNotifierItem("Kfilebox");
+
 }
+
+Notification::~Notification()
+{
+    delete notification;
+}
+
 
 void Notification::send(const QString &message)
 {
-    QProcess::startDetached("notify-send KFileBox '"+message+"'");
+    qDebug() << message;
+
+    notification->showMessage("Kfilebox", message, "Kfilebox");
 
     /*if (conf->getValue("ShowNotifications").toBool()==true){
         notificator= new KNotification("notify",KNotification::Persistent);

@@ -1,20 +1,24 @@
 #ifndef NOTIFICATION_H
 #define NOTIFICATION_H
 
+#include <QDebug>
+#include <QIcon>
 #include <QObject>
-#include <QProcess>
+#include <QPixmap>
 
 //#include "knotification.h"
-
+#include "kstatusnotifieritem.h"
 
 class Notification : public QObject
 {
 public:
     Notification();
-    static void send(const QString &message);
-
+    ~Notification();
+    void send(const QString &message);
 private:
-//    KNotification *notificator;
+
+    KStatusNotifierItem* notification;
+
 };
 
 #endif // NOTIFICATION_H
