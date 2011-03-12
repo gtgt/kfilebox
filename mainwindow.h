@@ -40,6 +40,7 @@ private:
     Ui::MainWindow* ui;
     TrayIcon* trayIcon;
     DropboxClient* dc;
+    DropboxClientAdaptor* adaptor;
 
 private slots:
     void applySettings();

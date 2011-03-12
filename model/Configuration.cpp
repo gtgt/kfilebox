@@ -26,12 +26,13 @@ Configuration::~Configuration()
 
 void Configuration::initConfigurationFile()
 {
-    generalGroup->writeEntry("Browser","rekonq");
-    generalGroup->writeEntry("FileManager","dolphin");
-    generalGroup->writeEntry("IconSet","default");
-    generalGroup->writeEntry("ShowNotifications",true);
-    generalGroup->writeEntry("AutoStart",true);
-    generalGroup->writeEntry("StartDaemon",true);
+    generalGroup->writeEntry("Browser", "rekonq");
+    generalGroup->writeEntry("FileManager", "dolphin");
+    generalGroup->writeEntry("IconSet", "default");
+    generalGroup->writeEntry("ShowNotifications", true);
+    generalGroup->writeEntry("AutoStart", true);
+    generalGroup->writeEntry("StartDaemon", true);
+    generalGroup->writeEntry("GtkUiDisabled", true);
 
     //! @todo add more pairs
 

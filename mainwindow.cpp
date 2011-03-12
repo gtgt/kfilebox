@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-//! @todo add support of DBus?
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -21,8 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     dc = new DropboxClient();
-
-
     trayIcon= new TrayIcon();
 
     connect(ui->saveSettings, SIGNAL(clicked()), this, SLOT(saveSettings()));
@@ -60,29 +56,12 @@ MainWindow::MainWindow(QWidget *parent) :
     initializeDBus();
 }
 
-void MainWindow::initializeDBus()
-{
-    DropboxClientAdaptor* adaptor = new DropboxClientAdaptor(dc);
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerObject("/Kfilebox", dc);
-    connection.registerService("org.kde.Kfilebox");
-
-    connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), adaptor, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)));
-}
-
-
 MainWindow::~MainWindow()
 {
     delete trayIcon;
+    delete adaptor;
     delete dc;
     delete ui;
-}
-
-void MainWindow::setIcons(){
-    ui->lblBusyIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_updating.png"));
-    ui->lblDisconIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox.png"));
-    ui->lblIdleIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_idle.png"));
-    ui->lblStopIcons->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_error.png"));
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -97,6 +76,24 @@ void MainWindow::changeEvent(QEvent *e)
     }
 }
 
+void MainWindow::initializeDBus()
+{
+    adaptor = new DropboxClientAdaptor(dc);
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.registerObject("/Kfilebox", dc);
+    connection.registerService("org.kde.Kfilebox");
+
+    connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), adaptor, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)));
+    //! @todo a lot of work:)
+}
+
+void MainWindow::setIcons(){
+    ui->lblBusyIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_updating.png"));
+    ui->lblDisconIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox.png"));
+    ui->lblIdleIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_idle.png"));
+    ui->lblStopIcons->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_error.png"));
+}
+
 void MainWindow::changeDropboxFolder()
 {
     QString dir = QFileDialog::getExistingDirectory(this,tr("Dropbox folder"), ui->dropboxFolder->text(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
@@ -107,7 +104,7 @@ void MainWindow::changeDropboxFolder()
 
 void MainWindow::unlinkComputer()
 {
-    //! @todo comming soon
+    //! @todo just delete key host_id?
 }
 
 void MainWindow::downloadRadioToggle()
@@ -178,9 +175,40 @@ void MainWindow::applySettings()
             dc->showGtkUi();
         }
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
+        conf.setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt());
 
-        //! QVariant(true).toInt() due to format of sqlite3 db
-        //        conf.setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt());
+        // Network
+        conf.setValue("throttle_download_style", QVariant(ui->downloadLimitRate->isChecked()).toInt());
+        conf.setValue("throttle_download_speed", ui->downloadLimitValue->value());
+
+        int _swap = 0;
+
+        if(ui->uploadAutoLimitRate->isChecked()) {
+            _swap = 1;
+        } else if (ui->uploadLimitRate->isChecked()) {
+            _swap = 2;
+        }
+        conf.setValue("throttle_upload_style", _swap);
+        conf.setValue("throttle_upload_speed", ui->uploadLimitValue->value());
+
+        _swap = 0;
+        if(ui->proxyAutoDetect->isChecked()) {
+            _swap = 1;
+        } else if (ui->proxySetManually->isChecked()) {
+            _swap = 2;
+
+            QStringList proxyType;
+            proxyType.push_back("HTTP");
+            proxyType.push_back("SOCKS4");
+            proxyType.push_back("SOCKS5");
+
+            conf.setValue("proxy_type", proxyType.value(ui->proxyType->currentIndex()));
+            conf.setValue("proxy_server", ui->proxyServer->text());
+            conf.setValue("proxy_port", ui->proxyPort->value());
+            conf.setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
+            conf.setValue("proxy_username", ui->proxyUsername->text());
+        }
+        conf.setValue("proxy_mode", _swap);
     }
 
     dc->start();
@@ -209,13 +237,15 @@ void MainWindow::loadSettings()
         ui->cbIconSet->setCurrentIndex(ui->cbIconSet->findText("default",Qt::MatchCaseSensitive));
     setIcons();
 
-    ui->displayVersion->setText("Dropbox v1.0.20"); // cat ~/.dropbox-dist/VERSION
+    ui->displayVersion->setText("Dropbox v" + dc->getVersion());
     ui->displayAccount->setText(conf.getValue("email").toString());
     ui->useP2P->setChecked(conf.getValue("p2p_enabled").toBool());
+    ui->useP2P->setEnabled(conf.hasKey("p2p_enabled"));
+    //! @todo Configuration can't know where to save this key (in dropbox db or in self conf file). On first start in dbthis value is missing..
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
 
     // Network
-    // (0: false, 1: auto, ?: true)
+    // (0: false, 1: auto, 2: true)
     int _swap = conf.getValue("throttle_download_style").toInt();
     ui->downloadDontLimitRate->setChecked(_swap == 0);
     ui->downloadLimitRate->setChecked(_swap == 1);
@@ -225,14 +255,14 @@ void MainWindow::loadSettings()
     _swap = conf.getValue("throttle_upload_style").toInt();
     ui->uploadAutoLimitRate->setChecked(_swap == 1);
     ui->uploadDontLimitRate->setChecked(_swap == 0);
-    ui->uploadLimitRate->setChecked(_swap == 13);
+    ui->uploadLimitRate->setChecked(_swap == 2);
     ui->uploadLimitValue->setValue(conf.getValue("throttle_upload_speed").toInt());
     ui->uploadLimitValue->setEnabled(ui->uploadLimitRate->isChecked());
 
     _swap = conf.getValue("proxy_mode").toInt();
     ui->proxyAutoDetect->setChecked(_swap == 1);
     ui->proxyDontUse->setChecked(_swap == 0);
-    ui->proxySetManually->setChecked(_swap == 13);
+    ui->proxySetManually->setChecked(_swap == 2);
     ui->proxyType->setCurrentIndex(ui->proxyType->findText(conf.getValue("proxy_type").toString()));
     ui->proxyType->setEnabled(ui->proxySetManually->isChecked());
     ui->proxyServer->setText(conf.getValue("proxy_server").toString());

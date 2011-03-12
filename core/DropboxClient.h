@@ -29,6 +29,7 @@ public:
     void static hideGtkUi();
     void static showGtkUi();
     bool static isInstalled();
+    QString static getVersion();
 
 private:
     QLocalSocket* m_socket;

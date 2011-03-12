@@ -37,7 +37,6 @@ void DropboxClient::start()
 void DropboxClient::stop()
 {
     m_timer->stop();
-//    m_status = DropboxClient::DropboxStopped; // is it nessesary?
     sendCommand("tray_action_hard_exit");
 }
 
@@ -199,6 +198,19 @@ void DropboxClient::showGtkUi()
         QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_.so"));
     else
         qDebug() << "ShowGtkUi: Failed to move /.dropbox-dist/wx._controls_orig.so";
+}
+
+QString DropboxClient::getVersion()
+{
+    QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/VERSION")));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return QString();
+
+    QString contents = "" ;
+    QTextStream in(&file);
+    in >> contents;
+
+    return contents;
 }
 
 } /* End of namespace core */
