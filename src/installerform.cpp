@@ -6,7 +6,6 @@ InstallerForm::InstallerForm(QWidget *parent) :
     ui(new Ui::InstallerForm)
 {
     ui->setupUi(this);
-
     //! @todo download to temp file name
     downloadPath=QDir::toNativeSeparators(QDir::homePath().append("/daemon.tar.gz"));
 
@@ -35,7 +34,6 @@ void InstallerForm::changeEvent(QEvent *e)
         break;
     }
 }
-
 
 void InstallerForm::downloadDaemon()
 {

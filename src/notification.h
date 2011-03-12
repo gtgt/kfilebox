@@ -13,14 +13,20 @@
 
 class Notification : public QObject
 {
+    Q_OBJECT
 #ifdef USE_KSTATUSNOTIFIERITEM
     KStatusNotifierItem* notification;
 #endif
 
 public:
-    Notification();
+    explicit Notification(QObject *parent = 0);
     ~Notification();
     void send(const QString &message);
+
+signals:
+
+public slots:
+
 };
 
 #endif // NOTIFICATION_H

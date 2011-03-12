@@ -1,8 +1,7 @@
-#include "DropboxClient.h"
+#include "dropboxclient.h"
 
-namespace core {
-
-DropboxClient::DropboxClient()
+DropboxClient::DropboxClient(QObject *parent) :
+    QObject(parent)
 {
     m_status = DropboxClient::DropboxUnkown;
 
@@ -212,5 +211,3 @@ QString DropboxClient::getVersion()
 
     return contents;
 }
-
-} /* End of namespace core */

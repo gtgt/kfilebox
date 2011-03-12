@@ -8,26 +8,28 @@ LIBS += -lkdeui
 TARGET = bin/kfilebox
 TEMPLATE = app
 SOURCES += main.cpp \
-    mainwindow.cpp \
-    model/Configuration.cpp \
-    core/DropboxClient.cpp \
-    installer/installerform.cpp \
-    core/trayicon.cpp \
-    core/notification.cpp \
-    model/configurationdbdriver.cpp \
-    dropboxclientadaptor.cpp
-HEADERS += mainwindow.h \
-    model/Configuration.h \
-    core/DropboxClient.h \
-    installer/installerform.h \
-    core/trayicon.h \
-    core/notification.h \
-    model/configurationdbdriver.h \
-    dropboxclientadaptor.h
+    src/dropboxclient.cpp \
+    src/dropboxclientadaptor.cpp \
+    src/notification.cpp \
+    src/trayicon.cpp \
+    src/configuration.cpp \
+    src/configurationdbdriver.cpp \
+    src/installerform.cpp \
+    src/mainwindow.cpp
+HEADERS += \
+    src/dropboxclient.h \
+    src/dropboxclientadaptor.h \
+    src/notification.h \
+    src/trayicon.h \
+    src/configuration.h \
+    src/configurationdbdriver.h \
+    src/installerform.h \
+    src/mainwindow.h
 RESOURCES += DropboxIcons.qrc
 
-FORMS += mainwindow.ui \
-    installer/installerform.ui
+FORMS += \
+    src/installerform.ui \
+    src/mainwindow.ui
 
 TRANSLIST = ar\
     br \
@@ -49,8 +51,7 @@ TRANSLIST = ar\
     zh
 
 for(language, TRANSLIST):TRANSLATIONS += locale/$${language}/kfilebox.po
-FORMS += mainwindow.ui \
-    installer/installerform.ui
+FORMS +=
 !isEmpty(TRANSLATIONS) {
     isEmpty(QMAKE_LRELEASE) {
         win32:QMAKE_LRELEASE = msgfmt.exe

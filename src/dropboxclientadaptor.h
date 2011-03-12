@@ -4,7 +4,7 @@
 #include <QtCore/QObject>
 #include <QtDBus/QtDBus>
 
-#include "core/DropboxClient.h" //! for DropboxClient::DropboxStatus
+#include "src/dropboxclient.h" //! for DropboxClient::DropboxStatus
 
 QT_BEGIN_NAMESPACE
 class QByteArray;
@@ -14,8 +14,6 @@ class QString;
 class QStringList;
 class QVariant;
 QT_END_NAMESPACE
-
-using core::DropboxClient;
 
 class DropboxClientAdaptor: public QDBusAbstractAdaptor
 {

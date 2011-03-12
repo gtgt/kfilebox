@@ -14,7 +14,7 @@
    <string>Dropbox Preferences</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="DropboxIcons.qrc">
+   <iconset resource="../DropboxIcons.qrc">
     <normaloff>:/icons/img/kfilebox.png</normaloff>:/icons/img/kfilebox.png</iconset>
   </property>
   <property name="styleSheet">
@@ -695,7 +695,7 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources>
-  <include location="DropboxIcons.qrc"/>
+  <include location="../DropboxIcons.qrc"/>
  </resources>
  <connections/>
  <slots>

@@ -15,18 +15,15 @@ namespace Ui {
 class InstallerForm;
 }
 
-class InstallerForm : public QDialog {
+class InstallerForm : public QDialog
+{
     Q_OBJECT
-public:
-    InstallerForm(QWidget *parent = 0);
-    ~InstallerForm();
-
-protected:
-    void changeEvent(QEvent *e);
-
 private:
     Ui::InstallerForm *ui;
 
+public:
+    explicit InstallerForm(QWidget *parent = 0);
+    ~InstallerForm();
 
 public slots:
     void downloadDaemon();
@@ -37,7 +34,11 @@ public slots:
     void downloadReadyRead();
     void displayError(QNetworkReply::NetworkError);
 
+protected:
+    void changeEvent(QEvent *e);
+
 private:
+
     QString daemonUrl;
     QString downloadPath;
 

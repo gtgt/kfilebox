@@ -3,26 +3,25 @@
 
 #include <QAction>
 #include <QDesktopServices>
-#include <QObject>
 #include <QProcess>
 #include <QSignalMapper>
 #include <QUrl>
+#include <QWidget>
 
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
 #include "kicon.h"
 
 //#include "core/notification.h"
-#include "core/DropboxClient.h" // for enum DropboxClient
-#include "model/Configuration.h"
+#include "src/dropboxclient.h" // for enum DropboxClient
+#include "src/configuration.h"
 
-namespace core {
 
 class TrayIcon : public QWidget
 {
     Q_OBJECT
 public:
-    TrayIcon();
+    explicit TrayIcon(QWidget *parent = 0);
     ~TrayIcon();
     void loadIcons(const QString &iconset);
 
@@ -71,6 +70,7 @@ signals:
     void prefsWindowActionTrigered();
     void startDropbox();
     void stopDropbox();
+
 };
-} /* End of namespace core */
+
 #endif // TRAYICON_H

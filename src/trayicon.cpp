@@ -1,19 +1,18 @@
 #include "trayicon.h"
 
-namespace core {
-
-TrayIcon::TrayIcon()
+TrayIcon::TrayIcon(QWidget *parent) :
+    QWidget(parent)
 {
     trayIcon = new KStatusNotifierItem();
 
-    sm= new QSignalMapper(this);
+    sm = new QSignalMapper(this);
 
     createActions();
     createTrayIcon();
 }
 
 TrayIcon::~TrayIcon()
-{    
+{
     delete openDir;
     delete openDropboxWebsite;
     delete openGetMoreSpace;
@@ -243,5 +242,3 @@ void TrayIcon::prepareLastChangedFiles(){
     }
     connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
 }
-
-} /* End of namespace core */

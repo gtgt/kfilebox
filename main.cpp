@@ -1,6 +1,5 @@
 //#include <QtGui/QApplication>
 #include <QtGui>
-#include "mainwindow.h"
 #include "kapplication.h"
 #include "kuniqueapplication.h"
 #include "kaboutdata.h"
@@ -9,6 +8,7 @@
 #include "klocalizedstring.h"
 #include "kconfig.h"
 
+#include "src/mainwindow.h"
 
 int main(int argc, char *argv[])
 {

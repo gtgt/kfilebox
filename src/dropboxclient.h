@@ -1,8 +1,9 @@
-#ifndef core_DropboxClient_h
-#define core_DropboxClient_h
+#ifndef DROPBOXCLIENT_H
+#define DROPBOXCLIENT_H
 
 #include <QDir>
 #include <QLocalSocket>
+#include <QObject>
 #include <QProcess>
 #include <QString>
 #include <QTextStream>
@@ -10,16 +11,14 @@
 
 #include "notification.h"
 
-namespace core {
-
-class DropboxClient: public QObject {
+class DropboxClient : public QObject
+{
     Q_OBJECT
 public:
-
     enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
                         DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
 
-    DropboxClient();
+    explicit DropboxClient(QObject *parent = 0);
     ~DropboxClient();
     QString sendCommand(const QString &command);
 
@@ -55,6 +54,4 @@ signals:
 
 };
 
-} /* End of namespace core */
-
-#endif // core_DropboxClient_h
+#endif //DROPBOXCLIENT_H

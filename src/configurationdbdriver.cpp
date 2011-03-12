@@ -1,7 +1,5 @@
 #include "configurationdbdriver.h"
 
-#include <QSqlError>
-
 //! @todo play with old dropbox if need
 ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     QObject(parent)

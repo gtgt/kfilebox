@@ -6,6 +6,7 @@
 #include <QFile>
 #include <QObject>
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQuery>
 #include <QSqlRecord>
 #include <QString>
@@ -34,9 +35,6 @@ private:
     enum DROPBOX_DB_VERSION {DROPBOX_DB, CONFIG_DB, UNKNOWN} dbVersion;
     QString dbFilename;
     QSqlDatabase* db;
-signals:
-
-public slots:
 
 };
 
