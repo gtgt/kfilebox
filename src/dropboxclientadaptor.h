@@ -1,8 +1,15 @@
 #ifndef DROPBOXCLIENTADAPTOR_H
 #define DROPBOXCLIENTADAPTOR_H
 
-#include <QtCore/QObject>
-#include <QtDBus/QtDBus>
+#include <QByteArray>
+#include <QList>
+#include <QMap>
+#include <QMetaObject>
+#include <QObject>
+#include <QString>
+#include <QStringList>
+#include <QtDBus>
+#include <QVariant>
 
 #include "src/dropboxclient.h" //! for DropboxClient::DropboxStatus
 
@@ -20,12 +27,12 @@ class DropboxClientAdaptor: public QDBusAbstractAdaptor
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.kde.Kfilebox")
     Q_CLASSINFO("D-Bus Introspection", ""
-"  <interface name=\"org.kde.Kfilebox\">\n"
-"    <method name=\"start\"/>\n"
-"    <method name=\"stop\"/>\n"
-"    <signal name=\"updateStatus\"/>\n"
-"  </interface>\n"
-        "")
+                "  <interface name=\"org.kde.Kfilebox\">\n"
+                "    <method name=\"start\"/>\n"
+                "    <method name=\"stop\"/>\n"
+                "    <signal name=\"updateStatus\"/>\n"
+                "  </interface>\n"
+                "")
 public:
     DropboxClientAdaptor(QObject *parent);
     virtual ~DropboxClientAdaptor();

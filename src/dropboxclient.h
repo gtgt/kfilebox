@@ -6,7 +6,6 @@
 #include <QObject>
 #include <QProcess>
 #include <QString>
-#include <QTextStream>
 #include <QTimer>
 
 #include "notification.h"

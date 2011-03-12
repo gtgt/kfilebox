@@ -1,11 +1,3 @@
-#include <QtCore/QMetaObject>
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
-#include <QtCore/QMap>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
-
 #include "dropboxclientadaptor.h"
 
 DropboxClientAdaptor::DropboxClientAdaptor(QObject *parent)

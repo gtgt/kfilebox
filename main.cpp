@@ -1,5 +1,4 @@
 //#include <QtGui/QApplication>
-#include <QtGui>
 #include "kapplication.h"
 #include "kuniqueapplication.h"
 #include "kaboutdata.h"

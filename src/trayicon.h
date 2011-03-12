@@ -3,7 +3,6 @@
 
 #include <QAction>
 #include <QDesktopServices>
-#include <QProcess>
 #include <QSignalMapper>
 #include <QUrl>
 #include <QWidget>
@@ -12,7 +11,7 @@
 #include <kmenu.h>
 #include "kicon.h"
 
-//#include "core/notification.h"
+//#include "src/notification.h"
 #include "src/dropboxclient.h" // for enum DropboxClient
 #include "src/configuration.h"
 
