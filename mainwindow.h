@@ -9,15 +9,19 @@
 #include <QFile>
 #include <QDebug>
 
+#include <QtDBus/QDBusConnection>
+
 #include "model/Configuration.h"
 #include "installer/installerform.h"
 #include "core/DropboxClient.h"
 #include "core/trayicon.h"
 
+#include "dropboxclientadaptor.h"
+
 using namespace core;
 
 namespace Ui {
-    class MainWindow;
+class MainWindow;
 }
 
 class MainWindow : public QMainWindow {
@@ -31,6 +35,7 @@ protected:
 
 private:
     void loadSettings();
+    void initializeDBus();
 
     Ui::MainWindow* ui;
     TrayIcon* trayIcon;

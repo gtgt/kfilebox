@@ -42,6 +42,8 @@ private:
 public slots:
     void start();
     void stop();
+    //! DropboxClient::DropboxStatus getStatus();
+    //! QString getStatusMessage();
 
 private slots:
     void displayError(QLocalSocket::LocalSocketError socketError);

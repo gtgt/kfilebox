@@ -14,14 +14,16 @@ SOURCES += main.cpp \
     installer/installerform.cpp \
     core/trayicon.cpp \
     core/notification.cpp \
-    model/configurationdbdriver.cpp
+    model/configurationdbdriver.cpp \
+    dropboxclientadaptor.cpp
 HEADERS += mainwindow.h \
     model/Configuration.h \
     core/DropboxClient.h \
     installer/installerform.h \
     core/trayicon.h \
     core/notification.h \
-    model/configurationdbdriver.h
+    model/configurationdbdriver.h \
+    dropboxclientadaptor.h
 RESOURCES += DropboxIcons.qrc
 
 FORMS += mainwindow.ui \

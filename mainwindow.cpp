@@ -11,8 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if(!DropboxClient::isInstalled()) {
 
-        //! @todo   remove new
-        //! @todo add wait for
+        //! @todo lock MainWindow?
         InstallerForm* di = new InstallerForm(this);
         di->downloadDaemon();
 
@@ -57,6 +56,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     if(ui->startDaemon->isChecked())
         dc->start();
+
+    initializeDBus();
+}
+
+void MainWindow::initializeDBus()
+{
+    DropboxClientAdaptor* adaptor = new DropboxClientAdaptor(dc);
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.registerObject("/Kfilebox", dc);
+    connection.registerService("org.kde.Kfilebox");
+
+    connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), adaptor, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)));
 }
 
 

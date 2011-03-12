@@ -9,8 +9,6 @@ DropboxClient::DropboxClient()
     m_socket = new QLocalSocket(this);
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
 
-    //    if(isRunning())
-    //        m_socket->connectToServer(m_socketPath);
     connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),this, SLOT(displayError(QLocalSocket::LocalSocketError)));
 
     m_timer = new QTimer(this);
@@ -39,7 +37,7 @@ void DropboxClient::start()
 void DropboxClient::stop()
 {
     m_timer->stop();
-    m_status = DropboxClient::DropboxStopped; // is it nessesary?
+//    m_status = DropboxClient::DropboxStopped; // is it nessesary?
     sendCommand("tray_action_hard_exit");
 }
 
@@ -90,15 +88,16 @@ void DropboxClient::getDropboxStatus()
     else if(message.contains("dopped") && m_status!= DropboxClient::DropboxError){
         m_status=DropboxClient::DropboxError;
     }
+     // else return
+    //  потому что остановлен, приходит новый статус остановлен - сигнал слать не нужно
+   //   тогда затычка prev_status не нужна ну и условия упростятся
 
 
-    if( (prev_status != m_status) && (prev_message != message)) {
+    if((prev_status != m_status) || (prev_message != message)) {
         prev_status = m_status;
         prev_message = message;
         emit updateStatus(m_status, message);
     }
-    //        qDebug() << m_status << message;
-
 
 }
 
@@ -112,7 +111,7 @@ QString DropboxClient::sendCommand(const QString &command)
         m_socket->connectToServer(m_socketPath);
         if(!m_socket->waitForConnected(waitTime)) {
             //            qDebug() << "hi! I am your new error tracing system:D " << m_socket->errorString();
-            m_status = DropboxClient::DropboxStopped;
+            //            m_status = DropboxClient::DropboxStopped;
             return "Dropbox isn't running";
         }
     }
@@ -195,7 +194,7 @@ void DropboxClient::hideGtkUi()
     if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_.so")).exists())
         QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"));
     else
-        qDebug() << "Failed to hide gui /.dropbox-dist/wx._controls_.so";
+        qDebug() << "HideGtkUi: Failed to move /.dropbox-dist/wx._controls_.so";
 }
 
 void DropboxClient::showGtkUi()
@@ -203,7 +202,7 @@ void DropboxClient::showGtkUi()
     if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so")).exists())
         QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_.so"));
     else
-        qDebug() << "Failed to show gui";
+        qDebug() << "ShowGtkUi: Failed to move /.dropbox-dist/wx._controls_orig.so";
 }
 
 } /* End of namespace core */
