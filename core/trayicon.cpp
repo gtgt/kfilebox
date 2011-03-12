@@ -23,11 +23,11 @@ TrayIcon::~TrayIcon()
     delete openForums;
     delete startAction;
     delete stopAction;
-//    delete quitAction;
+    //    delete quitAction;
 
-//    delete trayIcon;
-//    delete trayIconMenu;
-//    delete chFiles;
+    //    delete trayIcon;
+    //    delete trayIconMenu;
+    //    delete chFiles;
 
     delete  sm;
 }
@@ -200,6 +200,8 @@ void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QStrin
 //! in db '/gp/lacrimoza.gp5'
 //! absolute path is '~/Dropbox/shared-folder/' + that file
 void TrayIcon::prepareLastChangedFiles(){
+
+    disconnect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
 
     foreach (QAction *a, chFiles->actions()){
         chFiles->removeAction(a);
