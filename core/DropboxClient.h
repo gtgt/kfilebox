@@ -10,7 +10,6 @@
 
 #include "notification.h"
 
-
 namespace core {
 
 class DropboxClient: public QObject {
@@ -22,10 +21,9 @@ public:
 
     DropboxClient();
     ~DropboxClient();
-//    void sendCommand(QString command);
     QString sendCommand(const QString &command);
 
-    bool isRunning(); // Удалить: >> дай статус << ошибка - значит не запущен :: профит: меньше кода
+    bool isRunning();
 
     //! This functions not strongly related to this class..
     void static hideGtkUi();
@@ -35,16 +33,17 @@ public:
 private:
     QLocalSocket* m_socket;
     QString m_socketPath;
-    QTimer* timer;
+    QTimer* m_timer;
 
     DropboxStatus m_status;
+    DropboxStatus prev_status;
+    QString prev_message;
 
 public slots:
     void start();
     void stop();
 
 private slots:
-//    void readMsg();
     void displayError(QLocalSocket::LocalSocketError socketError);
     void getDropboxStatus();
 

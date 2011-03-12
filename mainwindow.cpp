@@ -55,7 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
     loadSettings();
 
 
-    if(ui->startDaemon->isChecked() && !dc->isRunning())
+    if(ui->startDaemon->isChecked())
         dc->start();
 }
 
