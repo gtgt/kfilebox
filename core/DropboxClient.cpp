@@ -60,38 +60,34 @@ void DropboxClient::getDropboxStatus()
 {
     QString message = sendCommand("get_dropbox_status");
 
-    if (message.contains("connecting") && m_status!= DropboxClient::DropboxBussy){
+    if (message.contains("connecting")){
         m_status=DropboxClient::DropboxBussy;
     }
-    else if ( message.contains("Idle") && m_status!= DropboxClient::DropboxIdle) //
+    else if ( message.contains("Idle"))
     {
         m_status=DropboxClient::DropboxIdle;
     }
-    else if (message.contains("Up")  && m_status!= DropboxClient::DropboxUploading){
+    else if (message.contains("Up")){
         m_status=DropboxClient::DropboxUploading;
     }
-    else if (message.contains("Downloading") && m_status!= DropboxClient::DropboxDownloading) {
+    else if (message.contains("Downloading")) {
         m_status=DropboxClient::DropboxDownloading;
     }
-    else if (message.contains("Saving")  && m_status!= DropboxClient::DropboxSaving) {
+    else if (message.contains("Saving")) {
         m_status=DropboxClient::DropboxSaving;
     }
-    else if (message.contains("Indexing")  && m_status!= DropboxClient::DropboxIndexing) {
+    else if (message.contains("Indexing")) {
         m_status=DropboxClient::DropboxIndexing;
     }
-    else if(message.contains("isn't") && m_status!= DropboxClient::DropboxStopped) {
+    else if(message.contains("isn't")) {
         m_status=DropboxClient::DropboxStopped;
     }
-    else if(message.contains("couldn't") && m_status!= DropboxClient::DropboxDisconnected){
+    else if(message.contains("couldn't")){
         m_status=DropboxClient::DropboxDisconnected;
     }
-    else if(message.contains("dopped") && m_status!= DropboxClient::DropboxError){
+    else if(message.contains("dopped")){
         m_status=DropboxClient::DropboxError;
     }
-     // else return
-    //  потому что остановлен, приходит новый статус остановлен - сигнал слать не нужно
-   //   тогда затычка prev_status не нужна ну и условия упростятся
-
 
     if((prev_status != m_status) || (prev_message != message)) {
         prev_status = m_status;
@@ -110,7 +106,7 @@ QString DropboxClient::sendCommand(const QString &command)
     {
         m_socket->connectToServer(m_socketPath);
         if(!m_socket->waitForConnected(waitTime)) {
-            //            qDebug() << "hi! I am your new error tracing system:D " << m_socket->errorString();
+            //            qDebug() << m_socket->errorString();
             //            m_status = DropboxClient::DropboxStopped;
             return "Dropbox isn't running";
         }
