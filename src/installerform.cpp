@@ -17,6 +17,7 @@ InstallerForm::InstallerForm(QWidget *parent) :
     else
         daemonUrl="http://www.dropbox.com/download?plat=lnx.x86";
 
+    //! called twice
     downloadDaemon();
 
 }
@@ -68,6 +69,7 @@ void InstallerForm::setProgressValue(qint64 bytesReceived, qint64 bytesTotal){
 
 void InstallerForm::processFile()
 {
+    ui->label->setText(tr("unpacking downloaded file"));
     QProcess sc;
     sc.execute("tar -xf "+downloadPath+" -C "+QDir::homePath());
     sc.waitForFinished();

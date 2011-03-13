@@ -33,6 +33,7 @@ void Configuration::initConfigurationFile()
     generalGroup->writeEntry("ShowNotifications", true);
     generalGroup->writeEntry("AutoStart", true);
     generalGroup->writeEntry("StartDaemon", true);
+    generalGroup->writeEntry("GtkUiDisabled", true);
 
     //! @todo add more pairs
 
