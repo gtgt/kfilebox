@@ -17,7 +17,6 @@ InstallerForm::InstallerForm(QWidget *parent) :
 
 InstallerForm::~InstallerForm()
 {
-    delete reply;
     delete request;
     delete manager;
     delete ui;
