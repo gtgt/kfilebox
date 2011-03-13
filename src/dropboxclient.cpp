@@ -153,7 +153,7 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
     case QLocalSocket::ServerNotFoundError:
         //! socket isn't exists > is dropbox exists? can I run installer?
         //         qt_message_output(QtWarningMsg, tr("The host was not found. Please check Dropbox daemon installation.").toLatin1());
-        notify.send(tr("The host was not found. Please check Dropbox daemon installation."));
+        //        notify.send(tr("The host was not found. Please check Dropbox daemon installation."));
         break;
     case QLocalSocket::ConnectionRefusedError:
         //! this is not an error

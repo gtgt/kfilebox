@@ -73,10 +73,6 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::initializeDBus()
 {
     adaptor = new DropboxClientAdaptor(dc);
-    QDBusConnection connection = QDBusConnection::sessionBus();
-    connection.registerObject("/Kfilebox", dc);
-    connection.registerService("org.kde.Kfilebox");
-
     connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), adaptor, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)));
     //! @todo a lot of work:)
 }
@@ -134,7 +130,6 @@ void MainWindow::saveSettings()
     hide();
 }
 
-//how to get list only of changed elements?
 void MainWindow::applySettings()
 {
     dc->stop();
@@ -235,7 +230,7 @@ void MainWindow::loadSettings()
     ui->displayAccount->setText(conf.getValue("email").toString());
     ui->useP2P->setChecked(conf.getValue("p2p_enabled").toBool());
     ui->useP2P->setEnabled(conf.hasKey("p2p_enabled"));
-    //! @todo Configuration can't know where to save this key (in dropbox db or in self conf file). On first start in dbthis value is missing..
+    //! @todo Configuration can't know where to save this key (in dropbox db or in self conf file). On first start there is no this key in config.db
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
 
     // Network

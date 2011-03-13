@@ -5,6 +5,9 @@ DropboxClientAdaptor::DropboxClientAdaptor(QObject *parent)
 {
     // I am constructor
     setAutoRelaySignals(true);
+    QDBusConnection connection = QDBusConnection::sessionBus();
+    connection.registerObject("/Kfilebox", parent);
+    connection.registerService("org.kde.Kfilebox");
 }
 
 DropboxClientAdaptor::~DropboxClientAdaptor()

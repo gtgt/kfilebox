@@ -2,19 +2,18 @@
 #define MAINWINDOW_H
 
 #include <QAction>
-#include <QDBusConnection>
 #include <QDebug>
 #include <QFile>
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMainWindow>
 
+#include "src/dropboxclient.h"
+#include "src/dropboxclientadaptor.h"
 #include "src/configuration.h"
 #include "src/installerform.h"
-#include "src/dropboxclient.h"
 #include "src/trayicon.h"
 
-#include "src/dropboxclientadaptor.h"
 
 namespace Ui {
 class MainWindow;
