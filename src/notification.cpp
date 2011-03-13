@@ -1,50 +1,40 @@
 #include "notification.h"
 
-//#include <QDebug>
-//#include <QDBusInterface>
-//#include <QDBusReply>
-//#include <QDBusError>
-
-//#include <QString>
-//#include <QVariant>
-
-
 Notification::Notification(QObject *parent) :
     QObject(parent)
 {
-#ifdef USE_KSTATUSNOTIFIERITEM
-    notification = new KStatusNotifierItem("Kfilebox");
-#endif
 }
 
 Notification::~Notification()
 {
-#ifdef USE_KSTATUSNOTIFIERITEM
-    delete notification;
-#endif
 }
 
 
 void Notification::send(const QString &message)
 {
 
-    //    QDBusInterface remoteApp("org.freedesktop.Notifications","/org/freedesktop/Notifications","org.freedesktop.Notifications.Notify",QDBusConnection::sessionBus());
-    //    if (remoteApp.isValid()){
+    // Notify(QString app_name, uint replaces_id, QString app_icon, QString summary, QString body, QStringList actions, QVariantMap hints, int timeout)
 
-    //        QDBusReply<uint> reply = remoteApp.call(QString("org.freedesktop.Notifications.Notify"), QVariant("kfilebox"), QVariant(115), QVariant("kfilebox"), QVariant("summary"), QVariant("body"));
-    //        qDebug() << reply;
-    //    } else {
-    //        qDebug() << "remote call is invalid" << remoteApp.lastError();
-    //    }
+    QString service   = "org.freedesktop.Notifications";
+    QString path      = "/org/freedesktop/Notifications";
+    QString interface = "org.freedesktop.Notifications";
+    QString method    = "Notify";
 
-    //    // uint org.freedesktop.Notifications.Notify(QString app_name, uint replaces_id, QString app_icon, QString summary, QString body, QStringList actions, QVariantMap hints, int timeout)
+    QList<QVariant> arguments;
+    arguments.append(QVariant(QString("Kfilebox")));
+    arguments.append(QVariant(quint32(0)));
+    arguments.append(QVariant(QString("kfilebox")));
+    arguments.append(QVariant(message));
+    arguments.append(QVariant(message));
+    arguments.append(QVariant(QStringList()));
+    arguments.append(QVariant(QVariantMap()));
+    arguments.append(QVariant((int)0));
 
+    QDBusMessage msg = QDBusMessage::createMethodCall(service, path, interface, method);
+    QDBusPendingReply<quint32> reply;
 
-#ifdef USE_KSTATUSNOTIFIERITEM
-    //if (conf->getValue("ShowNotifications").toBool()==true){
-    notification->showMessage("Kfilebox", message, "Kfilebox");
-#else
-    qDebug() << "Notification: " << message;
-#endif
+    msg.setArguments(arguments);
+
+    reply = QDBusConnection::sessionBus().call(msg);
+
 }
-
