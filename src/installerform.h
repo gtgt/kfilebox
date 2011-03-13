@@ -20,6 +20,16 @@ class InstallerForm : public QDialog
     Q_OBJECT
 private:
     Ui::InstallerForm *ui;
+    QString daemonUrl;
+    QString downloadPath;
+
+    QFile file;
+    QNetworkReply* reply;
+    QNetworkRequest* request;
+    QNetworkAccessManager* manager;
+
+protected:
+    void changeEvent(QEvent *e);
 
 public:
     explicit InstallerForm(QWidget *parent = 0);
@@ -33,19 +43,6 @@ public slots:
     void downloadFinished();
     void downloadReadyRead();
     void displayError(QNetworkReply::NetworkError);
-
-protected:
-    void changeEvent(QEvent *e);
-
-private:
-
-    QString daemonUrl;
-    QString downloadPath;
-
-    QFile file;
-    QNetworkReply* reply;
-    QNetworkRequest* request;
-    QNetworkAccessManager* manager;
 
 };
 

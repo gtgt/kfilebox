@@ -8,9 +8,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     if(!DropboxClient::isInstalled()) {
-        //! @todo lock MainWindow?
-        InstallerForm* di = new InstallerForm(this);
-        di->downloadDaemon();
+        InstallerForm di(this);
+        di.exec();
     }
 
     dc = new DropboxClient();

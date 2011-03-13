@@ -6,6 +6,9 @@ InstallerForm::InstallerForm(QWidget *parent) :
     ui(new Ui::InstallerForm)
 {
     ui->setupUi(this);
+    setModal(true);
+    setWindowModality(Qt::ApplicationModal);
+
     //! @todo download to temp file name
     downloadPath=QDir::toNativeSeparators(QDir::homePath().append("/daemon.tar.gz"));
 
@@ -13,6 +16,9 @@ InstallerForm::InstallerForm(QWidget *parent) :
         daemonUrl="http://www.dropbox.com/download?plat=lnx.x86_64";
     else
         daemonUrl="http://www.dropbox.com/download?plat=lnx.x86";
+
+    downloadDaemon();
+
 }
 
 InstallerForm::~InstallerForm()
@@ -76,12 +82,10 @@ void InstallerForm::downloadFinished()
 {
     file.close();
     QVariant possible_redirect=reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
-    if (!possible_redirect.toString().isEmpty() && possible_redirect.toString()!=daemonUrl){
+    if (!possible_redirect.toString().isEmpty() && possible_redirect.toString()!=daemonUrl) {
         daemonUrl=possible_redirect.toUrl().toString();
         downloadDaemon();
-    }
-    else
-    {
+    } else {
         reply->close();
         delete reply;
         processFile();
