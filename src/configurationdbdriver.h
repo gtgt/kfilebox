@@ -25,9 +25,9 @@ public:
     explicit ConfigurationDBDriver(QObject *parent = 0);
     ~ConfigurationDBDriver();
 
-    QStringList listKeys();
-    bool hasKey(const QString &key);
-    QVariant getValue(const QString &key);
+    QStringList listKeys() const;
+    bool hasKey(const QString &key) const;
+    QVariant getValue(const QString &key) const;
     void setValue(const QString &key, const QVariant &value);
     void deleteValue(const QString &key);
 

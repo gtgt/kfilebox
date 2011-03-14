@@ -40,12 +40,12 @@ void Configuration::initConfigurationFile()
     settings->sync();
 }
 
-bool Configuration::hasKey(const QString &key)
+bool Configuration::hasKey(const QString &key) const
 {
     return (generalGroup->hasKey(key) || DB->hasKey(key));
 }
 
-QVariant Configuration::getValue(const QString &key)
+QVariant Configuration::getValue(const QString &key) const
 {
     if(DB->hasKey(key))
         return DB->getValue(key);
@@ -61,4 +61,12 @@ void Configuration::setValue(const QString &key, const QVariant &value)
         DB->setValue(key, value);
     else
         generalGroup->writeEntry(key, value);
+}
+
+void Configuration::deleteValue(const QString &key)
+{
+    if(DB->hasKey(key))
+        DB->deleteValue(key);
+    else
+        generalGroup->deleteEntry(key);
 }

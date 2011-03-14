@@ -50,7 +50,7 @@ ConfigurationDBDriver::~ConfigurationDBDriver()
     QSqlDatabase::removeDatabase(connectionName);
 }
 
-bool ConfigurationDBDriver::hasKey(const QString &key)
+bool ConfigurationDBDriver::hasKey(const QString &key) const
 {
     if(dbVersion != CONFIG_DB)
         return false;
@@ -63,7 +63,7 @@ bool ConfigurationDBDriver::hasKey(const QString &key)
     return false;
 }
 
-QVariant ConfigurationDBDriver::getValue(const QString &key)
+QVariant ConfigurationDBDriver::getValue(const QString &key) const
 {
     if(dbVersion != CONFIG_DB)
         return QVariant();
@@ -76,13 +76,24 @@ QVariant ConfigurationDBDriver::getValue(const QString &key)
 }
 
 //! This function should only be called when dropbox is stopped
-//! was not properly tested yeat
 void ConfigurationDBDriver::setValue(const QString &key, const QVariant &value)
 {
     if(dbVersion != CONFIG_DB)
         return;
 
     db->exec("REPLACE INTO `config` (`key`, `value`) VALUES ('"+key+"', '"+value.toString()+"')");
+    if(db->lastError().isValid())
+        qDebug() << db->lastError() << "query:\n" << db->exec().lastQuery();
+
+}
+
+//! This function too should only be called when dropbox is stopped
+void ConfigurationDBDriver::deleteValue(const QString &key)
+{
+    if(dbVersion != CONFIG_DB)
+        return;
+
+    db->exec("DELETE FROM `config` WHERE `key`='"+key+"'");
     if(db->lastError().isValid())
         qDebug() << db->lastError() << "query:\n" << db->exec().lastQuery();
 

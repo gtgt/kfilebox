@@ -18,9 +18,9 @@ public:
     explicit Configuration(QObject *parent = 0);
     ~Configuration();
 
-    QStringList listKeys();
-    bool hasKey(const QString &key);
-    QVariant getValue(const QString &key);
+    QStringList listKeys() const;
+    bool hasKey(const QString &key) const;
+    QVariant getValue(const QString &key) const;
     void setValue(const QString &key, const QVariant &value);
     void deleteValue(const QString &key);
 
