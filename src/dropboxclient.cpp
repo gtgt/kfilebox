@@ -27,8 +27,10 @@ DropboxClient::~DropboxClient()
 void DropboxClient::start()
 {
     m_status=DropboxClient::DropboxUnkown;
-    if(!isRunning())
+    if(!isRunning()) {
         QProcess::startDetached(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
+        //        connect(m_ps, SIGNAL(readyReadStandardOutput()), SLOT(readDaemonOutput()));
+    }
     m_socket->connectToServer(m_socketPath);
     m_timer->start(500);
 }

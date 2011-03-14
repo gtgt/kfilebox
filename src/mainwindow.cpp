@@ -100,7 +100,8 @@ void MainWindow::changeDropboxFolder()
 
 void MainWindow::unlinkComputer()
 {
-    //! @todo just delete key host_id?
+    //! @todo research..
+    QProcess::startDetached("rm -frv "+QDir::homePath().append("/.dropbox/"));
 }
 
 void MainWindow::downloadRadioToggle()

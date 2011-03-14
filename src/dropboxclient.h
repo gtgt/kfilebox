@@ -30,13 +30,13 @@ public:
     QString static getVersion();
 
 private:
-    QLocalSocket* m_socket;
+    QTimer *m_timer;
+    QLocalSocket *m_socket;
     QString m_socketPath;
-    QTimer* m_timer;
 
+    QString prev_message;
     DropboxStatus m_status;
     DropboxStatus prev_status;
-    QString prev_message;
 
 public slots:
     void start();
@@ -45,6 +45,7 @@ public slots:
     //! QString getStatusMessage();
 
 private slots:
+    //    void readDaemonOutput();
     void displayError(QLocalSocket::LocalSocketError socketError);
     void getDropboxStatus();
 

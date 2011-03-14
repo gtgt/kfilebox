@@ -11,7 +11,6 @@
 #include <kmenu.h>
 #include "kicon.h"
 
-//#include "src/notification.h"
 #include "src/dropboxclient.h" // for enum DropboxClient
 #include "src/configuration.h"
 
