@@ -49,7 +49,8 @@ private:
     QAction *openForums;
     QAction *startAction;
     QAction *stopAction;
-    QAction *quitAction;
+    QAction *statusAction;
+//    QAction *quitAction;
 
     QSignalMapper* sm;
 

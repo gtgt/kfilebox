@@ -56,9 +56,13 @@ void TrayIcon::createActions()
 
     startAction = new QAction(tr("Start Dropbox"), this);
     connect(startAction, SIGNAL(triggered()), this, SIGNAL(startDropbox()));
+    startAction->setVisible(false);
 
     stopAction = new QAction(tr("Stop Dropbox"), this);
     connect(stopAction, SIGNAL(triggered()), this, SIGNAL(stopDropbox()));
+
+    statusAction = new QAction("connecting", this);
+    statusAction->setEnabled(false);
 
     //quitAction = new QAction(tr("&Exit"), this);
     //connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
@@ -94,13 +98,15 @@ void TrayIcon::createTrayIcon()
     trayIconMenu->addMenu(chFiles);
 
     trayIconMenu->addSeparator();
+    trayIconMenu->addAction(statusAction);
+    trayIconMenu->addSeparator();
     trayIconMenu->addMenu(helpMenu);
     trayIconMenu->addAction(openGetMoreSpace);
     trayIconMenu->addAction(openPrefs);
 
     trayIconMenu->addAction(stopAction);
-    startAction->setVisible(false);
     trayIconMenu->addAction(startAction);
+
 
     trayIcon->setStatus(KStatusNotifierItem::Active);
     trayIcon->setContextMenu(trayIconMenu);
@@ -160,6 +166,7 @@ void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QStrin
         }
     }
 
+    statusAction->setText(message);
     trayIcon->setToolTipSubTitle(message);
 
     switch(newStatus) {
