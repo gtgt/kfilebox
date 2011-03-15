@@ -27,6 +27,9 @@ DropboxClient::~DropboxClient()
     m_socket = 0;
     delete m_timer;
     m_timer = 0;
+    if(m_ps->isOpen())
+        m_ps->close();
+    delete m_ps;
 }
 
 void DropboxClient::start()

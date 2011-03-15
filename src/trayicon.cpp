@@ -243,18 +243,13 @@ void TrayIcon::prepareLastChangedFiles(){
             files.push_back(list.value(1));
     }
 
-    int i = 0;
-    foreach (QAction *a, chFiles->actions()){
-        disconnect(a, SIGNAL(triggered()), sm, SLOT(map()));
-        sm->removeMappings(a);
-        a->setText(files.at(i).split("/").last());
-        a->setEnabled(QFile(dropboxPath+files.at(i)).exists());
+    for (int i = 0; i < 5; ++i) {
+        disconnect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
+        sm->removeMappings(chFiles->actions().at(i));
+        chFiles->actions().at(i)->setText(files.at(i).split("/").last());
+        chFiles->actions().at(i)->setEnabled(QFile(dropboxPath+files.at(i)).exists());
 
-        connect(a, SIGNAL(triggered()), sm, SLOT(map()));
-        sm->setMapping(a, QString(dropboxPath+files.at(i)));
-
-        i++;
+        connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
+        sm->setMapping(chFiles->actions().at(i), QString(files.at(i)));
     }
-
-
 }
