@@ -10,9 +10,12 @@ DropboxClient::DropboxClient(QObject *parent) :
 
     connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),this, SLOT(displayError(QLocalSocket::LocalSocketError)));
 
+    m_ps = new QProcess(this);
+    connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
+
     m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
-
+    m_timer->start(500);
 }
 
 DropboxClient::~DropboxClient()
@@ -28,16 +31,13 @@ void DropboxClient::start()
 {
     m_status=DropboxClient::DropboxUnkown;
     if(!isRunning()) {
-        QProcess::startDetached(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
-        //        connect(m_ps, SIGNAL(readyReadStandardOutput()), SLOT(readDaemonOutput()));
+        m_ps->start(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
     }
     m_socket->connectToServer(m_socketPath);
-    m_timer->start(500);
 }
 
 void DropboxClient::stop()
 {
-    m_timer->stop();
     sendCommand("tray_action_hard_exit");
 }
 
@@ -145,6 +145,15 @@ QString DropboxClient::sendCommand(const QString &command)
         reply = list[1];
 
     return reply;
+}
+
+void DropboxClient::readDaemonOutput()
+{
+    QString swap = m_ps->readAllStandardOutput();
+    if (swap.contains("https://www.dropbox.com/cli_link?host_id=")) {
+        swap.remove("Please visit ").remove(" to link this machine.");
+        qDebug() << swap ;
+    }
 }
 
 void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)

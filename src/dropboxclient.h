@@ -33,6 +33,7 @@ private:
     QTimer *m_timer;
     QLocalSocket *m_socket;
     QString m_socketPath;
+    QProcess *m_ps;
 
     QString prev_message;
     DropboxStatus m_status;
@@ -45,7 +46,7 @@ public slots:
     //! QString getStatusMessage();
 
 private slots:
-    //    void readDaemonOutput();
+    void readDaemonOutput();
     void displayError(QLocalSocket::LocalSocketError socketError);
     void getDropboxStatus();
 

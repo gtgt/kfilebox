@@ -6,9 +6,18 @@ TrayIcon::TrayIcon(QWidget *parent) :
     trayIcon = new KStatusNotifierItem();
 
     sm = new QSignalMapper(this);
+    connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
+
 
     createActions();
     createTrayIcon();
+
+    chFiles->addAction(new QAction("empty", this));
+    chFiles->addAction(new QAction("empty", this));
+    chFiles->addAction(new QAction("empty", this));
+    chFiles->addAction(new QAction("empty", this));
+    chFiles->addAction(new QAction("empty", this));
+
 }
 
 TrayIcon::~TrayIcon()
@@ -202,21 +211,17 @@ void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QStrin
     }
 }
 
-//! @bug recent files from shared folders
+//! @todo recent files from shared folders
 //! in db '/gp/lacrimoza.gp5'
 //! absolute path is '~/Dropbox/shared-folder/' + that file
 void TrayIcon::prepareLastChangedFiles(){
 
-    disconnect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
-
-    foreach (QAction *a, chFiles->actions()){
-        chFiles->removeAction(a);
-    }
-
-    QString file;
+    QStringList files;
     Configuration conf;
     QString dropboxPath = conf.getValue("dropbox_path").toString();
-    foreach (QString elem, conf.getValue("recently_changed3").toString().split("\n")) {
+    QString recentlyChanged = conf.getValue("recently_changed3").toString();
+    if(recentlyChanged.isEmpty()) return;
+    foreach (QString elem, recentlyChanged.split("\n")) {
         QStringList list = elem.split(":");
         if(list.length()<=1) continue;
 
@@ -233,19 +238,23 @@ void TrayIcon::prepareLastChangedFiles(){
                 else
                     humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
             }
-            file = humanResult;
+            files.push_back(humanResult);
         } else
-            file = list.value(1);
-
-        //! @bug memory leak?
-        chFiles->addAction(new QAction(file.split("/").last(), this));
-        chFiles->actions().last()->setEnabled(QFile(dropboxPath+file).exists());
-
-        connect(chFiles->actions().last(), SIGNAL(triggered()), sm, SLOT(map()));
-
-        sm->setMapping(chFiles->actions().last(), file);
-
-
+            files.push_back(list.value(1));
     }
-    connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
+
+    int i = 0;
+    foreach (QAction *a, chFiles->actions()){
+        disconnect(a, SIGNAL(triggered()), sm, SLOT(map()));
+        sm->removeMappings(a);
+        a->setText(files.at(i).split("/").last());
+        a->setEnabled(QFile(dropboxPath+files.at(i)).exists());
+
+        connect(a, SIGNAL(triggered()), sm, SLOT(map()));
+        sm->setMapping(a, QString(dropboxPath+files.at(i)));
+
+        i++;
+    }
+
+
 }
