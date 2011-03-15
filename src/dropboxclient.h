@@ -24,6 +24,7 @@ public:
     bool isRunning();
 
     //! This functions not strongly related to this class..
+    QString getAuthUrl() const;
     void static hideGtkUi();
     void static showGtkUi();
     bool static isInstalled();
@@ -38,6 +39,8 @@ private:
     QString prev_message;
     DropboxStatus m_status;
     DropboxStatus prev_status;
+
+    QString authUrl;
 
 public slots:
     void start();

@@ -10,12 +10,6 @@ MainWindow::MainWindow(QWidget *parent) :
     if(!DropboxClient::isInstalled()) {
         InstallerForm di(this);
         di.exec();
-        DropboxClient::hideGtkUi();
-
-        // move to installer?
-        //        QProcess::start("dropbox")
-        //        QProcess::waitForReadyRead()
-        //        QDesktopServices::openUrl(QUrl("https://www.dropbox.com/cli_link?host_id=abcdef01234567ANDetc"));
     }
 
     dc = new DropboxClient();

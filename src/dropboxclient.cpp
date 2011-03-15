@@ -5,6 +5,8 @@ DropboxClient::DropboxClient(QObject *parent) :
 {
     m_status = DropboxClient::DropboxUnkown;
 
+    authUrl = "";
+
     m_socket = new QLocalSocket(this);
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
 
@@ -32,6 +34,7 @@ void DropboxClient::start()
     m_status=DropboxClient::DropboxUnkown;
     if(!isRunning()) {
         m_ps->start(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
+        m_ps->waitForStarted(500);
     }
     m_socket->connectToServer(m_socketPath);
 }
@@ -117,10 +120,9 @@ QString DropboxClient::sendCommand(const QString &command)
     m_socket->write(QString("done\n").toUtf8());
     m_socket->flush();
 
-    bool ready = false;
     QString reply;
 
-    while(!ready)
+    while(true)
     {
         if(!m_socket->waitForReadyRead(waitTime))
         {
@@ -130,7 +132,7 @@ QString DropboxClient::sendCommand(const QString &command)
         reply.append(m_socket->readAll());
 
         if(reply.split('\n').count()==4)
-            ready = true;
+            break;
     }
 
     //Strip out \ndone\n and ok\n
@@ -151,8 +153,7 @@ void DropboxClient::readDaemonOutput()
 {
     QString swap = m_ps->readAllStandardOutput();
     if (swap.contains("https://www.dropbox.com/cli_link?host_id=")) {
-        swap.remove("Please visit ").remove(" to link this machine.");
-        qDebug() << swap ;
+        authUrl = swap.remove("Please visit ").remove(" to link this machine.");
     }
 }
 
@@ -189,9 +190,14 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
 
 // ..
 
+QString DropboxClient::getAuthUrl() const
+{
+    return authUrl;
+}
+
 bool DropboxClient::isInstalled()
 {
-    return QDir(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/"))).exists();
+    return QFile(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropbox"))).exists();
 }
 
 void DropboxClient::hideGtkUi()

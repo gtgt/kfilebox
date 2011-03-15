@@ -2,6 +2,7 @@
 #define INSTALLERFORM_H
 
 #include <QDebug>
+#include <QDesktopServices>
 #include <QDialog>
 #include <QDir>
 #include <QFile>
@@ -10,6 +11,8 @@
 #include <QProcess>
 #include <QString>
 #include <QUrl>
+
+#include "src/dropboxclient.h"
 
 namespace Ui {
 class InstallerForm;
@@ -27,6 +30,7 @@ private:
     QNetworkReply* reply;
     QNetworkRequest* request;
     QNetworkAccessManager* manager;
+    DropboxClient* dc;
 
 protected:
     void changeEvent(QEvent *e);
@@ -38,6 +42,10 @@ public:
 public slots:
     void downloadDaemon();
     void processFile();
+    void runConfiguration();
+
+    void authThroughBrowser();
+    void runGtkInstaller();
 
     void setProgressValue(qint64, qint64);
     void downloadFinished();

@@ -24,7 +24,7 @@ void Notification::send(const QString &message)
     arguments.append(QVariant(QString("Kfilebox")));
     arguments.append(QVariant(quint32(0)));
     arguments.append(QVariant(QString("kfilebox")));
-    arguments.append(QVariant(message));
+    arguments.append(QVariant("Kfilebox"));
     arguments.append(QVariant(message));
     arguments.append(QVariant(QStringList()));
     arguments.append(QVariant(QVariantMap()));

@@ -7,9 +7,15 @@ InstallerForm::InstallerForm(QWidget *parent) :
 {
     ui->setupUi(this);
     setModal(true);
-    setWindowModality(Qt::ApplicationModal);
+    //    setWindowModality(Qt::ApplicationModal);
+    ui->launchBrowser->setVisible(false);
+    ui->showWizard->setVisible(false);
+
+    connect(ui->launchBrowser, SIGNAL(clicked()), SLOT(authThroughBrowser()));
+    connect(ui->showWizard, SIGNAL(clicked()), SLOT(runGtkInstaller()));
 
     //! @todo download to temp file name
+    //! @todo KIO::NetAccess::download(daemonUrl, tmpFile,this) .... and possibly uncompress?
     downloadPath=QDir::toNativeSeparators(QDir::homePath().append("/daemon.tar.gz"));
 
     if(QSysInfo::WordSize==64)
@@ -17,8 +23,10 @@ InstallerForm::InstallerForm(QWidget *parent) :
     else
         daemonUrl="http://www.dropbox.com/download?plat=lnx.x86";
 
-    //! called twice
-    downloadDaemon();
+    if(DropboxClient::isInstalled())
+        runConfiguration();
+    else
+        downloadDaemon();
 
 }
 
@@ -41,6 +49,7 @@ void InstallerForm::changeEvent(QEvent *e)
     }
 }
 
+//! called twice
 void InstallerForm::downloadDaemon()
 {
     show();
@@ -74,9 +83,37 @@ void InstallerForm::processFile()
     sc.execute("tar -xf "+downloadPath+" -C "+QDir::homePath());
     sc.waitForFinished();
 
-    hide();
-
     sc.startDetached("rm -f "+ downloadPath);
+
+    runConfiguration();
+}
+
+//! Run if ~/.dropbox-dist/ installed, but computer is not linked to any account
+void InstallerForm::runConfiguration()
+{
+    dc = new DropboxClient();
+    dc->hideGtkUi();
+    dc->start();
+
+    ui->launchBrowser->setVisible(true);
+    ui->showWizard->setVisible(true);
+    ui->progressBar->setVisible(false);
+    ui->label->setText(tr("Choose action"));
+}
+
+void InstallerForm::authThroughBrowser()
+{
+    hide();
+    QDesktopServices::openUrl(dc->getAuthUrl());
+    dc->stop();
+}
+
+void InstallerForm::runGtkInstaller()
+{
+    dc->stop();
+    dc->showGtkUi();
+    dc->start();
+    hide();
 }
 
 
