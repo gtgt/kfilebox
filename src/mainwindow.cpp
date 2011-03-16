@@ -12,8 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
         di.exec();
     }
 
-    dc = new DropboxClient();
-    trayIcon= new TrayIcon();
+    dc = new DropboxClient(this);
+    trayIcon= new TrayIcon(this);
 
     connect(ui->saveSettings, SIGNAL(clicked()), this, SLOT(saveSettings()));
     connect(ui->applySettings, SIGNAL(clicked()), this, SLOT(applySettings()));
@@ -52,9 +52,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete trayIcon;
-    delete adaptor;
-    delete dc;
     delete ui;
 }
 

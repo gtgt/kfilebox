@@ -3,7 +3,6 @@
 DropboxClientAdaptor::DropboxClientAdaptor(QObject *parent)
     : QDBusAbstractAdaptor(parent)
 {
-    // I am constructor
     setAutoRelaySignals(true);
     QDBusConnection connection = QDBusConnection::sessionBus();
     connection.registerObject("/Kfilebox", parent);
@@ -12,7 +11,6 @@ DropboxClientAdaptor::DropboxClientAdaptor(QObject *parent)
 
 DropboxClientAdaptor::~DropboxClientAdaptor()
 {
-    // I am destructor
 }
 
 void DropboxClientAdaptor::start()

@@ -33,7 +33,6 @@ InstallerForm::InstallerForm(QWidget *parent) :
 InstallerForm::~InstallerForm()
 {
     delete request;
-    delete manager;
     delete ui;
 }
 
@@ -91,7 +90,7 @@ void InstallerForm::processFile()
 //! Run if ~/.dropbox-dist/ installed, but computer is not linked to any account
 void InstallerForm::runConfiguration()
 {
-    dc = new DropboxClient();
+    dc = new DropboxClient(this);
     dc->hideGtkUi();
     dc->start();
 
@@ -126,7 +125,6 @@ void InstallerForm::downloadFinished()
         downloadDaemon();
     } else {
         reply->close();
-        delete reply;
         processFile();
     }
 }

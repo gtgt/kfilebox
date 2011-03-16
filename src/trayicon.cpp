@@ -3,7 +3,7 @@
 TrayIcon::TrayIcon(QWidget *parent) :
     QWidget(parent)
 {
-    trayIcon = new KStatusNotifierItem();
+    trayIcon = new KStatusNotifierItem(this);
 
     sm = new QSignalMapper(this);
     connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
@@ -22,22 +22,6 @@ TrayIcon::TrayIcon(QWidget *parent) :
 
 TrayIcon::~TrayIcon()
 {
-    delete openDir;
-    delete openDropboxWebsite;
-    delete openGetMoreSpace;
-    delete openPrefs;
-    delete openHelpCenter;
-    delete openTour;
-    delete openForums;
-    delete startAction;
-    delete stopAction;
-    //    delete quitAction;
-
-    //    delete trayIcon;
-    //    delete trayIconMenu;
-    //    delete chFiles;
-
-    delete  sm;
 }
 
 void TrayIcon::createActions()
@@ -94,12 +78,12 @@ void TrayIcon::createTrayIcon()
 
     trayIconMenu = new KMenu(this);
 
-    KMenu *helpMenu= new KMenu(tr("Help"));
+    KMenu *helpMenu= new KMenu(tr("Help"), this);
     helpMenu->addAction(openHelpCenter);
     helpMenu->addAction(openTour);
     helpMenu->addAction(openForums);
 
-    chFiles= new KMenu(tr("Recently changed files"));
+    chFiles= new KMenu(tr("Recently changed files"), this);
     connect(chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
 
     trayIconMenu->addAction(openDir);

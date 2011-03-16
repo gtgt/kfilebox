@@ -1,5 +1,5 @@
 #include "configuration.h"
-
+#include <QPointer>
 Configuration::Configuration(QObject *parent) :
     QObject(parent)
 {
@@ -21,8 +21,6 @@ Configuration::~Configuration()
     generalGroup = 0;
     delete settings;
     settings = 0;
-    delete DB;
-    DB = 0;
 }
 
 void Configuration::initConfigurationFile()
