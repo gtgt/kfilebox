@@ -8,24 +8,6 @@ TrayIcon::TrayIcon(QWidget *parent) :
     sm = new QSignalMapper(this);
     connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
 
-
-    createActions();
-    createTrayIcon();
-
-    chFiles->addAction(new QAction("empty", this));
-    chFiles->addAction(new QAction("empty", this));
-    chFiles->addAction(new QAction("empty", this));
-    chFiles->addAction(new QAction("empty", this));
-    chFiles->addAction(new QAction("empty", this));
-
-}
-
-TrayIcon::~TrayIcon()
-{
-}
-
-void TrayIcon::createActions()
-{
     openDir = new QAction(tr("Open Dropbox Folder"), this);
     connect(openDir, SIGNAL(triggered()), this, SLOT(openFileBrowser()));
 
@@ -57,26 +39,6 @@ void TrayIcon::createActions()
     statusAction = new QAction("connecting", this);
     statusAction->setEnabled(false);
 
-    //quitAction = new QAction(tr("&Exit"), this);
-    //connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-}
-
-void TrayIcon::loadIcons(const QString &iconset)
-{
-    defaultIcon = QIcon(":/icons/img/"+iconset+"/kfilebox.png");
-    idleIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_idle.png");
-    bussyIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_updating.png");
-    errorIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_error.png");
-
-    appIcon = QIcon(":/icons/img/"+iconset+"/kfileboxapp.png");
-    if (trayIcon!=NULL)
-        trayIcon->setToolTipIconByPixmap(appIcon);
-}
-
-void TrayIcon::createTrayIcon()
-{
-
-    trayIconMenu = new KMenu(this);
 
     KMenu *helpMenu= new KMenu(tr("Help"), this);
     helpMenu->addAction(openHelpCenter);
@@ -86,6 +48,14 @@ void TrayIcon::createTrayIcon()
     chFiles= new KMenu(tr("Recently changed files"), this);
     connect(chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
 
+    chFiles->addAction(new QAction("empty", this));
+    chFiles->addAction(new QAction("empty", this));
+    chFiles->addAction(new QAction("empty", this));
+    chFiles->addAction(new QAction("empty", this));
+    chFiles->addAction(new QAction("empty", this));
+
+
+    trayIconMenu = new KMenu(this);
     trayIconMenu->addAction(openDir);
     trayIconMenu->addAction(openDropboxWebsite);
     trayIconMenu->addMenu(chFiles);
@@ -107,7 +77,27 @@ void TrayIcon::createTrayIcon()
     trayIcon->setToolTipIconByPixmap(appIcon);
     trayIcon->setToolTipTitle("Kfilebox");
 
-    connect(trayIcon, SIGNAL(activateRequested(bool,QPoint)), this,SLOT(openFileBrowser()));
+    //! on left click show menu - and this line hides the 'show main window' action
+    trayIcon->setAssociatedWidget(trayIconMenu);
+
+    //    connect(trayIcon, SIGNAL(activateRequested(bool,QPoint)), this,SLOT(openFileBrowser()));
+
+}
+
+TrayIcon::~TrayIcon()
+{
+}
+
+void TrayIcon::loadIcons(const QString &iconset)
+{
+    defaultIcon = QIcon(":/icons/img/"+iconset+"/kfilebox.png");
+    idleIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_idle.png");
+    bussyIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_updating.png");
+    errorIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_error.png");
+
+    appIcon = QIcon(":/icons/img/"+iconset+"/kfileboxapp.png");
+    if (trayIcon!=NULL)
+        trayIcon->setToolTipIconByPixmap(appIcon);
 }
 
 void TrayIcon::openFileBrowser(const QString &path)
@@ -181,6 +171,7 @@ void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QStrin
     case  DropboxClient::DropboxIndexing:
         trayIcon->setIconByPixmap(bussyIcon);
         break;
+    case DropboxClient::DropboxUnkown:
     case DropboxClient::DropboxStopped:
         trayIcon->setIconByPixmap(errorIcon);
         break;
@@ -189,8 +180,6 @@ void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QStrin
         break;
     case DropboxClient::DropboxError:
         trayIcon->setIconByPixmap(errorIcon);
-        break;
-    case DropboxClient::DropboxUnkown:
         break;
     }
 }

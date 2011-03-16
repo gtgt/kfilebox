@@ -55,10 +55,17 @@ bool DropboxClient::isRunning()
     return QFile(QString("/proc/"+QString::number(pid)+"/cmdline")).open(QIODevice::ReadOnly | QIODevice::Text);
 }
 
-// loop..
+/** Loop. I don't know what is worth(every m_timer->interval() ):
+  * - get dropbox pid from file, try to read file in /proc/PID/some_file
+  * - if m_socket isn't open - try to connect, got error
+  */
 void DropboxClient::getDropboxStatus()
 {
     QString message = sendCommand("get_dropbox_status");
+
+    //! dropbox is stopped
+    if(message.isEmpty())
+        return;
 
     if (message.contains("connecting")){
         m_status=DropboxClient::DropboxBussy;

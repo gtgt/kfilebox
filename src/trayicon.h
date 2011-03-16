@@ -9,7 +9,7 @@
 
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
-#include "kicon.h"
+#include <kicon.h>
 
 #include "src/dropboxclient.h" // for enum DropboxClient
 #include "src/configuration.h"
@@ -24,10 +24,6 @@ public:
     void loadIcons(const QString &iconset);
 
 private:
-
-
-    void createActions();
-    void createTrayIcon();
 
     KStatusNotifierItem *trayIcon;
     KMenu *trayIconMenu;
@@ -50,7 +46,6 @@ private:
     QAction *startAction;
     QAction *stopAction;
     QAction *statusAction;
-//    QAction *quitAction;
 
     QSignalMapper* sm;
 

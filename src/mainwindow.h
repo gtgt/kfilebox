@@ -1,11 +1,11 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QAction>
+//#include <QAction>
 #include <QDebug>
-#include <QFile>
+//#include <QFile>
 #include <QFileDialog>
-#include <QFileInfo>
+//#include <QFileInfo>
 #include <QMainWindow>
 
 #include "src/dropboxclient.h"
