@@ -11,9 +11,9 @@
 #include "src/dropboxclient.h"
 #include "src/dropboxclientadaptor.h"
 #include "src/configuration.h"
+#include "src/configurationdbdriver.h"
 #include "src/installerform.h"
 #include "src/trayicon.h"
-
 
 namespace Ui {
 class MainWindow;

@@ -9,8 +9,6 @@ Configuration::Configuration(QObject *parent) :
     if(!generalGroup->hasKey("Browser")) {
         initConfigurationFile();
     }
-
-    DB = new ConfigurationDBDriver(this);
 }
 
 Configuration::~Configuration()
@@ -28,9 +26,9 @@ void Configuration::initConfigurationFile()
     generalGroup->writeEntry("Browser", "rekonq");
     generalGroup->writeEntry("FileManager", "dolphin");
     generalGroup->writeEntry("IconSet", "default");
-    generalGroup->writeEntry("ShowNotifications", true);
-    generalGroup->writeEntry("AutoStart", true);
-    generalGroup->writeEntry("StartDaemon", true);
+    generalGroup->writeEntry("ShowNotifications", true);            //! @todo use from config.db
+    generalGroup->writeEntry("AutoStart", true);                    //! @todo use from config.db
+    generalGroup->writeEntry("StartDaemon", true);                  //! @todo use from config.db
     generalGroup->writeEntry("GtkUiDisabled", true);
 
     //! @todo add more pairs
@@ -40,13 +38,12 @@ void Configuration::initConfigurationFile()
 
 bool Configuration::hasKey(const QString &key) const
 {
-    return (generalGroup->hasKey(key) || DB->hasKey(key));
+    return generalGroup->hasKey(key);
 }
 
+//! @todo inline
 QVariant Configuration::getValue(const QString &key) const
 {
-    if(DB->hasKey(key))
-        return DB->getValue(key);
     return generalGroup->readEntry(key);
 }
 
@@ -55,16 +52,10 @@ void Configuration::setValue(const QString &key, const QVariant &value)
     if(getValue(key)==value)
         return;
 
-    if(DB->hasKey(key))
-        DB->setValue(key, value);
-    else
-        generalGroup->writeEntry(key, value);
+    generalGroup->writeEntry(key, value);
 }
 
 void Configuration::deleteValue(const QString &key)
 {
-    if(DB->hasKey(key))
-        DB->deleteValue(key);
-    else
-        generalGroup->deleteEntry(key);
+    generalGroup->deleteEntry(key);
 }

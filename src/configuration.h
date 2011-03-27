@@ -8,9 +8,6 @@
 #include <kconfig.h>
 #include <kconfiggroup.h>
 
-#include "configurationdbdriver.h"
-
-
 class Configuration : public QObject
 {
     Q_OBJECT
@@ -29,7 +26,6 @@ private:
 
     KConfig* settings;
     KConfigGroup* generalGroup;
-    ConfigurationDBDriver* DB;
 
 };
 

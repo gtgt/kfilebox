@@ -126,7 +126,7 @@
            <item>
             <widget class="QCheckBox" name="useP2P">
              <property name="text">
-              <string>Use p2p</string>
+              <string>Enable LAN sync</string>
              </property>
              <property name="checked">
               <bool>true</bool>

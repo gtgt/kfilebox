@@ -13,6 +13,7 @@
 
 #include "src/dropboxclient.h" // for enum DropboxClient
 #include "src/configuration.h"
+#include "src/configurationdbdriver.h"
 
 
 class TrayIcon : public QWidget
@@ -24,6 +25,8 @@ public:
     void loadIcons(const QString &iconset);
 
 private:
+
+    QString fixUnicodeChars(QString value);
 
     KStatusNotifierItem *trayIcon;
     KMenu *trayIconMenu;

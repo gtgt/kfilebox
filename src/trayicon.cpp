@@ -105,9 +105,15 @@ void TrayIcon::openFileBrowser(const QString &path)
     //! @todo pathToFile = dropbox.getPathTo(file)
     //! get variables[FileManager, DropboxPath] from ui->dropboxPath
 
-    Configuration conf;
-    QDesktopServices::openUrl(QUrl(QDir::toNativeSeparators(conf.getValue("dropbox_path").toString().append(path))));
+    ConfigurationDBDriver conf;
 
+    //! if file - open parent folder for it
+    QString dirName = QDir::toNativeSeparators(conf.getValue("dropbox_path").toString().append(path));
+    QFileInfo fileInfo(dirName);
+    if(fileInfo.isFile())
+        dirName = fileInfo.dir().path();
+
+    QDesktopServices::openUrl(QUrl(dirName));
 }
 
 //! @todo get this urls from dropbox daemon
@@ -153,31 +159,19 @@ void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QStrin
     trayIcon->setToolTipSubTitle(message);
 
     switch(newStatus) {
-    case DropboxClient::DropboxBussy:
-        trayIcon->setIconByPixmap(defaultIcon);
-        break;
     case DropboxClient::DropboxIdle:
         trayIcon->setIconByPixmap(idleIcon);
         break;
+    case DropboxClient::DropboxBussy:
     case DropboxClient::DropboxUploading:
-        trayIcon->setIconByPixmap(bussyIcon);
-        break;
     case DropboxClient::DropboxDownloading:
-        trayIcon->setIconByPixmap(bussyIcon);
-        break;
     case DropboxClient::DropboxSaving:
-        trayIcon->setIconByPixmap(bussyIcon);
-        break;
     case  DropboxClient::DropboxIndexing:
         trayIcon->setIconByPixmap(bussyIcon);
         break;
     case DropboxClient::DropboxUnkown:
     case DropboxClient::DropboxStopped:
-        trayIcon->setIconByPixmap(errorIcon);
-        break;
     case DropboxClient::DropboxDisconnected:
-        trayIcon->setIconByPixmap(errorIcon);
-        break;
     case DropboxClient::DropboxError:
         trayIcon->setIconByPixmap(errorIcon);
         break;
@@ -190,30 +184,14 @@ void TrayIcon::updateStatus(DropboxClient::DropboxStatus newStatus, const QStrin
 void TrayIcon::prepareLastChangedFiles(){
 
     QStringList files;
-    Configuration conf;
+    ConfigurationDBDriver conf;
     QString dropboxPath = conf.getValue("dropbox_path").toString();
     QString recentlyChanged = conf.getValue("recently_changed3").toString();
     if(recentlyChanged.isEmpty()) return;
     foreach (QString elem, recentlyChanged.split("\n")) {
         QStringList list = elem.split(":");
-        if(list.length()<=1) continue;
-
-        //! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
-        //! convert to `снимок38.png'
-        //! hope somebody will find normal solution)
-        QString humanResult;
-        QStringList toHumanable = list.value(1).split("\\u");
-        if(toHumanable.length()>1) {
-            humanResult = toHumanable.first();
-            for(int i=1; i<toHumanable.length(); i++ ) {
-                if(toHumanable.at(i).length()!=4)
-                    humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
-                else
-                    humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
-            }
-            files.push_back(humanResult);
-        } else
-            files.push_back(list.value(1));
+        if(list.length()>1)
+            files.push_back(fixUnicodeChars(list.value(1)));
     }
 
     for (int i = 0; i < 5; ++i) {
@@ -223,6 +201,26 @@ void TrayIcon::prepareLastChangedFiles(){
         chFiles->actions().at(i)->setEnabled(QFile(dropboxPath+files.at(i)).exists());
 
         connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-        sm->setMapping(chFiles->actions().at(i), QString(files.at(i)));
+        sm->setMapping(chFiles->actions().at(i), files.at(i));
     }
+}
+
+//! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
+//! convert to `снимок38.png'
+//! hope somebody will find normal solution)
+QString TrayIcon::fixUnicodeChars(QString value)
+{
+    QString humanResult;
+    QStringList toHumanable = value.split("\\u");
+    if(toHumanable.length()>1) {
+        humanResult = toHumanable.first();
+        for(int i=1; i<toHumanable.length(); i++ ) {
+            if(toHumanable.at(i).length()!=4)
+                humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
+            else
+                humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
+        }
+        return humanResult;
+    } else
+        return value;
 }

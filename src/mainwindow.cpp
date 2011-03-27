@@ -137,16 +137,17 @@ void MainWindow::applySettings()
     //! to destroy conf..
     {
         Configuration conf;
+        ConfigurationDBDriver db;
 
         conf.setValue("Browser",ui->browser->text());
         conf.setValue("FileManager",ui->fileManager->currentText());
         conf.setValue("IconSet",ui->cbIconSet->currentText());
 
-        if(ui->dropboxFolder->text() != conf.getValue("dropbox_path").toString()) {
+        if(ui->dropboxFolder->text() != db.getValue("dropbox_path").toString()) {
 
             //! @todo test this
-            qDebug() << QDir(conf.getValue("dropbox_path").toString()).rename(conf.getValue("dropbox_path").toString(), ui->dropboxFolder->text());
-            conf.setValue("dropbox_path",ui->dropboxFolder->text());
+            qDebug() << QDir(db.getValue("dropbox_path").toString()).rename(db.getValue("dropbox_path").toString(), ui->dropboxFolder->text());
+            db.setValue("dropbox_path",ui->dropboxFolder->text());
         }
 
         conf.setValue("ShowNotifications",ui->showNotifications->isChecked());
@@ -162,21 +163,20 @@ void MainWindow::applySettings()
             dc->showGtkUi();
         }
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
-        conf.setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt());
+        db.setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt());
 
         // Network
-        conf.setValue("throttle_download_style", QVariant(ui->downloadLimitRate->isChecked()).toInt());
-        conf.setValue("throttle_download_speed", ui->downloadLimitValue->value());
+        db.setValue("throttle_download_style", QVariant(ui->downloadLimitRate->isChecked()).toInt());
+        db.setValue("throttle_download_speed", ui->downloadLimitValue->value());
 
         int _swap = 0;
-
         if(ui->uploadAutoLimitRate->isChecked()) {
             _swap = 1;
         } else if (ui->uploadLimitRate->isChecked()) {
             _swap = 2;
         }
-        conf.setValue("throttle_upload_style", _swap);
-        conf.setValue("throttle_upload_speed", ui->uploadLimitValue->value());
+        db.setValue("throttle_upload_style", _swap);
+        db.setValue("throttle_upload_speed", ui->uploadLimitValue->value());
 
         _swap = 0;
         if(ui->proxyAutoDetect->isChecked()) {
@@ -189,13 +189,13 @@ void MainWindow::applySettings()
             proxyType.push_back("SOCKS4");
             proxyType.push_back("SOCKS5");
 
-            conf.setValue("proxy_type", proxyType.value(ui->proxyType->currentIndex()));
-            conf.setValue("proxy_server", ui->proxyServer->text());
-            conf.setValue("proxy_port", ui->proxyPort->value());
-            conf.setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
-            conf.setValue("proxy_username", ui->proxyUsername->text());
+            db.setValue("proxy_type", proxyType.value(ui->proxyType->currentIndex()));
+            db.setValue("proxy_server", ui->proxyServer->text());
+            db.setValue("proxy_port", ui->proxyPort->value());
+            db.setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
+            db.setValue("proxy_username", ui->proxyUsername->text());
         }
-        conf.setValue("proxy_mode", _swap);
+        db.setValue("proxy_mode", _swap);
     }
 
     dc->start();
@@ -204,6 +204,7 @@ void MainWindow::applySettings()
 void MainWindow::loadSettings()
 {
     Configuration conf;
+    ConfigurationDBDriver db;
 
     QString iconset=conf.getValue("IconSet").toString();
     if (iconset.length()==0)
@@ -212,7 +213,7 @@ void MainWindow::loadSettings()
     trayIcon->loadIcons(iconset);
 
 
-    ui->dropboxFolder->setText(conf.getValue("dropbox_path").toString());
+    ui->dropboxFolder->setText(db.getValue("dropbox_path").toString());
     ui->fileManager->setCurrentIndex(ui->fileManager->findText(conf.getValue("FileManager").toString()));
     ui->browser->setText(conf.getValue("Browser").toString());
     ui->showNotifications->setChecked(conf.getValue("ShowNotifications").toBool());
@@ -225,40 +226,38 @@ void MainWindow::loadSettings()
     setIcons();
 
     ui->displayVersion->setText("Dropbox v" + dc->getVersion());
-    ui->displayAccount->setText(conf.getValue("email").toString());
-    ui->useP2P->setChecked(conf.getValue("p2p_enabled").toBool());
-    ui->useP2P->setEnabled(conf.hasKey("p2p_enabled"));
-    //! @todo Configuration can't know where to save this key (in dropbox db or in self conf file). On first start there is no this key in config.db
+    ui->displayAccount->setText(db.getValue("email").toString());
+    ui->useP2P->setChecked(db.getValue("p2p_enabled").toBool());
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
 
     // Network
     // (0: false, 1: auto, 2: true)
-    int _swap = conf.getValue("throttle_download_style").toInt();
+    int _swap = db.getValue("throttle_download_style").toInt();
     ui->downloadDontLimitRate->setChecked(_swap == 0);
     ui->downloadLimitRate->setChecked(_swap == 1);
-    ui->downloadLimitValue->setValue(conf.getValue("throttle_download_speed").toInt());
+    ui->downloadLimitValue->setValue(db.getValue("throttle_download_speed").toInt());
     ui->downloadLimitValue->setEnabled(ui->downloadLimitRate->isChecked());
 
-    _swap = conf.getValue("throttle_upload_style").toInt();
+    _swap = db.getValue("throttle_upload_style").toInt();
     ui->uploadAutoLimitRate->setChecked(_swap == 1);
     ui->uploadDontLimitRate->setChecked(_swap == 0);
     ui->uploadLimitRate->setChecked(_swap == 2);
-    ui->uploadLimitValue->setValue(conf.getValue("throttle_upload_speed").toInt());
+    ui->uploadLimitValue->setValue(db.getValue("throttle_upload_speed").toInt());
     ui->uploadLimitValue->setEnabled(ui->uploadLimitRate->isChecked());
 
-    _swap = conf.getValue("proxy_mode").toInt();
+    _swap = db.getValue("proxy_mode").toInt();
     ui->proxyAutoDetect->setChecked(_swap == 1);
     ui->proxyDontUse->setChecked(_swap == 0);
     ui->proxySetManually->setChecked(_swap == 2);
-    ui->proxyType->setCurrentIndex(ui->proxyType->findText(conf.getValue("proxy_type").toString()));
+    ui->proxyType->setCurrentIndex(ui->proxyType->findText(db.getValue("proxy_type").toString()));
     ui->proxyType->setEnabled(ui->proxySetManually->isChecked());
-    ui->proxyServer->setText(conf.getValue("proxy_server").toString());
+    ui->proxyServer->setText(db.getValue("proxy_server").toString());
     ui->proxyServer->setEnabled(ui->proxySetManually->isChecked());
-    ui->proxyPort->setValue(conf.getValue("proxy_port").toInt());
+    ui->proxyPort->setValue(db.getValue("proxy_port").toInt());
     ui->proxyPort->setEnabled(ui->proxySetManually->isChecked());
     ui->proxyRequiresAuth->setEnabled(ui->proxySetManually->isChecked());
-    ui->proxyRequiresAuth->setChecked(conf.getValue("proxy_requires_auth").toBool());
-    ui->proxyUsername->setText(conf.getValue("proxy_username").toString());
+    ui->proxyRequiresAuth->setChecked(db.getValue("proxy_requires_auth").toBool());
+    ui->proxyUsername->setText(db.getValue("proxy_username").toString());
     ui->proxyUsername->setEnabled(ui->proxyRequiresAuth->isChecked());
     ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());
 
