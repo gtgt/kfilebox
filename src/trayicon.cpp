@@ -40,12 +40,12 @@ TrayIcon::TrayIcon(QWidget *parent) :
     statusAction->setEnabled(false);
 
 
-    KMenu *helpMenu= new KMenu(tr("Help"), this);
+    helpMenu= new QMenu(tr("Help"), this);
     helpMenu->addAction(openHelpCenter);
     helpMenu->addAction(openTour);
     helpMenu->addAction(openForums);
 
-    chFiles= new KMenu(tr("Recently changed files"), this);
+    chFiles= new QMenu(tr("Recently changed files"), this);
     connect(chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
 
     chFiles->addAction(new QAction("empty", this));
@@ -55,7 +55,7 @@ TrayIcon::TrayIcon(QWidget *parent) :
     chFiles->addAction(new QAction("empty", this));
 
 
-    trayIconMenu = new KMenu(this);
+    trayIconMenu = new QMenu(this);
     trayIconMenu->addAction(openDir);
     trayIconMenu->addAction(openDropboxWebsite);
     trayIconMenu->addMenu(chFiles);
@@ -72,7 +72,7 @@ TrayIcon::TrayIcon(QWidget *parent) :
 
 
     trayIcon->setStatus(KStatusNotifierItem::Active);
-    trayIcon->setContextMenu(trayIconMenu);
+    trayIcon->setContextMenu(static_cast<KMenu*>(trayIconMenu));
     trayIcon->setIconByPixmap(defaultIcon);
     trayIcon->setToolTipIconByPixmap(appIcon);
     trayIcon->setToolTipTitle("Kfilebox");

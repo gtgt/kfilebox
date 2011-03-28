@@ -3,6 +3,7 @@
 
 #include <QAction>
 #include <QDesktopServices>
+#include <QMenu>
 #include <QSignalMapper>
 #include <QUrl>
 #include <QWidget>
@@ -28,10 +29,10 @@ private:
 
     QString fixUnicodeChars(QString value);
 
-    KStatusNotifierItem *trayIcon;
-    KMenu *trayIconMenu;
-    KMenu *chFiles;
-
+    KStatusNotifierItem* trayIcon;
+    QMenu* trayIconMenu;
+    QMenu* chFiles;
+    QMenu* helpMenu;
 
     QIcon defaultIcon;
     QIcon idleIcon;
