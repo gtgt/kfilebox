@@ -15,9 +15,13 @@ MainWindow::MainWindow(QWidget *parent) :
     dc = new DropboxClient(this);
     trayIcon= new TrayIcon(this);
 
-    connect(ui->saveSettings, SIGNAL(clicked()), this, SLOT(saveSettings()));
-    connect(ui->applySettings, SIGNAL(clicked()), this, SLOT(applySettings()));
-    connect(ui->cancelSettings, SIGNAL(clicked()), this, SLOT(hide()));
+//    connect(ui->saveSettings, SIGNAL(clicked()), this, SLOT(saveSettings()));
+//    connect(ui->applySettings, SIGNAL(clicked()), this, SLOT(applySettings()));
+//    connect(ui->cancelSettings, SIGNAL(clicked()), this, SLOT(hide()));
+    connect(ui->frame, SIGNAL(accepted()), SLOT(saveSettings()));
+    connect(ui->frame, SIGNAL(rejected()), SLOT(hide()));
+
+
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(QString)), this, SLOT(setIcons()));
     connect(ui->unlinkComputer, SIGNAL(clicked()), this, SLOT(unlinkComputer()));
