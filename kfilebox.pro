@@ -11,7 +11,6 @@ SOURCES += main.cpp \
     src/dropboxclient.cpp \
     src/dropboxclientadaptor.cpp \
     src/notification.cpp \
-    src/trayicon.cpp \
     src/configuration.cpp \
     src/configurationdbdriver.cpp \
     src/installerform.cpp \
@@ -20,7 +19,6 @@ HEADERS += \
     src/dropboxclient.h \
     src/dropboxclientadaptor.h \
     src/notification.h \
-    src/trayicon.h \
     src/configuration.h \
     src/configurationdbdriver.h \
     src/installerform.h \

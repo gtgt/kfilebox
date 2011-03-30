@@ -50,6 +50,7 @@ public slots:
 
 private slots:
     void readDaemonOutput();
+    void readyRead();
     void displayError(QLocalSocket::LocalSocketError socketError);
     void getDropboxStatus();
 

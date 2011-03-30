@@ -11,6 +11,7 @@ DropboxClient::DropboxClient(QObject *parent) :
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
 
     connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),this, SLOT(displayError(QLocalSocket::LocalSocketError)));
+    connect(m_socket, SIGNAL(readyRead()), SLOT(readyRead()));
 
     m_ps = new QProcess(this);
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
@@ -39,6 +40,8 @@ void DropboxClient::start()
 void DropboxClient::stop()
 {
     sendCommand("tray_action_hard_exit");
+    m_status = DropboxClient::DropboxStopped;
+    emit updateStatus(m_status, "Dropbox isn't running");
 }
 
 bool DropboxClient::isRunning()
@@ -62,8 +65,46 @@ bool DropboxClient::isRunning()
 void DropboxClient::getDropboxStatus()
 {
     QString message = sendCommand("get_dropbox_status");
+}
 
-    //! dropbox is stopped
+//Re-entrant
+QString DropboxClient::sendCommand(const QString &command)
+{
+    if(!m_socket->isOpen())
+    {
+        m_socket->connectToServer(m_socketPath);
+        //        if(!m_socket->waitForConnected(waitTime)) {
+        //            qDebug() << m_socket->errorString();
+        //            m_status = DropboxClient::DropboxStopped;
+        return "Dropbox isn't running";
+        //        }
+    }
+
+    m_socket->write(command.toUtf8());
+    m_socket->write(QString("\n").toUtf8());
+    m_socket->write(QString("done\n").toUtf8());
+    m_socket->flush();
+
+    return QString();
+}
+
+void DropboxClient::readyRead()
+{
+    QString reply = m_socket->readAll();
+
+    //Strip out \ndone\n and ok\n
+    reply = reply.remove("\ndone\n");
+    reply = reply.remove("ok\n");
+
+    //Remove status\t or Replace status to Idle
+    QStringList list = reply.split("\t");
+    if (list.length()==1 && list[0].trimmed()=="status")
+        reply = "Idle";
+    else if (list.length()>1 && list[0].trimmed()=="status")
+        reply = list[1];
+
+    QString message = reply;
+
     if(message.isEmpty())
         return;
 
@@ -101,56 +142,6 @@ void DropboxClient::getDropboxStatus()
         prev_message = message;
         emit updateStatus(m_status, message);
     }
-
-}
-
-//Re-entrant
-QString DropboxClient::sendCommand(const QString &command)
-{
-    int waitTime = 100;
-
-    if(!m_socket->isOpen())
-    {
-        m_socket->connectToServer(m_socketPath);
-        if(!m_socket->waitForConnected(waitTime)) {
-            //            qDebug() << m_socket->errorString();
-            //            m_status = DropboxClient::DropboxStopped;
-            return "Dropbox isn't running";
-        }
-    }
-
-    m_socket->write(command.toUtf8());
-    m_socket->write(QString("\n").toUtf8());
-    m_socket->write(QString("done\n").toUtf8());
-    m_socket->flush();
-
-    QString reply;
-
-    while(true)
-    {
-        if(!m_socket->waitForReadyRead(waitTime))
-        {
-            return QString();
-        }
-
-        reply.append(m_socket->readAll());
-
-        if(reply.split('\n').count()==4)
-            break;
-    }
-
-    //Strip out \ndone\n and ok\n
-    reply = reply.remove("\ndone\n");
-    reply = reply.remove("ok\n");
-
-    //Remove status\t or Replace status to Idle
-    QStringList list = reply.split("\t");
-    if (list.length()==1 && list[0].trimmed()=="status")
-        reply = "Idle";
-    else if (list.length()>1 && list[0].trimmed()=="status")
-        reply = list[1];
-
-    return reply;
 }
 
 void DropboxClient::readDaemonOutput()
@@ -180,8 +171,8 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
         break;
     case QLocalSocket::SocketTimeoutError:
     case QLocalSocket::PeerClosedError:
-        m_status = DropboxClient::DropboxStopped;
-        emit updateStatus(m_status, "Dropbox isn't running");
+        //        m_status = DropboxClient::DropboxStopped;
+        //        emit updateStatus(m_status, "Dropbox isn't running");
         //        notify.send(tr("Dropbox daemon stoped"));
         break;
     default:

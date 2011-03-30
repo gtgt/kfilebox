@@ -1,19 +1,21 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-//#include <QAction>
+#include <QAbstractButton>
 #include <QDebug>
-//#include <QFile>
+#include <QDesktopServices>
 #include <QFileDialog>
-//#include <QFileInfo>
 #include <QMainWindow>
+#include <QSignalMapper>
+
+#include <kstatusnotifieritem.h>
+#include <kmenu.h>
 
 #include "src/dropboxclient.h"
 #include "src/dropboxclientadaptor.h"
 #include "src/configuration.h"
 #include "src/configurationdbdriver.h"
 #include "src/installerform.h"
-#include "src/trayicon.h"
 
 namespace Ui {
 class MainWindow;
@@ -31,16 +33,26 @@ protected:
     void changeEvent(QEvent* e);
 
 private:
+    void loadIcons(const QString &iconset);
     void loadSettings();
     void initializeDBus();
+    QString fixUnicodeChars(QString value);
 
     Ui::MainWindow* ui;
-    TrayIcon* trayIcon;
     DropboxClient* dc;
     DropboxClientAdaptor* adaptor;
 
-private slots:
-    void applySettings();
+    QSignalMapper* sm;
+    KStatusNotifierItem* trayIcon;
+
+    QIcon defaultIcon;
+    QIcon idleIcon;
+    QIcon bussyIcon;
+    QIcon errorIcon;
+    QIcon appIcon;
+
+public slots:
+    void applySettings(QAbstractButton* button=0);
     void saveSettings();
     void changeDropboxFolder();
     void unlinkComputer();
@@ -50,6 +62,15 @@ private slots:
     void proxyRadioToggle();
     void proxyAuthRadioToggle();
 
+    void updateStatus(DropboxClient::DropboxStatus newStatus, const QString &message);
+
+    void openFileBrowser(const QString &path="");
+    void openHelpCenterURL();
+    void openTourURL();
+    void openForumsURL();
+    void openDropboxWebsiteURL();
+    void openGetMoreSpaceURL();
+    void prepareLastChangedFiles();
 };
 
 #endif // MAINWINDOW_H

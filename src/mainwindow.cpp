@@ -13,24 +13,16 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     dc = new DropboxClient(this);
-    trayIcon= new TrayIcon(this);
 
-//    connect(ui->saveSettings, SIGNAL(clicked()), this, SLOT(saveSettings()));
-//    connect(ui->applySettings, SIGNAL(clicked()), this, SLOT(applySettings()));
-//    connect(ui->cancelSettings, SIGNAL(clicked()), this, SLOT(hide()));
-    connect(ui->frame, SIGNAL(accepted()), SLOT(saveSettings()));
-    connect(ui->frame, SIGNAL(rejected()), SLOT(hide()));
-
+    connect(ui->dialogButtoBox, SIGNAL(accepted()), SLOT(saveSettings()));
+    connect(ui->dialogButtoBox, SIGNAL(clicked(QAbstractButton*)), SLOT(applySettings(QAbstractButton*))); //! @todo fix later
+    connect(ui->dialogButtoBox, SIGNAL(rejected()), SLOT(hide()));
 
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(QString)), this, SLOT(setIcons()));
     connect(ui->unlinkComputer, SIGNAL(clicked()), this, SLOT(unlinkComputer()));
 
-
-    connect(trayIcon, SIGNAL(prefsWindowActionTrigered()), this, SLOT(show()));
-    connect(trayIcon, SIGNAL(startDropbox()), dc, SLOT(start()));
-    connect(trayIcon, SIGNAL(stopDropbox()), dc, SLOT(stop()));
-    connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), trayIcon, SLOT(updateStatus(DropboxClient::DropboxStatus,QString)));
+    connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), this, SLOT(updateStatus(DropboxClient::DropboxStatus,QString)));
 
     connect(ui->downloadDontLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
     connect(ui->downloadLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
@@ -45,8 +37,33 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->proxyRequiresAuth, SIGNAL(toggled(bool)), this, SLOT(proxyAuthRadioToggle()));
 
+    connect(ui->openDir, SIGNAL(triggered()), this, SLOT(openFileBrowser()));
+    connect(ui->openHelpCenter, SIGNAL(triggered()), this, SLOT(openHelpCenterURL()));
+    connect(ui->openDropboxWebsite, SIGNAL(triggered()), this, SLOT(openDropboxWebsiteURL()));
+    connect(ui->openGetMoreSpace, SIGNAL(triggered()), this, SLOT(openGetMoreSpaceURL()));
+    connect(ui->openTour, SIGNAL(triggered()), this, SLOT(openTourURL()));
+    connect(ui->openForums, SIGNAL(triggered()), this, SLOT(openForumsURL()));
+    connect(ui->openPrefs, SIGNAL(triggered()), this, SLOT(show()));
+    connect(ui->startAction, SIGNAL(triggered()), dc, SLOT(start()));
+    connect(ui->stopAction, SIGNAL(triggered()), dc, SLOT(stop()));
+    connect(ui->chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
+
+    ui->startAction->setVisible(false);
+    ui->menuBar->setVisible(false);
+
     loadSettings();
 
+    trayIcon = new KStatusNotifierItem(this);
+
+    sm = new QSignalMapper(this);
+    connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
+
+    trayIcon->setStatus(KStatusNotifierItem::Active);
+    trayIcon->setContextMenu(static_cast<KMenu*>(ui->trayIconMenu));
+    trayIcon->setIconByPixmap(defaultIcon);
+    trayIcon->setToolTipIconByPixmap(appIcon);
+    trayIcon->setToolTipTitle("Kfilebox");
+    trayIcon->setAssociatedWidget(ui->trayIconMenu);
 
     if(ui->startDaemon->isChecked())
         dc->start();
@@ -132,11 +149,15 @@ void MainWindow::saveSettings()
     hide();
 }
 
-void MainWindow::applySettings()
+void MainWindow::applySettings(QAbstractButton* button)
 {
+
+    if(ui->dialogButtoBox->standardButton(button) != QDialogButtonBox::Apply)
+        return; //
+
     dc->stop();
 
-    trayIcon->loadIcons(ui->cbIconSet->currentText());
+    loadIcons(ui->cbIconSet->currentText());
 
     //! to destroy conf..
     {
@@ -202,6 +223,7 @@ void MainWindow::applySettings()
         db.setValue("proxy_mode", _swap);
     }
 
+    //! @todo start not always
     dc->start();
 }
 
@@ -211,10 +233,10 @@ void MainWindow::loadSettings()
     ConfigurationDBDriver db;
 
     QString iconset=conf.getValue("IconSet").toString();
-    if (iconset.length()==0)
+    if (iconset.isEmpty())
         iconset="default";
 
-    trayIcon->loadIcons(iconset);
+    loadIcons(iconset);
 
 
     ui->dropboxFolder->setText(db.getValue("dropbox_path").toString());
@@ -265,4 +287,138 @@ void MainWindow::loadSettings()
     ui->proxyUsername->setEnabled(ui->proxyRequiresAuth->isChecked());
     ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());
 
+}
+
+
+//! cutted from TrayIcon keep watching
+
+void MainWindow::loadIcons(const QString &iconset)
+{
+    defaultIcon = QIcon(":/icons/img/"+iconset+"/kfilebox.png");
+    idleIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_idle.png");
+    bussyIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_updating.png");
+    errorIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_error.png");
+
+    appIcon = QIcon(":/icons/img/"+iconset+"/kfileboxapp.png");
+    if (trayIcon!=NULL)
+        trayIcon->setToolTipIconByPixmap(appIcon);
+}
+
+void MainWindow::openFileBrowser(const QString &path)
+{
+    //! if file - open parent folder for it
+    QString dirName = QDir::toNativeSeparators(ui->dropboxFolder->text().append(path));
+    QFileInfo fileInfo(dirName);
+    if(fileInfo.isFile())
+        dirName = fileInfo.dir().path();
+
+    QDesktopServices::openUrl(QUrl(dirName));
+}
+
+//! @todo get this urls from dropbox daemon
+void MainWindow::openHelpCenterURL()
+{
+    QDesktopServices::openUrl(QUrl("https://www.dropbox.com/help"));
+}
+
+void MainWindow::openTourURL()
+{
+    QDesktopServices::openUrl(QUrl("https://www.dropbox.com/tour"));
+}
+
+void MainWindow::openForumsURL()
+{
+    QDesktopServices::openUrl(QUrl("http://forums.dropbox.com/"));
+}
+
+void MainWindow::openDropboxWebsiteURL()
+{
+    QDesktopServices::openUrl(QUrl("https://www.dropbox.com/home"));
+}
+void MainWindow::openGetMoreSpaceURL()
+{
+    QDesktopServices::openUrl(QUrl("https://www.dropbox.com/plans"));
+}
+
+void MainWindow::updateStatus(DropboxClient::DropboxStatus newStatus, const QString &message)
+{
+    if(newStatus == DropboxClient::DropboxStopped){
+        if(ui->stopAction->isVisible() || !ui->startAction->isVisible()) {
+            ui->startAction->setVisible(true);
+            ui->stopAction->setVisible(false);
+        }
+    } else{
+        if (!ui->stopAction->isVisible() || ui->startAction->isVisible()) {
+            ui->startAction->setVisible(false);
+            ui->stopAction->setVisible(true);
+        }
+    }
+
+    ui->statusAction->setText(message);
+    trayIcon->setToolTipSubTitle(message);
+
+    switch(newStatus) {
+    case DropboxClient::DropboxIdle:
+        trayIcon->setIconByPixmap(idleIcon);
+        break;
+    case DropboxClient::DropboxBussy:
+    case DropboxClient::DropboxUploading:
+    case DropboxClient::DropboxDownloading:
+    case DropboxClient::DropboxSaving:
+    case DropboxClient::DropboxIndexing:
+        trayIcon->setIconByPixmap(bussyIcon);
+        break;
+    case DropboxClient::DropboxUnkown:
+    case DropboxClient::DropboxStopped:
+    case DropboxClient::DropboxDisconnected:
+    case DropboxClient::DropboxError:
+        trayIcon->setIconByPixmap(errorIcon);
+        break;
+    }
+}
+
+//! @todo recent files from shared folders
+//! in db '/gp/lacrimoza.gp5'
+//! absolute path is '~/Dropbox/shared-folder/' + that file
+void MainWindow::prepareLastChangedFiles(){
+    QStringList files;
+    ConfigurationDBDriver conf;
+    QString recentlyChanged = conf.getValue("recently_changed3").toString();
+
+    if(recentlyChanged.isEmpty()) return;
+    foreach (QString elem, recentlyChanged.split("\n")) {
+        QStringList list = elem.split(":");
+        if(list.length()>1)
+            files.push_back(fixUnicodeChars(list.value(1)));
+    }
+
+    for (int i = 0; i < 5; ++i) {
+        disconnect(ui->chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
+        sm->removeMappings(ui->chFiles->actions().at(i));
+        ui->chFiles->actions().at(i)->setText(files.at(i).split("/").last());
+        ui->chFiles->actions().at(i)->setEnabled(QFile(ui->dropboxFolder->text()+files.at(i)).exists());
+
+        connect(ui->chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
+        sm->setMapping(ui->chFiles->actions().at(i), files.at(i));
+    }
+}
+
+//! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
+//! convert to `снимок38.png'
+//! hope somebody will find normal solution)
+QString MainWindow::fixUnicodeChars(QString value)
+{
+    QString humanResult;
+    QStringList toHumanable = value.split("\\u");
+    if(toHumanable.length()>1) {
+        humanResult = toHumanable.first();
+        for(int i=1; i<toHumanable.length(); i++ ) {
+            if(toHumanable.at(i).length()!=4)
+                humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
+            else
+                humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
+        }
+        return humanResult;
+    } else
+        return value;
 }
