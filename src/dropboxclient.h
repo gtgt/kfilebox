@@ -19,7 +19,7 @@ public:
 
     explicit DropboxClient(QObject *parent = 0);
     ~DropboxClient();
-    QString sendCommand(const QString &command);
+    void sendCommand(const QString &command);
 
     bool isRunning();
 
@@ -50,7 +50,8 @@ public slots:
 
 private slots:
     void readDaemonOutput();
-    void readyRead();
+    void receiveReply();
+    void processReply(const QString &message);
     void displayError(QLocalSocket::LocalSocketError socketError);
     void getDropboxStatus();
 

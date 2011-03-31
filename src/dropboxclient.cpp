@@ -11,7 +11,7 @@ DropboxClient::DropboxClient(QObject *parent) :
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
 
     connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),this, SLOT(displayError(QLocalSocket::LocalSocketError)));
-    connect(m_socket, SIGNAL(readyRead()), SLOT(readyRead()));
+    connect(m_socket, SIGNAL(readyRead()), SLOT(receiveReply()));
 
     m_ps = new QProcess(this);
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
@@ -40,8 +40,9 @@ void DropboxClient::start()
 void DropboxClient::stop()
 {
     sendCommand("tray_action_hard_exit");
-    m_status = DropboxClient::DropboxStopped;
-    emit updateStatus(m_status, "Dropbox isn't running");
+    processReply("Dropbox isn't running");
+    //    m_status = DropboxClient::DropboxStopped;
+    //    emit updateStatus(m_status, "Dropbox isn't running");
 }
 
 bool DropboxClient::isRunning()
@@ -64,11 +65,11 @@ bool DropboxClient::isRunning()
   */
 void DropboxClient::getDropboxStatus()
 {
-    QString message = sendCommand("get_dropbox_status");
+    sendCommand("get_dropbox_status");
 }
 
 //Re-entrant
-QString DropboxClient::sendCommand(const QString &command)
+void DropboxClient::sendCommand(const QString &command)
 {
     if(!m_socket->isOpen())
     {
@@ -76,7 +77,7 @@ QString DropboxClient::sendCommand(const QString &command)
         //        if(!m_socket->waitForConnected(waitTime)) {
         //            qDebug() << m_socket->errorString();
         //            m_status = DropboxClient::DropboxStopped;
-        return "Dropbox isn't running";
+        return; // "Dropbox isn't running";
         //        }
     }
 
@@ -85,15 +86,14 @@ QString DropboxClient::sendCommand(const QString &command)
     m_socket->write(QString("done\n").toUtf8());
     m_socket->flush();
 
-    return QString();
 }
 
-void DropboxClient::readyRead()
+void DropboxClient::receiveReply()
 {
     QString reply = m_socket->readAll();
 
-    //Strip out \ndone\n and ok\n
     reply = reply.remove("\ndone\n");
+    reply = reply.remove("done\n"); //! @todo
     reply = reply.remove("ok\n");
 
     //Remove status\t or Replace status to Idle
@@ -103,8 +103,11 @@ void DropboxClient::readyRead()
     else if (list.length()>1 && list[0].trimmed()=="status")
         reply = list[1];
 
-    QString message = reply;
+    processReply(reply);
+}
 
+void DropboxClient::processReply(const QString &message)
+{
     if(message.isEmpty())
         return;
 
@@ -143,6 +146,7 @@ void DropboxClient::readyRead()
         emit updateStatus(m_status, message);
     }
 }
+
 
 void DropboxClient::readDaemonOutput()
 {
