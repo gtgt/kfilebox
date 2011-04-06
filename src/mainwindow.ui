@@ -194,30 +194,6 @@
          </widget>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="tab1Layout">
-          <item>
-           <spacer name="tab1LayoutSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QPushButton" name="unlinkComputer">
-            <property name="text">
-             <string>Unlink this computer...</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
          <widget class="QLabel" name="label_6">
           <property name="text">
            <string>Dropbox folder location</string>
@@ -266,136 +242,134 @@
          </spacer>
         </item>
         <item>
-         <widget class="QLabel" name="label_4">
-          <property name="text">
+         <widget class="QGroupBox" name="downloadBox">
+          <property name="title">
            <string>Download</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_5">
+           <item>
+            <widget class="QRadioButton" name="downloadDontLimitRate">
+             <property name="text">
+              <string>Don't limit download rate</string>
+             </property>
+             <property name="checked">
+              <bool>false</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="networkDownloadLayout">
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QRadioButton" name="downloadLimitRate">
+               <property name="text">
+                <string>Limit download rate to:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="downloadLimitValue">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="value">
+                <number>50</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="downloadLimitValueFor">
+               <property name="text">
+                <string>kB/s</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <widget class="QRadioButton" name="downloadDontLimitRate">
-          <property name="text">
-           <string>Don't limit download rate</string>
-          </property>
-          <property name="checked">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="networkDownloadLayout">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <item>
-           <widget class="QRadioButton" name="downloadLimitRate">
-            <property name="text">
-             <string>Limit download rate to:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="downloadLimitValue">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="value">
-             <number>50</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="downloadLimitValueFor">
-            <property name="text">
-             <string>kB/s</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <widget class="QLabel" name="label_5">
-          <property name="text">
+         <widget class="QGroupBox" name="uploadBox">
+          <property name="title">
            <string>Upload</string>
           </property>
-          <property name="alignment">
-           <set>Qt::AlignCenter</set>
-          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_6">
+           <item>
+            <widget class="QRadioButton" name="uploadDontLimitRate">
+             <property name="text">
+              <string>Don't limit upload rate</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QRadioButton" name="uploadAutoLimitRate">
+             <property name="text">
+              <string>Limit upload rate automatically</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <layout class="QHBoxLayout" name="horizontalLayout_4">
+             <item>
+              <widget class="QRadioButton" name="uploadLimitRate">
+               <property name="text">
+                <string>Limit upload rate to:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <spacer name="horizontalSpacer_2">
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+               <property name="sizeHint" stdset="0">
+                <size>
+                 <width>40</width>
+                 <height>20</height>
+                </size>
+               </property>
+              </spacer>
+             </item>
+             <item>
+              <widget class="QSpinBox" name="uploadLimitValue">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="value">
+                <number>10</number>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="uploadLimitValueFor">
+               <property name="text">
+                <string>kB/s</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
+          </layout>
          </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="uploadDontLimitRate">
-          <property name="text">
-           <string>Don't limit upload rate</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QRadioButton" name="uploadAutoLimitRate">
-          <property name="text">
-           <string>Limit upload rate automatically</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
-          <item>
-           <widget class="QRadioButton" name="uploadLimitRate">
-            <property name="text">
-             <string>Limit upload rate to:</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <spacer name="horizontalSpacer_2">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QSpinBox" name="uploadLimitValue">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="value">
-             <number>10</number>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="uploadLimitValueFor">
-            <property name="text">
-             <string>kB/s</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
        </layout>
       </widget>

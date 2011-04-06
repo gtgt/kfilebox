@@ -55,7 +55,6 @@ public slots:
     void applySettings();
     void dialogButtonBoxTriggered(QAbstractButton* button);
     void changeDropboxFolder();
-    void unlinkComputer();
     void setIcons();    // select icon themes
     void downloadRadioToggle();
     void uploadRadioToggle();

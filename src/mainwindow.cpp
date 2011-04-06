@@ -14,13 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dc = new DropboxClient(this);
 
-    //    connect(ui->dialogButtoBox, SIGNAL(accepted()), SLOT(saveSettings()));
     connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*))); //! @todo fix later
-    //    connect(ui->dialogButtoBox, SIGNAL(rejected()), SLOT(hide()));
-
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(QString)), this, SLOT(setIcons()));
-    connect(ui->unlinkComputer, SIGNAL(clicked()), this, SLOT(unlinkComputer()));
 
     connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), this, SLOT(updateStatus(DropboxClient::DropboxStatus,QString)));
 
@@ -108,12 +104,6 @@ void MainWindow::changeDropboxFolder()
 
     if ( (dir.length()!=0) && (ui->dropboxFolder->text() != dir) )
         ui->dropboxFolder->setText(dir);
-}
-
-void MainWindow::unlinkComputer()
-{
-    //! @todo research..
-    QProcess::startDetached("rm -frv "+QDir::homePath().append("/.dropbox/"));
 }
 
 void MainWindow::downloadRadioToggle()
