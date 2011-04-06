@@ -108,17 +108,15 @@ void DropboxClient::receiveReply()
 
 void DropboxClient::processReply(const QString &message)
 {
-    if(message.isEmpty())
-        return;
+    if(message.isEmpty()) return;
 
-    if (message.contains("connecting")){
+    if (message.contains("connecting")) {
         m_status=DropboxClient::DropboxBussy;
     }
-    else if ( message.contains("Idle"))
-    {
+    else if ( message.contains("Idle")) {
         m_status=DropboxClient::DropboxIdle;
     }
-    else if (message.contains("Up")){
+    else if (message.contains("Up")) {
         m_status=DropboxClient::DropboxUploading;
     }
     else if (message.contains("Downloading")) {
@@ -199,20 +197,20 @@ bool DropboxClient::isInstalled()
     return QFile(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropbox"))).exists();
 }
 
-void DropboxClient::hideGtkUi()
+void DropboxClient::hideGtkUi(bool v)
 {
-    if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_.so")).exists())
-        QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"));
-    else
-        qDebug() << "HideGtkUi: Failed to move /.dropbox-dist/wx._controls_.so";
-}
+    if(v) {
+        if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_.so")).exists())
+            QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"));
+        //        else
+        //            qDebug() << "HideGtkUi: Failed to move /.dropbox-dist/wx._controls_.so";
+    } else {
+        if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so")).exists())
+            QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_.so"));
+        //        else
+        //            qDebug() << "ShowGtkUi: Failed to move /.dropbox-dist/wx._controls_orig.so";
+    }
 
-void DropboxClient::showGtkUi()
-{
-    if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so")).exists())
-        QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_.so"));
-    else
-        qDebug() << "ShowGtkUi: Failed to move /.dropbox-dist/wx._controls_orig.so";
 }
 
 QString DropboxClient::getVersion()

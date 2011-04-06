@@ -52,8 +52,8 @@ private:
     QIcon appIcon;
 
 public slots:
-    void applySettings(QAbstractButton* button=0);
-    void saveSettings();
+    void applySettings();
+    void dialogButtonBoxTriggered(QAbstractButton* button);
     void changeDropboxFolder();
     void unlinkComputer();
     void setIcons();    // select icon themes

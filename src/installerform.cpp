@@ -91,7 +91,7 @@ void InstallerForm::processFile()
 void InstallerForm::runConfiguration()
 {
     dc = new DropboxClient(this);
-    dc->hideGtkUi();
+    dc->hideGtkUi(true);
     dc->start();
 
     ui->launchBrowser->setVisible(true);
@@ -110,7 +110,7 @@ void InstallerForm::authThroughBrowser()
 void InstallerForm::runGtkInstaller()
 {
     dc->stop();
-    dc->showGtkUi();
+    dc->hideGtkUi(false);
     dc->start();
     hide();
 }

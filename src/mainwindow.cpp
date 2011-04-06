@@ -14,9 +14,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dc = new DropboxClient(this);
 
-    connect(ui->dialogButtoBox, SIGNAL(accepted()), SLOT(saveSettings()));
-    connect(ui->dialogButtoBox, SIGNAL(clicked(QAbstractButton*)), SLOT(applySettings(QAbstractButton*))); //! @todo fix later
-    connect(ui->dialogButtoBox, SIGNAL(rejected()), SLOT(hide()));
+    //    connect(ui->dialogButtoBox, SIGNAL(accepted()), SLOT(saveSettings()));
+    connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*))); //! @todo fix later
+    //    connect(ui->dialogButtoBox, SIGNAL(rejected()), SLOT(hide()));
 
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(QString)), this, SLOT(setIcons()));
@@ -143,18 +143,22 @@ void MainWindow::proxyAuthRadioToggle()
 }
 
 
-void MainWindow::saveSettings()
+void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
 {
-    applySettings();
-    hide();
+    QDialogButtonBox::StandardButton m_type = ui->dialogButtonBox->standardButton(button);
+    if (m_type == QDialogButtonBox::Ok) {
+        applySettings();
+        hide();
+    } else if (m_type == QDialogButtonBox::Cancel) {
+        loadSettings();
+        hide();
+    } else if (m_type == QDialogButtonBox::Apply) {
+        applySettings();
+    }
 }
 
-void MainWindow::applySettings(QAbstractButton* button)
+void MainWindow::applySettings()
 {
-
-    if(ui->dialogButtoBox->standardButton(button) != QDialogButtonBox::Apply)
-        return; //
-
     dc->stop();
 
     loadIcons(ui->cbIconSet->currentText());
@@ -178,17 +182,12 @@ void MainWindow::applySettings(QAbstractButton* button)
         conf.setValue("ShowNotifications",ui->showNotifications->isChecked());
         conf.setValue("StartDaemon",ui->startDaemon->isChecked());
         conf.setValue("AutoStart",ui->startDaemon->isChecked());
-        conf.setValue("GtkUiDisabled",ui->hideGtkUI->isChecked());
+        conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
+        db.setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt());
 
         //! @todo add more options to save..
 
-        if(ui->hideGtkUI->isChecked()) {
-            dc->hideGtkUi();
-        }else {
-            dc->showGtkUi();
-        }
-        conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
-        db.setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt());
+        dc->hideGtkUi(ui->hideGtkUI->isChecked());
 
         // Network
         db.setValue("throttle_download_style", QVariant(ui->downloadLimitRate->isChecked()).toInt());

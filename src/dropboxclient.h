@@ -25,8 +25,7 @@ public:
 
     //! This functions not strongly related to this class..
     QString getAuthUrl() const;
-    void static hideGtkUi();
-    void static showGtkUi();
+    void static hideGtkUi(bool v);
     bool static isInstalled();
     QString static getVersion();
 
