@@ -146,7 +146,7 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
         applySettings();
     }
 }
-
+//! @bug when by hand stoping the dropbox status is not changed..
 void MainWindow::applySettings()
 {
     dc->stop();
@@ -180,8 +180,8 @@ void MainWindow::applySettings()
         dc->hideGtkUi(ui->hideGtkUI->isChecked());
 
         // Network
-        db.setValue("throttle_download_style", QVariant(ui->downloadLimitRate->isChecked()).toInt());
-        db.setValue("throttle_download_speed", ui->downloadLimitValue->value());
+        db.setValue("throttle_download_style", (ui->downloadLimitRate->isChecked()?2:0));
+        db.setValue("throttle_download_speed", QString::number(ui->downloadLimitValue->value()).append(".0"));
 
         int _swap = 0;
         if(ui->uploadAutoLimitRate->isChecked()) {
@@ -190,7 +190,7 @@ void MainWindow::applySettings()
             _swap = 2;
         }
         db.setValue("throttle_upload_style", _swap);
-        db.setValue("throttle_upload_speed", ui->uploadLimitValue->value());
+        db.setValue("throttle_upload_speed", QString::number(ui->uploadLimitValue->value()).append(".0"));
 
         _swap = 0;
         if(ui->proxyAutoDetect->isChecked()) {
@@ -199,14 +199,12 @@ void MainWindow::applySettings()
             _swap = 2;
 
             QStringList proxyType;
-            proxyType.push_back("HTTP");
-            proxyType.push_back("SOCKS4");
-            proxyType.push_back("SOCKS5");
+            proxyType << "HTTP" << "SOCKS4" << "SOCKS5";
 
             db.setValue("proxy_type", proxyType.value(ui->proxyType->currentIndex()));
             db.setValue("proxy_server", ui->proxyServer->text());
             db.setValue("proxy_port", ui->proxyPort->value());
-            db.setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
+            db.setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt()); //! @bug ????????????
             db.setValue("proxy_username", ui->proxyUsername->text());
         }
         db.setValue("proxy_mode", _swap);
@@ -249,20 +247,20 @@ void MainWindow::loadSettings()
     // (0: false, 1: auto, 2: true)
     int _swap = db.getValue("throttle_download_style").toInt();
     ui->downloadDontLimitRate->setChecked(_swap == 0);
-    ui->downloadLimitRate->setChecked(_swap == 1);
+    ui->downloadLimitRate->setChecked(_swap == 2);
     ui->downloadLimitValue->setValue(db.getValue("throttle_download_speed").toInt());
     ui->downloadLimitValue->setEnabled(ui->downloadLimitRate->isChecked());
 
     _swap = db.getValue("throttle_upload_style").toInt();
-    ui->uploadAutoLimitRate->setChecked(_swap == 1);
     ui->uploadDontLimitRate->setChecked(_swap == 0);
+    ui->uploadAutoLimitRate->setChecked(_swap == 1);
     ui->uploadLimitRate->setChecked(_swap == 2);
     ui->uploadLimitValue->setValue(db.getValue("throttle_upload_speed").toInt());
     ui->uploadLimitValue->setEnabled(ui->uploadLimitRate->isChecked());
 
     _swap = db.getValue("proxy_mode").toInt();
-    ui->proxyAutoDetect->setChecked(_swap == 1);
     ui->proxyDontUse->setChecked(_swap == 0);
+    ui->proxyAutoDetect->setChecked(_swap == 1);
     ui->proxySetManually->setChecked(_swap == 2);
     ui->proxyType->setCurrentIndex(ui->proxyType->findText(db.getValue("proxy_type").toString()));
     ui->proxyType->setEnabled(ui->proxySetManually->isChecked());
@@ -271,7 +269,7 @@ void MainWindow::loadSettings()
     ui->proxyPort->setValue(db.getValue("proxy_port").toInt());
     ui->proxyPort->setEnabled(ui->proxySetManually->isChecked());
     ui->proxyRequiresAuth->setEnabled(ui->proxySetManually->isChecked());
-    ui->proxyRequiresAuth->setChecked(db.getValue("proxy_requires_auth").toBool());
+    ui->proxyRequiresAuth->setChecked(db.getValue("proxy_requires_auth").toBool()); //! @bug ??????
     ui->proxyUsername->setText(db.getValue("proxy_username").toString());
     ui->proxyUsername->setEnabled(ui->proxyRequiresAuth->isChecked());
     ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());
@@ -305,6 +303,15 @@ void MainWindow::openFileBrowser(const QString &path)
 }
 
 //! @todo get this urls from dropbox daemon
+
+//! @todo
+//helper::runner::perform(QUrl url) {
+//    if(options[useNative])
+//        QDesktopServices::openUrl(url);
+//    else
+//        QProcess::startDetached(options[browser] + options[browserOptions] + url);
+//}
+
 void MainWindow::openHelpCenterURL()
 {
     QDesktopServices::openUrl(QUrl("https://www.dropbox.com/help"));

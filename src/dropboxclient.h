@@ -14,6 +14,7 @@ class DropboxClient : public QObject
 {
     Q_OBJECT
 public:
+    //! @todo move from class to freedom
     enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
                         DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
 
@@ -28,6 +29,7 @@ public:
     void static hideGtkUi(bool v);
     bool static isInstalled();
     QString static getVersion();
+    QStringList getSharedFolders();
 
 private:
     QTimer *m_timer;

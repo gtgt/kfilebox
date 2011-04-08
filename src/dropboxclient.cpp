@@ -40,9 +40,8 @@ void DropboxClient::start()
 void DropboxClient::stop()
 {
     sendCommand("tray_action_hard_exit");
+    //    int count=0; while(true){sleep(200); count++; qDebug() << "iteration " << count; if((!isRunning())||(count>=12)) break;}
     processReply("Dropbox isn't running");
-    //    m_status = DropboxClient::DropboxStopped;
-    //    emit updateStatus(m_status, "Dropbox isn't running");
 }
 
 bool DropboxClient::isRunning()
@@ -91,7 +90,6 @@ void DropboxClient::sendCommand(const QString &command)
 void DropboxClient::receiveReply()
 {
     QString reply = m_socket->readAll();
-
     reply = reply.remove("\ndone\n");
     reply = reply.remove("done\n"); //! @todo
     reply = reply.remove("ok\n");
@@ -106,6 +104,7 @@ void DropboxClient::receiveReply()
     processReply(reply);
 }
 
+//! @bug fix if dropbox is stoped
 void DropboxClient::processReply(const QString &message)
 {
     if(message.isEmpty()) return;
@@ -132,6 +131,9 @@ void DropboxClient::processReply(const QString &message)
         m_status=DropboxClient::DropboxStopped;
     }
     else if(message.contains("couldn't")){
+        m_status=DropboxClient::DropboxDisconnected;
+    }
+    else if(message.contains("Syncing paused")){
         m_status=DropboxClient::DropboxDisconnected;
     }
     else if(message.contains("dopped")){
@@ -175,6 +177,7 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
     case QLocalSocket::PeerClosedError:
         //        m_status = DropboxClient::DropboxStopped;
         //        emit updateStatus(m_status, "Dropbox isn't running");
+        processReply("Dropbox isn't running");
         //        notify.send(tr("Dropbox daemon stoped"));
         break;
     default:
@@ -224,4 +227,25 @@ QString DropboxClient::getVersion()
     in >> contents;
 
     return contents;
+}
+
+
+/**
+  * @todo Dropbox doesn't providing
+  * How to get shared folders?
+  * manually get %tag% of the every folder insede of %dropbox_folder%
+  * where needed %tag% must be like shared
+  *
+  */
+QStringList DropboxClient::getSharedFolders()
+{
+    QStringList subs = QDir("/path/to/").entryList(QDir::Dirs|QDir::NoDotAndDotDot);
+    QStringList m_sharedList;
+    foreach (QString filename, subs) {
+        qDebug() << filename;
+        if("/path/to"+filename+"get_status" == "shared") {
+            m_sharedList << "/path/to"+filename;
+        }
+    }
+    return m_sharedList;
 }

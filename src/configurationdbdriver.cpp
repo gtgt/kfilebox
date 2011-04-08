@@ -82,6 +82,7 @@ void ConfigurationDBDriver::setValue(const QString &key, const QVariant &value)
         return;
 
     db->exec("REPLACE INTO `config` (`key`, `value`) VALUES ('"+key+"', '"+value.toString()+"')");
+    qDebug() << "REPLACE INTO `config` (`key`, `value`) VALUES ('"+key+"', '"+value.toString()+"')";
     if(db->lastError().isValid())
         qDebug() << db->lastError() << "query:\n" << db->exec().lastQuery();
 
