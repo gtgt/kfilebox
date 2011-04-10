@@ -43,7 +43,7 @@ public Q_SLOTS:
     void stop();
 
 Q_SIGNALS:
-    void updateStatus(DropboxClient::DropboxStatus, QString);
+    void updateStatus(DropboxStatus, QString);
 };
 
 #endif // DROPBOXCLIENTADAPTOR_H

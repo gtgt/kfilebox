@@ -61,7 +61,7 @@ public slots:
     void proxyRadioToggle();
     void proxyAuthRadioToggle();
 
-    void updateStatus(DropboxClient::DropboxStatus newStatus, const QString &message);
+    void updateStatus(DropboxStatus newStatus, const QString &message);
 
     void openFileBrowser(const QString &path="");
     void openHelpCenterURL();

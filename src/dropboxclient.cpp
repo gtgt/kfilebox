@@ -1,22 +1,22 @@
 #include "dropboxclient.h"
 
 DropboxClient::DropboxClient(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+//    m_sharedFolders(new QStringList()),
+    m_socket(new QLocalSocket(this)),
+    m_ps(new QProcess(this)),
+    m_timer(new QTimer(this))
 {
-    m_status = DropboxClient::DropboxUnkown;
-
+    m_status = DropboxUnkown;
     authUrl = "";
 
-    m_socket = new QLocalSocket(this);
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
 
     connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),this, SLOT(displayError(QLocalSocket::LocalSocketError)));
     connect(m_socket, SIGNAL(readyRead()), SLOT(receiveReply()));
 
-    m_ps = new QProcess(this);
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
 
-    m_timer = new QTimer(this);
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
     m_timer->start(500);
 }
@@ -29,7 +29,7 @@ DropboxClient::~DropboxClient()
 
 void DropboxClient::start()
 {
-    m_status=DropboxClient::DropboxUnkown;
+    m_status=DropboxUnkown;
     if(!isRunning()) {
         m_ps->start(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
         m_ps->waitForStarted(500);
@@ -46,7 +46,7 @@ void DropboxClient::stop()
 
 bool DropboxClient::isRunning()
 {
-    //    return (m_status!=DropboxClient::DropboxStopped);
+    //    return (m_status!=DropboxStopped);
     QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/dropbox.pid")));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
@@ -55,7 +55,7 @@ bool DropboxClient::isRunning()
     QTextStream in(&file);
     in >> pid;
 
-    return QFile(QString("/proc/"+QString::number(pid)+"/cmdline")).open(QIODevice::ReadOnly | QIODevice::Text);
+    return QFile(QString("/proc/%1/cmdline").arg(QString::number(pid))).open(QIODevice::ReadOnly | QIODevice::Text);
 }
 
 /** Loop. I don't know what is worth(every m_timer->interval() ):
@@ -67,7 +67,6 @@ void DropboxClient::getDropboxStatus()
     sendCommand("get_dropbox_status");
 }
 
-//Re-entrant
 void DropboxClient::sendCommand(const QString &command)
 {
     if(!m_socket->isOpen())
@@ -75,14 +74,13 @@ void DropboxClient::sendCommand(const QString &command)
         m_socket->connectToServer(m_socketPath);
         //        if(!m_socket->waitForConnected(waitTime)) {
         //            qDebug() << m_socket->errorString();
-        //            m_status = DropboxClient::DropboxStopped;
+        //            m_status = DropboxStopped;
         return; // "Dropbox isn't running";
         //        }
     }
 
     m_socket->write(command.toUtf8());
-    m_socket->write(QString("\n").toUtf8());
-    m_socket->write(QString("done\n").toUtf8());
+    m_socket->write(QString("\ndone\n").toUtf8());
     m_socket->flush();
 
 }
@@ -90,9 +88,16 @@ void DropboxClient::sendCommand(const QString &command)
 void DropboxClient::receiveReply()
 {
     QString reply = m_socket->readAll();
+
     reply = reply.remove("\ndone\n");
     reply = reply.remove("done\n"); //! @todo
     reply = reply.remove("ok\n");
+
+//    if(reply.startsWith("tag")) {
+//        qDebug() << reply.split("\t");
+//        m_sharedFolders->push_back(reply);
+//        return;
+//    }
 
     //Remove status\t or Replace status to Idle
     QStringList list = reply.split("\t");
@@ -110,34 +115,34 @@ void DropboxClient::processReply(const QString &message)
     if(message.isEmpty()) return;
 
     if (message.contains("connecting")) {
-        m_status=DropboxClient::DropboxBussy;
+        m_status=DropboxBussy;
     }
     else if ( message.contains("Idle")) {
-        m_status=DropboxClient::DropboxIdle;
+        m_status=DropboxIdle;
     }
     else if (message.contains("Up")) {
-        m_status=DropboxClient::DropboxUploading;
+        m_status=DropboxUploading;
     }
     else if (message.contains("Downloading")) {
-        m_status=DropboxClient::DropboxDownloading;
+        m_status=DropboxDownloading;
     }
     else if (message.contains("Saving")) {
-        m_status=DropboxClient::DropboxSaving;
+        m_status=DropboxSaving;
     }
     else if (message.contains("Indexing")) {
-        m_status=DropboxClient::DropboxIndexing;
+        m_status=DropboxIndexing;
     }
     else if(message.contains("isn't")) {
-        m_status=DropboxClient::DropboxStopped;
+        m_status=DropboxStopped;
     }
     else if(message.contains("couldn't")){
-        m_status=DropboxClient::DropboxDisconnected;
+        m_status=DropboxDisconnected;
     }
     else if(message.contains("Syncing paused")){
-        m_status=DropboxClient::DropboxDisconnected;
+        m_status=DropboxDisconnected;
     }
     else if(message.contains("dopped")){
-        m_status=DropboxClient::DropboxError;
+        m_status=DropboxError;
     }
 
     if((prev_status != m_status) || (prev_message != message)) {
@@ -145,6 +150,10 @@ void DropboxClient::processReply(const QString &message)
         prev_message = message;
         emit updateStatus(m_status, message);
     }
+
+//    if((m_status == DropboxIdle) && (m_sharedFolders->isEmpty())) {
+//        getSharedFolders("/home/nib/Dropbox"); //! hard coded yeat
+//    }
 }
 
 
@@ -175,7 +184,7 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
         break;
     case QLocalSocket::SocketTimeoutError:
     case QLocalSocket::PeerClosedError:
-        //        m_status = DropboxClient::DropboxStopped;
+        //        m_status = DropboxStopped;
         //        emit updateStatus(m_status, "Dropbox isn't running");
         processReply("Dropbox isn't running");
         //        notify.send(tr("Dropbox daemon stoped"));
@@ -236,16 +245,29 @@ QString DropboxClient::getVersion()
   * manually get %tag% of the every folder insede of %dropbox_folder%
   * where needed %tag% must be like shared
   *
+  * I assume that inside shared folder you can't share subfolder
+  *
+  * getSharedFolders(QString path)
+  * foreach(subPath, getSubfolders(path))
+  *     if(folderTag(subPath) == "shared")
+  *         add to shared
+  *     else
+  *         getSharedFolders(subPath)
   */
-QStringList DropboxClient::getSharedFolders()
-{
-    QStringList subs = QDir("/path/to/").entryList(QDir::Dirs|QDir::NoDotAndDotDot);
-    QStringList m_sharedList;
-    foreach (QString filename, subs) {
-        qDebug() << filename;
-        if("/path/to"+filename+"get_status" == "shared") {
-            m_sharedList << "/path/to"+filename;
-        }
-    }
-    return m_sharedList;
-}
+//void DropboxClient::getSharedFolders(const QString& to)
+//{
+
+//    //    <- get_folder_tag /some/folder/
+//    //    -> tag    shared  # this folder is shared
+//    //       tag    dropbox # this is your dropbox's root folder
+//    //       tag    public  # this is your public folder
+//    //       tag    photos  # this is your photos folder
+//    //       tag            # otherwise
+
+//    //    sendCommand("get_folder_tag\npath\t/home/nib/Dropbox/Audio/");
+
+//    foreach (QString filename, QDir(to).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
+//        sendCommand(QString("get_folder_tag\npath\t%1").arg(to+QDir::separator()+filename+QDir::separator()));
+//        getSharedFolders(to+QDir::separator()+filename);
+//    }
+//}

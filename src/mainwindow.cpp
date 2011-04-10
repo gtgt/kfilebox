@@ -24,7 +24,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(QString)), this, SLOT(setIcons()));
 
-    connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), this, SLOT(updateStatus(DropboxClient::DropboxStatus,QString)));
+    connect(dc, SIGNAL(updateStatus(DropboxStatus,QString)), this, SLOT(updateStatus(DropboxStatus,QString)));
 
     connect(ui->downloadDontLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
     connect(ui->downloadLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
@@ -93,15 +93,15 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::initializeDBus()
 {
     adaptor = new DropboxClientAdaptor(dc);
-    connect(dc, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)), adaptor, SIGNAL(updateStatus(DropboxClient::DropboxStatus,QString)));
+    connect(dc, SIGNAL(updateStatus(DropboxStatus,QString)), adaptor, SIGNAL(updateStatus(DropboxStatus,QString)));
     //! @todo a lot of work:)
 }
 
 void MainWindow::setIcons(){
-    ui->lblBusyIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_updating.png"));
-    ui->lblDisconIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox.png"));
-    ui->lblIdleIcon->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_idle.png"));
-    ui->lblStopIcons->setPixmap(QPixmap(":/icons/img/"+ui->cbIconSet->currentText()+"/kfilebox_error.png"));
+    ui->lblBusyIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_updating.png").arg(ui->cbIconSet->currentText())));
+    ui->lblDisconIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox.png").arg(ui->cbIconSet->currentText())));
+    ui->lblIdleIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_idle.png").arg(ui->cbIconSet->currentText())));
+    ui->lblStopIcons->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_error.png").arg(ui->cbIconSet->currentText())));
 }
 
 void MainWindow::changeDropboxFolder()
@@ -210,7 +210,7 @@ void MainWindow::applySettings()
             db.setValue("proxy_type", proxyType.value(ui->proxyType->currentIndex()));
             db.setValue("proxy_server", ui->proxyServer->text());
             db.setValue("proxy_port", ui->proxyPort->value());
-            db.setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt()); //! @bug ????????????
+            db.setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
             db.setValue("proxy_username", ui->proxyUsername->text());
         }
         db.setValue("proxy_mode", _swap);
@@ -275,7 +275,7 @@ void MainWindow::loadSettings()
     ui->proxyPort->setValue(db.getValue("proxy_port").toInt());
     ui->proxyPort->setEnabled(ui->proxySetManually->isChecked());
     ui->proxyRequiresAuth->setEnabled(ui->proxySetManually->isChecked());
-    ui->proxyRequiresAuth->setChecked(db.getValue("proxy_requires_auth").toBool()); //! @bug ??????
+    ui->proxyRequiresAuth->setChecked(db.getValue("proxy_requires_auth").toBool());
     ui->proxyUsername->setText(db.getValue("proxy_username").toString());
     ui->proxyUsername->setEnabled(ui->proxyRequiresAuth->isChecked());
     ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());
@@ -287,13 +287,13 @@ void MainWindow::loadSettings()
 
 void MainWindow::loadIcons(const QString &iconset)
 {
-    defaultIcon = QIcon(":/icons/img/"+iconset+"/kfilebox.png");
-    idleIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_idle.png");
-    bussyIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_updating.png");
-    errorIcon = QIcon(":/icons/img/"+iconset+"/kfilebox_error.png");
+    defaultIcon = QIcon(QString(":/icons/img/%1/kfilebox.png").arg(iconset));
+    idleIcon = QIcon(QString(":/icons/img/%1/kfilebox_idle.png").arg(iconset));
+    bussyIcon = QIcon(QString(":/icons/img/%1/kfilebox_updating.png").arg(iconset));
+    errorIcon = QIcon(QString(":/icons/img/%1/kfilebox_error.png").arg(iconset));
+    appIcon = QIcon(QString(":/icons/img/%1/kfileboxapp.png").arg(iconset));
 
-    appIcon = QIcon(":/icons/img/"+iconset+"/kfileboxapp.png");
-    if (trayIcon!=NULL)
+    if(trayIcon!=NULL)
         trayIcon->setToolTipIconByPixmap(appIcon);
 }
 
@@ -342,9 +342,9 @@ void MainWindow::openGetMoreSpaceURL()
     QDesktopServices::openUrl(QUrl("https://www.dropbox.com/plans"));
 }
 
-void MainWindow::updateStatus(DropboxClient::DropboxStatus newStatus, const QString &message)
+void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
 {
-    if(newStatus == DropboxClient::DropboxStopped){
+    if(newStatus == DropboxStopped){
         if(ui->stopAction->isVisible() || !ui->startAction->isVisible()) {
             ui->startAction->setVisible(true);
             ui->stopAction->setVisible(false);
@@ -360,20 +360,20 @@ void MainWindow::updateStatus(DropboxClient::DropboxStatus newStatus, const QStr
     trayIcon->setToolTipSubTitle(message);
 
     switch(newStatus) {
-    case DropboxClient::DropboxIdle:
+    case DropboxIdle:
         trayIcon->setIconByPixmap(idleIcon);
         break;
-    case DropboxClient::DropboxBussy:
-    case DropboxClient::DropboxUploading:
-    case DropboxClient::DropboxDownloading:
-    case DropboxClient::DropboxSaving:
-    case DropboxClient::DropboxIndexing:
+    case DropboxBussy:
+    case DropboxUploading:
+    case DropboxDownloading:
+    case DropboxSaving:
+    case DropboxIndexing:
         trayIcon->setIconByPixmap(bussyIcon);
         break;
-    case DropboxClient::DropboxUnkown:
-    case DropboxClient::DropboxStopped:
-    case DropboxClient::DropboxDisconnected:
-    case DropboxClient::DropboxError:
+    case DropboxUnkown:
+    case DropboxStopped:
+    case DropboxDisconnected:
+    case DropboxError:
         trayIcon->setIconByPixmap(errorIcon);
         break;
     }

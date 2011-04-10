@@ -4,23 +4,24 @@
 #include "kaboutdata.h"
 #include "kcmdlineargs.h"
 //#include "klocale.h"
-//ki18n
+
+//! @todo should I replace all tr() calls to ki18n()?
 
 #include "src/mainwindow.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char** argv)
 {
     KAboutData aboutData(
                 "kfilebox",
                 0,
                 ki18n("kfilebox"),
                 "0.4.8",
-                ki18n("KDE dropbox client and gui"),
+                ki18n("KDE Dropbox frontend"),
                 KAboutData::License_GPL_V3,
                 ki18n("(c) 2011"),
-                ki18n("Kfilebox is a KDE dropbox client and gui"),
+                ki18n("Kfilebox is a KDE Dropbox frontend"),
                 "http://kfilebox.deuteros.es/",
-                "kfilebox@gmail.com");
+                "nib952051@gmail.com");
 
     KCmdLineArgs::init( argc, argv, &aboutData );
     KUniqueApplication a;

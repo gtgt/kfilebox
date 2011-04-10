@@ -10,14 +10,15 @@
 
 #include "notification.h"
 
+//! @todo provide 2 low level classes asynchronous(to get status in loop) and syncronous(to query commands like get_folder_tag)
+
+enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
+                    DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
+
 class DropboxClient : public QObject
 {
     Q_OBJECT
 public:
-    //! @todo move from class to freedom
-    enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
-                        DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
-
     explicit DropboxClient(QObject *parent = 0);
     ~DropboxClient();
     void sendCommand(const QString &command);
@@ -29,7 +30,7 @@ public:
     void static hideGtkUi(bool v);
     bool static isInstalled();
     QString static getVersion();
-    QStringList getSharedFolders();
+    //    void getSharedFolders(const QString& to);
 
 private:
     QTimer *m_timer;
@@ -40,6 +41,7 @@ private:
     QString prev_message;
     DropboxStatus m_status;
     DropboxStatus prev_status;
+    //    QStringList* m_sharedFolders;
 
     QString authUrl;
 
@@ -57,7 +59,7 @@ private slots:
     void getDropboxStatus();
 
 signals:
-    void updateStatus(DropboxClient::DropboxStatus status, const QString &message);
+    void updateStatus(DropboxStatus status, const QString &message);
 
 };
 
