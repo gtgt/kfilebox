@@ -2,14 +2,14 @@
 
 DropboxClient::DropboxClient(QObject *parent) :
     QObject(parent),
-    //    m_sharedFolders(new QStringList()),
+    m_sharedFolders(new QStringList()),
     m_socket(new QLocalSocket(this)),
     m_ps(new QProcess(this)),
     m_timer(new QTimer(this))
 {
     m_status = prev_status = DropboxUnkown;
-    prev_message = "";
-    authUrl = "";
+    m_message = "";
+    m_authUrl = "";
 
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
 
@@ -26,6 +26,7 @@ DropboxClient::~DropboxClient()
 {
     if(m_ps->isOpen())
         m_ps->close();
+    delete m_sharedFolders;
 }
 
 void DropboxClient::start()
@@ -41,21 +42,8 @@ void DropboxClient::stop()
 {
     sendCommand("tray_action_hard_exit");
     //    int count=0; while(true){sleep(200); count++; qDebug() << "iteration " << count; if((!isRunning())||(count>=12)) break;}
+    // or wait in save settings function
     processReply("Dropbox isn't running");
-}
-
-bool DropboxClient::isRunning()
-{
-    //    return (m_status!=DropboxStopped);
-    QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/dropbox.pid")));
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-        return false;
-
-    int pid = 0;
-    QTextStream in(&file);
-    in >> pid;
-
-    return QFile(QString("/proc/%1/cmdline").arg(QString::number(pid))).open(QIODevice::ReadOnly | QIODevice::Text);
 }
 
 /** Loop. I don't know what is worth(every m_timer->interval() ):
@@ -89,15 +77,19 @@ void DropboxClient::receiveReply()
 {
     QString reply = m_socket->readAll();
 
+    if(reply.contains("tag")) {
+        reply = reply.remove("done");
+        reply = reply.remove("ok");
+        reply = reply.remove("tag");
+        reply = reply.remove("\n");
+        qDebug() << reply.split("\t");
+        m_sharedFolders->push_back(reply);
+        return;
+    }
+
     reply = reply.remove("\ndone\n");
     reply = reply.remove("done\n"); //! @todo
     reply = reply.remove("ok\n");
-
-    //    if(reply.startsWith("tag")) {
-    //        qDebug() << reply.split("\t");
-    //        m_sharedFolders->push_back(reply);
-    //        return;
-    //    }
 
     //Remove status\t or Replace status to Idle
     QStringList list = reply.split("\t");
@@ -109,11 +101,11 @@ void DropboxClient::receiveReply()
     processReply(reply);
 }
 
-//! @bug fix if dropbox is stoped
 void DropboxClient::processReply(const QString &message)
 {
     if(message.isEmpty()) return;
 
+    //! @todo coment first if{} block(or modify) if you want disable tray icon blinking on startup in green and blue color(default icons scheme)
     if (message.contains("connecting")) {
         m_status=DropboxBussy;
     }
@@ -142,15 +134,15 @@ void DropboxClient::processReply(const QString &message)
         m_status=DropboxError;
     }
 
-    if((prev_status != m_status) || (prev_message != message)) {
+    if((prev_status != m_status) || (m_message != message)) {
         prev_status = m_status;
-        prev_message = message;
+        m_message = message;
         emit updateStatus(m_status, message);
     }
 
-    //    if((m_status == DropboxIdle) && (m_sharedFolders->isEmpty())) {
-    //        getSharedFolders("/home/nib/Dropbox"); //! hard coded yeat
-    //    }
+    if((m_status == DropboxIdle) && (m_sharedFolders->isEmpty())) {
+        getSharedFolders("/home/nib/Dropbox/"); //! hard coded yeat
+    }
 }
 
 
@@ -158,9 +150,9 @@ void DropboxClient::readDaemonOutput()
 {
     QString swap = m_ps->readAllStandardOutput();
     if (swap.contains("https://www.dropbox.com/cli_link?host_id=")) {
-        QString prevAuthUrl = authUrl;
-        authUrl = swap.remove("Please visit ").remove(" to link this machine.");
-        if(prevAuthUrl.isEmpty() || prevAuthUrl!=authUrl) Notification().send(QString(tr("Please visit <a href=\"%1\">url</a> to link this machine.")).arg(authUrl));
+        QString prevAuthUrl = m_authUrl;
+        m_authUrl = swap.remove("Please visit ").remove(" to link this machine.");
+        if(prevAuthUrl.isEmpty() || prevAuthUrl!=m_authUrl) Notification().send(tr("Please visit <a href=\"%1\">url</a> to link this machine.").arg(m_authUrl));
     }
 }
 
@@ -190,9 +182,18 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
 
 // ..
 
-QString DropboxClient::getAuthUrl() const
+bool DropboxClient::isRunning()
 {
-    return authUrl;
+    //    return (m_status!=DropboxStopped);
+    QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/dropbox.pid")));
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return false;
+
+    int pid = 0;
+    QTextStream in(&file);
+    in >> pid;
+
+    return QFile(QString("/proc/%1/cmdline").arg(QString::number(pid))).open(QIODevice::ReadOnly | QIODevice::Text);
 }
 
 bool DropboxClient::isInstalled()
@@ -245,20 +246,20 @@ QString DropboxClient::getVersion()
   *     else
   *         getSharedFolders(subPath)
   */
-//void DropboxClient::getSharedFolders(const QString& to)
-//{
+void DropboxClient::getSharedFolders(const QString& to)
+{
 
-//    //    <- get_folder_tag /some/folder/
-//    //    -> tag    shared  # this folder is shared
-//    //       tag    dropbox # this is your dropbox's root folder
-//    //       tag    public  # this is your public folder
-//    //       tag    photos  # this is your photos folder
-//    //       tag            # otherwise
+    //    <- get_folder_tag /some/folder/
+    //    -> tag    shared  # this folder is shared
+    //       tag    dropbox # this is your dropbox's root folder
+    //       tag    public  # this is your public folder
+    //       tag    photos  # this is your photos folder
+    //       tag            # otherwise
 
-//    //    sendCommand("get_folder_tag\npath\t/home/nib/Dropbox/Audio/");
+    //    sendCommand("get_folder_tag\npath\t/home/nib/Dropbox/Audio/");
 
-//    foreach (QString filename, QDir(to).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
-//        sendCommand(QString("get_folder_tag\npath\t%1").arg(to+QDir::separator()+filename+QDir::separator()));
-//        getSharedFolders(to+QDir::separator()+filename);
-//    }
-//}
+    foreach (QString filename, QDir(to).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
+        sendCommand(QString("get_folder_tag\npath\t%1").arg(to+QDir::separator()+filename+QDir::separator()));
+        getSharedFolders(to+QDir::separator()+filename);
+    }
+}

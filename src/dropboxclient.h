@@ -10,6 +10,9 @@
 
 #include "src/notification.h"
 
+// for memory
+// ("", "shared", "", "", "", "photos", "public", "", "")
+
 //! @todo provide 2 low level classes asynchronous(to get status in loop) and syncronous(to query commands like get_folder_tag)
 
 enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
@@ -19,31 +22,29 @@ class DropboxClient : public QObject
 {
     Q_OBJECT
 public:
-    explicit DropboxClient(QObject *parent = 0);
+    explicit DropboxClient(QObject* parent = 0);
     ~DropboxClient();
-    void sendCommand(const QString &command);
 
-    bool isRunning();
+    void sendCommand(const QString& command);
 
     //! This functions not strongly related to this class..
-    QString getAuthUrl() const;
+    bool isRunning();
     void static hideGtkUi(bool v);
     bool static isInstalled();
     QString static getVersion();
-    //    void getSharedFolders(const QString& to);
+
+    inline QString getAuthUrl() const {return m_authUrl;}
 
 private:
-    QTimer *m_timer;
-    QLocalSocket *m_socket;
-    QString m_socketPath;
-    QProcess *m_ps;
+    void getSharedFolders(const QString& to);
 
-    QString prev_message;
-    DropboxStatus m_status;
-    DropboxStatus prev_status;
-    //    QStringList* m_sharedFolders;
+    QTimer* m_timer;
+    QLocalSocket* m_socket;
+    QProcess* m_ps;
+    QString m_message, m_authUrl, m_socketPath;
+    DropboxStatus m_status, prev_status;
+    QStringList* m_sharedFolders; //! @todo move to syncronouse model..
 
-    QString authUrl;
 
 public slots:
     void start();
@@ -59,7 +60,7 @@ private slots:
     void getDropboxStatus();
 
 signals:
-    void updateStatus(DropboxStatus status, const QString &message);
+    void updateStatus(DropboxStatus status, const QString& message);
 
 };
 
