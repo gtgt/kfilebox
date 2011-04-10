@@ -1,6 +1,10 @@
 # -------------------------------------------------
 # Project created by QtCreator 2010-01-28T13:45:03
 # -------------------------------------------------
+
+# to fix bug in QtCreator
+INCLUDEPATH += /usr/include/
+
 QT += sql \
     network \
     dbus

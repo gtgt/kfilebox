@@ -1,6 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+int pow(int src) {
+    if(src==0||src==1)
+        return 1;
+    return pow(src-1);
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -14,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     dc = new DropboxClient(this);
 
-    connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*))); //! @todo fix later
+    connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(QString)), this, SLOT(setIcons()));
 
@@ -240,22 +246,22 @@ void MainWindow::loadSettings()
 
     ui->displayVersion->setText("Dropbox v" + dc->getVersion());
     ui->displayAccount->setText(db.getValue("email").toString());
-    ui->useP2P->setChecked(db.getValue("p2p_enabled").toBool());
+    ui->useP2P->setChecked(db.getValue("p2p_enabled", 1).toBool());
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
 
     // Network
     // (0: false, 1: auto, 2: true)
-    int _swap = db.getValue("throttle_download_style").toInt();
+    int _swap = db.getValue("throttle_download_style", 0).toInt();
     ui->downloadDontLimitRate->setChecked(_swap == 0);
     ui->downloadLimitRate->setChecked(_swap == 2);
-    ui->downloadLimitValue->setValue(db.getValue("throttle_download_speed").toInt());
+    ui->downloadLimitValue->setValue(db.getValue("throttle_download_speed", 50).toInt());
     ui->downloadLimitValue->setEnabled(ui->downloadLimitRate->isChecked());
 
-    _swap = db.getValue("throttle_upload_style").toInt();
+    _swap = db.getValue("throttle_upload_style", 1).toInt();
     ui->uploadDontLimitRate->setChecked(_swap == 0);
     ui->uploadAutoLimitRate->setChecked(_swap == 1);
     ui->uploadLimitRate->setChecked(_swap == 2);
-    ui->uploadLimitValue->setValue(db.getValue("throttle_upload_speed").toInt());
+    ui->uploadLimitValue->setValue(db.getValue("throttle_upload_speed", 10).toInt());
     ui->uploadLimitValue->setEnabled(ui->uploadLimitRate->isChecked());
 
     _swap = db.getValue("proxy_mode").toInt();

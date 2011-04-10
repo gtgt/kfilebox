@@ -16,10 +16,10 @@ public:
     ~Configuration();
 
     QStringList listKeys() const;
-    bool hasKey(const QString &key) const;
-    QVariant getValue(const QString &key) const;
-    void setValue(const QString &key, const QVariant &value);
-    void deleteValue(const QString &key);
+    inline bool hasKey(const QString& key) const {return generalGroup->hasKey(key);}
+    inline QVariant getValue(const QString& key) const {return generalGroup->readEntry(key);}
+    inline void setValue(const QString& key, const QVariant& value) {generalGroup->writeEntry(key, value);}
+    inline void deleteValue(const QString &key) {generalGroup->deleteEntry(key);}
 
 private:
     void initConfigurationFile();

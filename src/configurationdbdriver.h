@@ -26,12 +26,43 @@ public:
     ~ConfigurationDBDriver();
 
     QStringList listKeys() const;
-    bool hasKey(const QString &key) const;
-    QVariant getValue(const QString &key) const;
-    void setValue(const QString &key, const QVariant &value);
-    void deleteValue(const QString &key);
+
+    inline bool hasKey(const QString& key) {
+        QSqlQuery query = justQuery(QString("SELECT COUNT(`key`) FROM `config` WHERE `key`='%1'").arg(key));
+        if (query.next()) {
+            if(query.value(0).toInt() == 1)
+                return true;
+        }
+        return false;
+    }
+
+    inline QVariant getValue(const QString& key, QVariant defaultValue=QVariant()) {
+        QSqlQuery query = justQuery(QString("SELECT `value` FROM `config` WHERE `key`='%1' LIMIT 1").arg(key));
+        if (query.next()) {
+            return query.value(0);
+        }
+        return defaultValue;
+    }
+
+    inline void setValue(const QString &key, const QVariant& value) {
+        justQuery(QString("REPLACE INTO `config` (`key`, `value`) VALUES ('%1', %2)").arg(key).arg(value.toString()));
+    }
+
+    inline void deleteValue(const QString& key) {
+        justQuery(QString("DELETE FROM `config` WHERE `key`='%1'").arg(key));
+    }
 
 private:
+    inline QSqlQuery justQuery(const QString& query)
+    {
+        if(dbVersion != CONFIG_DB)
+            return QSqlQuery();
+
+        QSqlQuery result = db->exec(query);
+        if(db->lastError().isValid())
+            qDebug() << db->lastError() << " query:\n" << db->exec().lastQuery();
+        return result;
+    }
     enum DROPBOX_DB_VERSION {DROPBOX_DB, CONFIG_DB, UNKNOWN} dbVersion;
     QString dbFilename;
     QSqlDatabase* db;
