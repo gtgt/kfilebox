@@ -2,12 +2,13 @@
 
 DropboxClient::DropboxClient(QObject *parent) :
     QObject(parent),
-//    m_sharedFolders(new QStringList()),
+    //    m_sharedFolders(new QStringList()),
     m_socket(new QLocalSocket(this)),
     m_ps(new QProcess(this)),
     m_timer(new QTimer(this))
 {
-    m_status = DropboxUnkown;
+    m_status = prev_status = DropboxUnkown;
+    prev_message = "";
     authUrl = "";
 
     m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
@@ -29,7 +30,6 @@ DropboxClient::~DropboxClient()
 
 void DropboxClient::start()
 {
-    m_status=DropboxUnkown;
     if(!isRunning()) {
         m_ps->start(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
         m_ps->waitForStarted(500);
@@ -93,11 +93,11 @@ void DropboxClient::receiveReply()
     reply = reply.remove("done\n"); //! @todo
     reply = reply.remove("ok\n");
 
-//    if(reply.startsWith("tag")) {
-//        qDebug() << reply.split("\t");
-//        m_sharedFolders->push_back(reply);
-//        return;
-//    }
+    //    if(reply.startsWith("tag")) {
+    //        qDebug() << reply.split("\t");
+    //        m_sharedFolders->push_back(reply);
+    //        return;
+    //    }
 
     //Remove status\t or Replace status to Idle
     QStringList list = reply.split("\t");
@@ -135,10 +135,7 @@ void DropboxClient::processReply(const QString &message)
     else if(message.contains("isn't")) {
         m_status=DropboxStopped;
     }
-    else if(message.contains("couldn't")){
-        m_status=DropboxDisconnected;
-    }
-    else if(message.contains("Syncing paused")){
+    else if(message.contains("couldn't")||message.contains("Syncing paused")||message.contains("Waiting to be linked")){
         m_status=DropboxDisconnected;
     }
     else if(message.contains("dopped")){
@@ -151,9 +148,9 @@ void DropboxClient::processReply(const QString &message)
         emit updateStatus(m_status, message);
     }
 
-//    if((m_status == DropboxIdle) && (m_sharedFolders->isEmpty())) {
-//        getSharedFolders("/home/nib/Dropbox"); //! hard coded yeat
-//    }
+    //    if((m_status == DropboxIdle) && (m_sharedFolders->isEmpty())) {
+    //        getSharedFolders("/home/nib/Dropbox"); //! hard coded yeat
+    //    }
 }
 
 
@@ -161,25 +158,21 @@ void DropboxClient::readDaemonOutput()
 {
     QString swap = m_ps->readAllStandardOutput();
     if (swap.contains("https://www.dropbox.com/cli_link?host_id=")) {
+        QString prevAuthUrl = authUrl;
         authUrl = swap.remove("Please visit ").remove(" to link this machine.");
+        if(prevAuthUrl.isEmpty() || prevAuthUrl!=authUrl) Notification().send(QString(tr("Please visit <a href=\"%1\">url</a> to link this machine.")).arg(authUrl));
     }
 }
 
 void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
 {
-    Notification notify;
-
     switch (socketError) {
     case QLocalSocket::ServerNotFoundError:
         //! socket isn't exists > is dropbox exists? can I run installer?
-        //         qt_message_output(QtWarningMsg, tr("The host was not found. Please check Dropbox daemon installation.").toLatin1());
         //        notify.send(tr("The host was not found. Please check Dropbox daemon installation."));
         break;
     case QLocalSocket::ConnectionRefusedError:
         //! this is not an error
-        //         qt_message_output(QtWarningMsg,tr("The connection was refused by the peer. "
-        //                                     "Make sure the Dropbox daemon is running, "
-        //                                     "and check that the settings are correct.").toLatin1());
         //        notify.send(tr("The connection was refused by the peer.\nMake sure the Dropbox daemon is running, and check that the settings are correct."));
         break;
     case QLocalSocket::SocketTimeoutError:
@@ -190,9 +183,7 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
         //        notify.send(tr("Dropbox daemon stoped"));
         break;
     default:
-        notify.send(tr("The following error occurred: %1.").arg(m_socket->errorString()));
-        //         qt_message_output(QtWarningMsg,tr("The following error occurred: %1.")
-        //                                  .arg(s->errorString()).toLatin1());
+        Notification().send(tr("The following error occurred: %1.").arg(m_socket->errorString()));
     }
 
 }

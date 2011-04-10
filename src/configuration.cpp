@@ -27,8 +27,8 @@ void Configuration::initConfigurationFile()
     generalGroup->writeEntry("FileManager", "dolphin");
     generalGroup->writeEntry("IconSet", "default");
     generalGroup->writeEntry("ShowNotifications", true);            //! @todo use from config.db
-    generalGroup->writeEntry("AutoStart", true);                    //! @todo use from config.db
-    generalGroup->writeEntry("StartDaemon", true);                  //! @todo use from config.db
+    generalGroup->writeEntry("AutoStart", true);
+    generalGroup->writeEntry("StartDaemon", true);
     generalGroup->writeEntry("GtkUiDisabled", true);
 
     //! @todo add more pairs

@@ -8,7 +8,7 @@
 #include <QString>
 #include <QTimer>
 
-#include "notification.h"
+#include "src/notification.h"
 
 //! @todo provide 2 low level classes asynchronous(to get status in loop) and syncronous(to query commands like get_folder_tag)
 
