@@ -36,7 +36,8 @@ private:
     void loadIcons(const QString &iconset);
     void loadSettings();
     void initializeDBus();
-    QString fixUnicodeChars(QString value);
+    QString fixUnicodeChars(const QString& value);
+    QString resolveFileName(const QString& filename);
 
     Ui::MainWindow* ui;
     DropboxClient* dc;

@@ -2,7 +2,7 @@
 
 DropboxClient::DropboxClient(QObject *parent) :
     QObject(parent),
-    m_sharedFolders(new QStringList()),
+    m_sharedFolders(new QMap<QString,QString>()),
     m_socket(new QLocalSocket(this)),
     m_ps(new QProcess(this)),
     m_timer(new QTimer(this))
@@ -77,16 +77,6 @@ void DropboxClient::receiveReply()
 {
     QString reply = m_socket->readAll();
 
-    if(reply.contains("tag")) {
-        reply = reply.remove("done");
-        reply = reply.remove("ok");
-        reply = reply.remove("tag");
-        reply = reply.remove("\n");
-        qDebug() << reply.split("\t");
-        m_sharedFolders->push_back(reply);
-        return;
-    }
-
     reply = reply.remove("\ndone\n");
     reply = reply.remove("done\n"); //! @todo
     reply = reply.remove("ok\n");
@@ -140,8 +130,9 @@ void DropboxClient::processReply(const QString &message)
         emit updateStatus(m_status, message);
     }
 
-    if((m_status == DropboxIdle) && (m_sharedFolders->isEmpty())) {
-        getSharedFolders("/home/nib/Dropbox/"); //! hard coded yeat
+    if((m_status == DropboxIdle )) { //&& (m_sharedFolders->isEmpty())
+        updateSharedFolders("/home/nib/Dropbox/"); //! hard coded yeat
+        //        qDebug() << m_sharedFolders->count();
     }
 }
 
@@ -230,36 +221,35 @@ QString DropboxClient::getVersion()
     return contents;
 }
 
-
 /**
-  * @todo Dropbox doesn't providing
-  * How to get shared folders?
-  * manually get %tag% of the every folder insede of %dropbox_folder%
-  * where needed %tag% must be like shared
-  *
   * I assume that inside shared folder you can't share subfolder
-  *
-  * getSharedFolders(QString path)
-  * foreach(subPath, getSubfolders(path))
-  *     if(folderTag(subPath) == "shared")
-  *         add to shared
-  *     else
-  *         getSharedFolders(subPath)
   */
-void DropboxClient::getSharedFolders(const QString& to)
+void DropboxClient::updateSharedFolders(const QString& to)
 {
-
-    //    <- get_folder_tag /some/folder/
-    //    -> tag    shared  # this folder is shared
-    //       tag    dropbox # this is your dropbox's root folder
-    //       tag    public  # this is your public folder
-    //       tag    photos  # this is your photos folder
-    //       tag            # otherwise
-
-    //    sendCommand("get_folder_tag\npath\t/home/nib/Dropbox/Audio/");
+    //! (shared, dropbox, public, photos, "")
+    QString reply;
+    SynchronousDropboxConnection dc;
 
     foreach (QString filename, QDir(to).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
-        sendCommand(QString("get_folder_tag\npath\t%1").arg(to+QDir::separator()+filename+QDir::separator()));
-        getSharedFolders(to+QDir::separator()+filename);
+        QString tmpPath = to+QDir::separator()+filename+QDir::separator();
+        reply = dc.sendCommand(QString("get_folder_tag\npath\t%1").arg(tmpPath));
+        reply = reply.remove("tag\t");
+
+        if(!reply.isEmpty())
+            m_sharedFolders->insert(tmpPath, reply);
+        else
+            updateSharedFolders(to+QDir::separator()+filename);
     }
+}
+
+QStringList DropboxClient::getSharedFolders()
+{
+    QStringList retVal;
+    QMap<QString,QString>::const_iterator i = m_sharedFolders->constBegin();
+    while (i != m_sharedFolders->constEnd()) {
+        if(i.value() != "dropbox")
+            retVal.push_back(i.key());
+        ++i;
+    }
+    return retVal;
 }

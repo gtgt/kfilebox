@@ -19,6 +19,8 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     dc = new DropboxClient(this);
+    if(Configuration().getValue("StartDaemon").toBool())
+        dc->start();
 
     connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
@@ -66,9 +68,6 @@ MainWindow::MainWindow(QWidget *parent) :
     trayIcon->setToolTipIconByPixmap(appIcon);
     trayIcon->setToolTipTitle("Kfilebox");
     trayIcon->setAssociatedWidget(ui->trayIconMenu);
-
-    if(ui->startDaemon->isChecked())
-        dc->start();
 
     initializeDBus();
 }
@@ -297,10 +296,13 @@ void MainWindow::loadIcons(const QString &iconset)
         trayIcon->setToolTipIconByPixmap(appIcon);
 }
 
+//! if path is file - open parent folder for it; if is empty - open Dropbox location
 void MainWindow::openFileBrowser(const QString &path)
 {
-    //! if file - open parent folder for it
-    QString dirName = QDir::toNativeSeparators(ui->dropboxFolder->text().append(path));
+    QString dirName = path;
+    if(path.isEmpty())
+        dirName = ui->dropboxFolder->text();
+
     QFileInfo fileInfo(dirName);
     if(fileInfo.isFile())
         dirName = fileInfo.dir().path();
@@ -308,16 +310,7 @@ void MainWindow::openFileBrowser(const QString &path)
     QDesktopServices::openUrl(QUrl(dirName));
 }
 
-//! @todo get this urls from dropbox daemon
-
-//! @todo
-//helper::runner::perform(QUrl url) {
-//    if(options[useNative])
-//        QDesktopServices::openUrl(url);
-//    else
-//        QProcess::startDetached(options[browser] + options[browserOptions] + url);
-//}
-
+//! @todo create layer: to use system wide or predeffined
 void MainWindow::openHelpCenterURL()
 {
     QDesktopServices::openUrl(QUrl("https://www.dropbox.com/help"));
@@ -394,21 +387,22 @@ void MainWindow::prepareLastChangedFiles(){
             files.push_back(fixUnicodeChars(list.value(1)));
     }
 
-    for (int i = 0; i < 5; ++i) {
+    for (int i = 0; i < files.count(); ++i) {
+        QString fileName = resolveFileName(files.at(i));
         disconnect(ui->chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
         sm->removeMappings(ui->chFiles->actions().at(i));
-        ui->chFiles->actions().at(i)->setText(files.at(i).split("/").last());
-        ui->chFiles->actions().at(i)->setEnabled(QFile(ui->dropboxFolder->text()+files.at(i)).exists());
+        ui->chFiles->actions().at(i)->setText(fileName.split("/").last());
+        ui->chFiles->actions().at(i)->setEnabled(QFile(fileName).exists());
 
         connect(ui->chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-        sm->setMapping(ui->chFiles->actions().at(i), files.at(i));
+        sm->setMapping(ui->chFiles->actions().at(i), fileName);
     }
 }
 
 //! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
 //! convert to `снимок38.png'
 //! hope somebody will find normal solution)
-QString MainWindow::fixUnicodeChars(QString value)
+QString MainWindow::fixUnicodeChars(const QString &value)
 {
     QString humanResult;
     QStringList toHumanable = value.split("\\u");
@@ -423,4 +417,15 @@ QString MainWindow::fixUnicodeChars(QString value)
         return humanResult;
     } else
         return value;
+}
+
+QString MainWindow::resolveFileName(const QString& filename)
+{
+    QStringList foldersList = dc->getSharedFolders();
+    foldersList.push_front(ui->dropboxFolder->text() + QDir::separator());
+    foreach (QString folderPath, foldersList) {
+        QString tmpPath = QDir::toNativeSeparators(folderPath+filename);
+        if(QFile(tmpPath).exists()) return tmpPath;
+    }
+    return filename; //! for example, file was deleted
 }
