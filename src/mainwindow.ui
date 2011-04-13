@@ -394,7 +394,7 @@
         <item>
          <widget class="QRadioButton" name="proxyDontUse">
           <property name="text">
-           <string>No more proxy</string>
+           <string>Without proxy</string>
           </property>
           <property name="checked">
            <bool>true</bool>

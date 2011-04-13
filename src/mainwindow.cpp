@@ -49,9 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->startAction->setVisible(false);
     ui->menuBar->setVisible(false);
 
-    loadSettings();
-
     trayIcon = new KStatusNotifierItem(this);
+
+    loadSettings();
 
     sm = new QSignalMapper(this);
     connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
@@ -284,8 +284,8 @@ void MainWindow::loadIcons(const QString &iconset)
     errorIcon = QIcon(QString(":/icons/img/%1/kfilebox_error.png").arg(iconset));
     appIcon = QIcon(QString(":/icons/img/%1/kfileboxapp.png").arg(iconset));
 
-    if(trayIcon!=NULL)
-        trayIcon->setToolTipIconByPixmap(appIcon);
+    //    if(trayIcon!=NULL)
+    trayIcon->setToolTipIconByPixmap(appIcon);
 }
 
 //! if path is file - open parent folder for it; if is empty - open Dropbox location
