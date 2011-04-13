@@ -12,10 +12,6 @@
 
 #include "src/notification.h"
 
-//! @todo provide 2 low level classes asynchronous(to get status in loop) and syncronous(to query commands like get_folder_tag)
-
-class SynchronousDropboxClient;
-
 enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
                     DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
 
@@ -128,8 +124,26 @@ private:
 
 
 
+/*class AsynchronousDropboxConnection : public QObject
+{
+    Q_OBJECT
+public:
+    explicit AsynchronousDropboxConnection(QObject* parent = 0) :
+        QObject(parent)
+    {
+        ;
+    }
+    virtual ~AsynchronousDropboxConnection() {}
 
 
+    void sendCommand(const QString& command);
+private slots:
+
+    void receiveReply();
+    void displayError(QLocalSocket::LocalSocketError socketError);
+signals:
+    void processReply(const QString &message);
+};*/
 
 
 #endif //DROPBOXCLIENT_H

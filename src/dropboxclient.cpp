@@ -41,8 +41,7 @@ void DropboxClient::start()
 void DropboxClient::stop()
 {
     sendCommand("tray_action_hard_exit");
-    //    int count=0; while(true){sleep(200); count++; qDebug() << "iteration " << count; if((!isRunning())||(count>=12)) break;}
-    // or wait in save settings function
+    m_ps->waitForFinished();
     processReply("Dropbox isn't running");
 }
 
@@ -60,11 +59,7 @@ void DropboxClient::sendCommand(const QString &command)
     if(!m_socket->isOpen())
     {
         m_socket->connectToServer(m_socketPath);
-        //        if(!m_socket->waitForConnected(waitTime)) {
-        //            qDebug() << m_socket->errorString();
-        //            m_status = DropboxStopped;
         return; // "Dropbox isn't running";
-        //        }
     }
 
     m_socket->write(command.toUtf8());
@@ -171,11 +166,8 @@ void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
 
 }
 
-// ..
-
 bool DropboxClient::isRunning()
 {
-    //    return (m_status!=DropboxStopped);
     QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/dropbox.pid")));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
@@ -235,10 +227,10 @@ void DropboxClient::updateSharedFolders(const QString& to)
         reply = dc.sendCommand(QString("get_folder_tag\npath\t%1").arg(tmpPath));
         reply = reply.remove("tag\t");
 
-        if(!reply.isEmpty())
-            m_sharedFolders->insert(tmpPath, reply);
-        else
+        if(reply.isEmpty())
             updateSharedFolders(to+QDir::separator()+filename);
+        else
+            m_sharedFolders->insert(tmpPath, reply);
     }
 }
 

@@ -1,12 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-int pow(int src) {
-    if(src==0||src==1)
-        return 1;
-    return pow(src-1);
-}
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -155,7 +149,6 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
 void MainWindow::applySettings()
 {
     dc->stop();
-
     loadIcons(ui->cbIconSet->currentText());
 
     //! to destroy conf..
@@ -206,16 +199,15 @@ void MainWindow::applySettings()
             QStringList proxyType;
             proxyType << "HTTP" << "SOCKS4" << "SOCKS5";
 
-            db.setValue("proxy_type", proxyType.value(ui->proxyType->currentIndex()));
-            db.setValue("proxy_server", ui->proxyServer->text());
+            db.setValue("proxy_type", "'"+proxyType.value(ui->proxyType->currentIndex())+"'");
+            db.setValue("proxy_server", "'"+ui->proxyServer->text()+"'");
             db.setValue("proxy_port", ui->proxyPort->value());
             db.setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
-            db.setValue("proxy_username", ui->proxyUsername->text());
+            db.setValue("proxy_username", "'"+ui->proxyUsername->text()+"'");
         }
         db.setValue("proxy_mode", _swap);
     }
 
-    //! @todo start not always
     dc->start();
 }
 
@@ -372,7 +364,7 @@ void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
     }
 }
 
-//! @todo recent files from shared folders
+//! recent files from shared folders
 //! in db '/gp/lacrimoza.gp5'
 //! absolute path is '~/Dropbox/shared-folder/' + that file
 void MainWindow::prepareLastChangedFiles(){
