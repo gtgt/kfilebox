@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
-    connect(ui->cbIconSet, SIGNAL(currentIndexChanged(QString)), this, SLOT(setIcons()));
+    connect(ui->cbIconSet, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(loadIcons())); //! not loadIcons(const QString&) cause contents is translated
 
     connect(dc, SIGNAL(updateStatus(DropboxStatus,QString)), this, SLOT(updateStatus(DropboxStatus,QString)));
 
@@ -50,18 +50,15 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuBar->setVisible(false);
 
     trayIcon = new KStatusNotifierItem(this);
+    iconsetList =  new QStringList();
+    iconsetList->push_back("default");
+    iconsetList->push_back("monochrome");
+    iconsetList->push_back("white");
 
     loadSettings();
 
     sm = new QSignalMapper(this);
     connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
-
-    trayIcon->setStatus(KStatusNotifierItem::Active);
-    trayIcon->setContextMenu(static_cast<KMenu*>(ui->trayIconMenu));
-    trayIcon->setIconByPixmap(defaultIcon);
-    trayIcon->setToolTipIconByPixmap(appIcon);
-    trayIcon->setToolTipTitle("Kfilebox");
-    trayIcon->setAssociatedWidget(ui->trayIconMenu);
 
     initializeDBus();
 }
@@ -88,13 +85,6 @@ void MainWindow::initializeDBus()
     adaptor = new DropboxClientAdaptor(dc);
     connect(dc, SIGNAL(updateStatus(DropboxStatus,QString)), adaptor, SIGNAL(updateStatus(DropboxStatus,QString)));
     //! @todo a lot of work:)
-}
-
-void MainWindow::setIcons(){
-    ui->lblBusyIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_updating.png").arg(ui->cbIconSet->currentText())));
-    ui->lblDisconIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox.png").arg(ui->cbIconSet->currentText())));
-    ui->lblIdleIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_idle.png").arg(ui->cbIconSet->currentText())));
-    ui->lblStopIcons->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_error.png").arg(ui->cbIconSet->currentText())));
 }
 
 void MainWindow::changeDropboxFolder()
@@ -149,7 +139,7 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
 void MainWindow::applySettings()
 {
     dc->stop();
-    loadIcons(ui->cbIconSet->currentText());
+    loadIcons();
 
     //! to destroy conf..
     {
@@ -158,7 +148,7 @@ void MainWindow::applySettings()
 
         conf.setValue("Browser",ui->browser->text());
         conf.setValue("FileManager",ui->fileManager->currentText());
-        conf.setValue("IconSet",ui->cbIconSet->currentText());
+        conf.setValue("IconSet",iconsetList->at(ui->cbIconSet->currentIndex()));
 
         if(ui->dropboxFolder->text() != db.getValue("dropbox_path").toString()) {
 
@@ -220,20 +210,20 @@ void MainWindow::loadSettings()
     if (iconset.isEmpty())
         iconset="default";
 
+    ui->cbIconSet->setCurrentIndex(iconsetList->indexOf(iconset));
+
     loadIcons(iconset);
 
+    //    trayIcon->setStatus(KStatusNotifierItem::Active);
+    trayIcon->setContextMenu(static_cast<KMenu*>(ui->trayIconMenu));
+    trayIcon->setToolTipTitle("Kfilebox");
+    trayIcon->setAssociatedWidget(ui->trayIconMenu);
 
     ui->dropboxFolder->setText(db.getValue("dropbox_path").toString());
     ui->fileManager->setCurrentIndex(ui->fileManager->findText(conf.getValue("FileManager").toString()));
     ui->browser->setText(conf.getValue("Browser").toString());
     ui->showNotifications->setChecked(conf.getValue("ShowNotifications").toBool());
     ui->startDaemon->setChecked(conf.getValue("StartDaemon").toBool());
-
-    if (conf.getValue("IconSet").toString().length()>0)
-        ui->cbIconSet->setCurrentIndex(ui->cbIconSet->findText(conf.getValue("IconSet").toString(),Qt::MatchCaseSensitive));
-    else
-        ui->cbIconSet->setCurrentIndex(ui->cbIconSet->findText("default",Qt::MatchCaseSensitive));
-    setIcons();
 
     ui->displayVersion->setText("Dropbox v" + dc->getVersion());
     ui->displayAccount->setText(db.getValue("email").toString());
@@ -278,13 +268,26 @@ void MainWindow::loadSettings()
 
 void MainWindow::loadIcons(const QString &iconset)
 {
-    defaultIcon = QIcon(QString(":/icons/img/%1/kfilebox.png").arg(iconset));
-    idleIcon = QIcon(QString(":/icons/img/%1/kfilebox_idle.png").arg(iconset));
-    bussyIcon = QIcon(QString(":/icons/img/%1/kfilebox_updating.png").arg(iconset));
-    errorIcon = QIcon(QString(":/icons/img/%1/kfilebox_error.png").arg(iconset));
-    appIcon = QIcon(QString(":/icons/img/%1/kfileboxapp.png").arg(iconset));
+    //! due to translated Iconset
+    QString iconset_;
+    if(iconset.isEmpty())
+        iconset_ = iconsetList->at(ui->cbIconSet->currentIndex());
+    else
+        iconset_ = iconset;
 
-    //    if(trayIcon!=NULL)
+    defaultIcon = QIcon(QString(":/icons/img/%1/kfilebox.png").arg(iconset_));
+    idleIcon = QIcon(QString(":/icons/img/%1/kfilebox_idle.png").arg(iconset_));
+    bussyIcon = QIcon(QString(":/icons/img/%1/kfilebox_updating.png").arg(iconset_));
+    errorIcon = QIcon(QString(":/icons/img/%1/kfilebox_error.png").arg(iconset_));
+    appIcon = QIcon(QString(":/icons/img/%1/kfileboxapp.png").arg(iconset_));
+
+    ui->lblBusyIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_updating.png").arg(iconset_)));
+    ui->lblDisconIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox.png").arg(iconset_)));
+    ui->lblIdleIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_idle.png").arg(iconset_)));
+    ui->lblStopIcons->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_error.png").arg(iconset_)));
+
+    trayIcon->setIconByPixmap(defaultIcon);
+    //    trayIcon->setIconByName(QString(":/icons/img/%1/kfilebox.png").arg(iconset_));
     trayIcon->setToolTipIconByPixmap(appIcon);
 }
 

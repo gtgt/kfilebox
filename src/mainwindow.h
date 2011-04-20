@@ -33,7 +33,6 @@ protected:
     void changeEvent(QEvent* e);
 
 private:
-    void loadIcons(const QString &iconset);
     void loadSettings();
     void initializeDBus();
     QString fixUnicodeChars(const QString& value);
@@ -52,11 +51,13 @@ private:
     QIcon errorIcon;
     QIcon appIcon;
 
+    QStringList* iconsetList;
+
 public slots:
     void applySettings();
     void dialogButtonBoxTriggered(QAbstractButton* button);
     void changeDropboxFolder();
-    void setIcons();    // select icon themes
+    void loadIcons(const QString &iconset=QString());
     void downloadRadioToggle();
     void uploadRadioToggle();
     void proxyRadioToggle();

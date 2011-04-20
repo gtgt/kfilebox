@@ -1,27 +1,31 @@
-# Guillermo Amat, 2010.
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: \n"
+"Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-24 13:24+0200\n"
-"PO-Revision-Date: 2010-09-24 13:24+0200\n"
-"Last-Translator: Guillermo Amat\n"
-"Language-Team: Spanish <kde-i18n-doc@kde.org>\n"
+"POT-Creation-Date: 2011-04-17 22:15+0300\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 1.0\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: installer/Daemoninstaller.cpp:94
 msgid "File extracted"
 msgstr "File extracted"
 
-#: ui_mainwindow.h:259
+#: ui_mainwindow.h:259 rc.cpp:15 rc.cpp:207
 msgid "Dropbox Preferences"
 msgstr "Dropbox Preferences"
 
-#: ui_mainwindow.h:260
+#: ui_mainwindow.h:260 rc.cpp:39 rc.cpp:231
 msgid "Account information for this computer"
 msgstr "Account information for this computer"
 
@@ -29,47 +33,47 @@ msgstr "Account information for this computer"
 msgid "Unlink this computer..."
 msgstr "Unlink this computer..."
 
-#: ui_mainwindow.h:262
+#: ui_mainwindow.h:262 rc.cpp:54 rc.cpp:246
 msgid "Dropbox folder location"
 msgstr "Dropbox folder location"
 
-#: ui_mainwindow.h:263
+#: ui_mainwindow.h:263 rc.cpp:57 rc.cpp:249
 msgid "Move..."
 msgstr "Move..."
 
-#: ui_mainwindow.h:264
+#: ui_mainwindow.h:264 rc.cpp:21 rc.cpp:213
 msgid "Desktop integration"
 msgstr "Desktop integration"
 
-#: ui_mainwindow.h:265
+#: ui_mainwindow.h:265 rc.cpp:24 rc.cpp:216
 msgid "Show system tray notifications"
 msgstr "Show system tray notifications"
 
-#: ui_mainwindow.h:266
+#: ui_mainwindow.h:266 rc.cpp:27 rc.cpp:219
 msgid "Start Dropbox on system startup"
 msgstr "Start Dropbox on system startup"
 
-#: ui_mainwindow.h:267
+#: ui_mainwindow.h:267 rc.cpp:18 rc.cpp:210
 msgid "General"
 msgstr "General"
 
-#: ui_mainwindow.h:268
+#: ui_mainwindow.h:268 rc.cpp:117 rc.cpp:309
 msgid "File Manager"
 msgstr "File Manager"
 
-#: ui_mainwindow.h:269
+#: ui_mainwindow.h:269 rc.cpp:126 rc.cpp:318
 msgid "Browser"
 msgstr "Browser"
 
-#: ui_mainwindow.h:272
+#: ui_mainwindow.h:272 rc.cpp:120 rc.cpp:312
 msgid "dolphin"
 msgstr "dolphin"
 
-#: ui_mainwindow.h:273
+#: ui_mainwindow.h:273 rc.cpp:123 rc.cpp:315
 msgid "konqueror"
 msgstr "konqueror"
 
-#: ui_mainwindow.h:275
+#: ui_mainwindow.h:275 rc.cpp:114 rc.cpp:306
 msgid "Misc"
 msgstr "Misc"
 
@@ -85,7 +89,7 @@ msgstr "Apply"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: mainwindow.cpp:71
+#: mainwindow.cpp:71 src/mainwindow.cpp:102
 msgid "Dropbox folder"
 msgstr "Dropbox folder"
 
@@ -101,7 +105,7 @@ msgstr ""
 "The connection was refused by the peer. Make sure the Dropbox daemon is "
 "running, and check that the settings are correct."
 
-#: core/DaemonConnection.cpp:76
+#: core/DaemonConnection.cpp:76 src/dropboxclient.cpp:164
 #, kde-format
 msgid "The following error occurred: %1."
 msgstr "The following error occurred: %1."
@@ -114,27 +118,27 @@ msgstr "Dropbox daemon started"
 msgid "Unable to start Dropbox daemon"
 msgstr "Unable to start Dropbox daemon"
 
-#: core/trayicon.cpp:41
+#: core/trayicon.cpp:41 rc.cpp:192 rc.cpp:384
 msgid "Open Dropbox Folder"
 msgstr "Open Dropbox Folder"
 
-#: core/trayicon.cpp:44
+#: core/trayicon.cpp:44 rc.cpp:171 rc.cpp:363
 msgid "Help Center"
 msgstr "Help Center"
 
-#: core/trayicon.cpp:47
+#: core/trayicon.cpp:47 rc.cpp:150 rc.cpp:342
 msgid "Launch Dropbox Website"
 msgstr "Launch Dropbox Website"
 
-#: core/trayicon.cpp:50
+#: core/trayicon.cpp:50 rc.cpp:180 rc.cpp:372
 msgid "Get More Space"
 msgstr "Get More Space"
 
-#: core/trayicon.cpp:53
+#: core/trayicon.cpp:53 rc.cpp:174 rc.cpp:366
 msgid "Tour"
 msgstr "Tour"
 
-#: core/trayicon.cpp:56
+#: core/trayicon.cpp:56 rc.cpp:177 rc.cpp:369
 msgid "Forums"
 msgstr "Forums"
 
@@ -142,23 +146,23 @@ msgstr "Forums"
 msgid "Preferences..."
 msgstr "Preferences..."
 
-#: core/trayicon.cpp:62 core/trayicon.cpp:202
+#: core/trayicon.cpp:62 core/trayicon.cpp:202 rc.cpp:186 rc.cpp:378
 msgid "Start Dropbox"
 msgstr "Start Dropbox"
 
-#: core/trayicon.cpp:65 core/trayicon.cpp:211
+#: core/trayicon.cpp:65 core/trayicon.cpp:211 rc.cpp:189 rc.cpp:381
 msgid "Stop Dropbox"
 msgstr "Stop Dropbox"
 
-#: core/trayicon.cpp:77
+#: core/trayicon.cpp:77 rc.cpp:147 rc.cpp:339
 msgid "Help"
 msgstr "Help"
 
-#: core/trayicon.cpp:82
+#: core/trayicon.cpp:82 rc.cpp:144 rc.cpp:336
 msgid "Recently changed files"
 msgstr "Recently changed files"
 
-#: util/Downloader.cpp:76
+#: util/Downloader.cpp:76 src/installerform.cpp:138
 msgid "Error downloading file"
 msgstr "Error downloading file"
 
@@ -166,6 +170,143 @@ msgstr "Error downloading file"
 msgid "Daemon installer"
 msgstr "Daemon installer"
 
-#: ui_installerform.h:70
+#: ui_installerform.h:70 rc.cpp:6 rc.cpp:198
 msgid "Downloading Dropbox Daemon..."
 msgstr "Downloading Dropbox Daemon..."
+
+#: src/installerform.cpp:80
+msgid "unpacking downloaded file"
+msgstr ""
+
+#: src/installerform.cpp:100
+msgid "Choose action"
+msgstr ""
+
+#: src/dropboxclient.cpp:141
+#, kde-format
+msgid "Please visit <a href=\"%1\">url</a> to link this machine."
+msgstr ""
+
+#: rc.cpp:3 rc.cpp:195
+msgid "Dialog"
+msgstr ""
+
+#: rc.cpp:9 rc.cpp:201
+msgid "Run gtk based installer"
+msgstr ""
+
+#: rc.cpp:12 rc.cpp:204
+msgid "Or simplly link account"
+msgstr ""
+
+#: rc.cpp:30 rc.cpp:222
+msgid "Enable LAN sync"
+msgstr ""
+
+#: rc.cpp:33 rc.cpp:225
+msgid "hide Gtk UI from tray"
+msgstr ""
+
+#: rc.cpp:36 rc.cpp:48 rc.cpp:228 rc.cpp:240
+msgid "Account"
+msgstr ""
+
+#: rc.cpp:42 rc.cpp:234
+msgid "Version"
+msgstr ""
+
+#: rc.cpp:45 rc.cpp:237
+msgid "Dropbox v1.0.20"
+msgstr ""
+
+#: rc.cpp:51 rc.cpp:243
+msgid "email"
+msgstr ""
+
+#: rc.cpp:60 rc.cpp:252
+msgid "Network"
+msgstr ""
+
+#: rc.cpp:63 rc.cpp:255
+msgid "Download"
+msgstr ""
+
+#: rc.cpp:66 rc.cpp:258
+msgid "Don't limit download rate"
+msgstr ""
+
+#: rc.cpp:69 rc.cpp:261
+msgid "Limit download rate to:"
+msgstr ""
+
+#: rc.cpp:72 rc.cpp:87 rc.cpp:264 rc.cpp:279
+msgid "kB/s"
+msgstr ""
+
+#: rc.cpp:75 rc.cpp:267
+msgid "Upload"
+msgstr ""
+
+#: rc.cpp:78 rc.cpp:270
+msgid "Don't limit upload rate"
+msgstr ""
+
+#: rc.cpp:81 rc.cpp:273
+msgid "Limit upload rate automatically"
+msgstr ""
+
+#: rc.cpp:84 rc.cpp:276
+msgid "Limit upload rate to:"
+msgstr ""
+
+#: rc.cpp:90 rc.cpp:282
+msgid "Proxy"
+msgstr ""
+
+#: rc.cpp:93 rc.cpp:285
+msgid "Without proxy"
+msgstr ""
+
+#: rc.cpp:96 rc.cpp:288
+msgid "Auto detected"
+msgstr ""
+
+#: rc.cpp:99 rc.cpp:291
+msgid "Manually"
+msgstr ""
+
+#: rc.cpp:102 rc.cpp:294
+msgid "HTTP"
+msgstr ""
+
+#: rc.cpp:105 rc.cpp:297
+msgid "Socks4"
+msgstr ""
+
+#: rc.cpp:108 rc.cpp:300
+msgid "Socks5"
+msgstr ""
+
+#: rc.cpp:111 rc.cpp:303
+msgid "required password"
+msgstr ""
+
+#: rc.cpp:129 rc.cpp:321
+msgid "Iconset"
+msgstr ""
+
+#: rc.cpp:132 rc.cpp:324
+msgid "default"
+msgstr ""
+
+#: rc.cpp:135 rc.cpp:327
+msgid "monochrome"
+msgstr ""
+
+#: rc.cpp:138 rc.cpp:330
+msgid "white"
+msgstr ""
+
+#: rc.cpp:183 rc.cpp:375
+msgid "Preferences"
+msgstr ""

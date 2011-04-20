@@ -1,27 +1,32 @@
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# nib952051 <nib952051@gmail.com>, 2011.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-09-23 18:22+0200\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2011-04-17 22:15+0300\n"
+"PO-Revision-Date: 2011-04-20 15:40+0300\n"
+"Last-Translator: nib952051 <nib952051@gmail.com>\n"
+"Language-Team: Russian <kde-russian@lists.kde.ru>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.7.0\n"
+"X-Generator: Lokalize 1.2\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: installer/Daemoninstaller.cpp:94
 msgid "File extracted"
-msgstr ""
+msgstr "Файл извлечен"
 
-#: ui_mainwindow.h:259
-#, fuzzy
+#: ui_mainwindow.h:259 rc.cpp:15 rc.cpp:207 rc.cpp:399
 msgid "Dropbox Preferences"
 msgstr "Настройки Dropbox"
 
-#: ui_mainwindow.h:260
-#, fuzzy
+#: ui_mainwindow.h:260 rc.cpp:39 rc.cpp:231 rc.cpp:423
 msgid "Account information for this computer"
 msgstr "Учетная запись"
 
@@ -29,76 +34,63 @@ msgstr "Учетная запись"
 msgid "Unlink this computer..."
 msgstr ""
 
-#: ui_mainwindow.h:262
-#, fuzzy
+#: ui_mainwindow.h:262 rc.cpp:54 rc.cpp:246 rc.cpp:438
 msgid "Dropbox folder location"
 msgstr "Расположение каталога Dropbox"
 
-#: ui_mainwindow.h:263
-#, fuzzy
+#: ui_mainwindow.h:263 rc.cpp:57 rc.cpp:249 rc.cpp:441
 msgid "Move..."
-msgstr "..."
+msgstr "переместить"
 
-#: ui_mainwindow.h:264
-#, fuzzy
+#: ui_mainwindow.h:264 rc.cpp:21 rc.cpp:213 rc.cpp:405
 msgid "Desktop integration"
 msgstr "Интеграция с рабочим окружением"
 
-#: ui_mainwindow.h:265
-#, fuzzy
+#: ui_mainwindow.h:265 rc.cpp:24 rc.cpp:216 rc.cpp:408
 msgid "Show system tray notifications"
 msgstr "Показывать уведомления"
 
-#: ui_mainwindow.h:266
-#, fuzzy
+#: ui_mainwindow.h:266 rc.cpp:27 rc.cpp:219 rc.cpp:411
 msgid "Start Dropbox on system startup"
-msgstr "Запуск вуместе с системой"
+msgstr "Запуск вместе с системой"
 
-#: ui_mainwindow.h:267
-#, fuzzy
+#: ui_mainwindow.h:267 rc.cpp:18 rc.cpp:210 rc.cpp:402
 msgid "General"
 msgstr "Основное"
 
-#: ui_mainwindow.h:268
-#, fuzzy
+#: ui_mainwindow.h:268 rc.cpp:117 rc.cpp:309 rc.cpp:501
 msgid "File Manager"
 msgstr "Файловый менеджер"
 
-#: ui_mainwindow.h:269
-#, fuzzy
+#: ui_mainwindow.h:269 rc.cpp:126 rc.cpp:318 rc.cpp:510
 msgid "Browser"
 msgstr "Браузер"
 
-#: ui_mainwindow.h:272
+#: ui_mainwindow.h:272 rc.cpp:120 rc.cpp:312 rc.cpp:504
 msgid "dolphin"
 msgstr ""
 
-#: ui_mainwindow.h:273
+#: ui_mainwindow.h:273 rc.cpp:123 rc.cpp:315 rc.cpp:507
 msgid "konqueror"
 msgstr ""
 
-#: ui_mainwindow.h:275
-#, fuzzy
+#: ui_mainwindow.h:275 rc.cpp:114 rc.cpp:306 rc.cpp:498
 msgid "Misc"
 msgstr "Дополнительно"
 
 #: ui_mainwindow.h:276
-#, fuzzy
 msgid "OK"
-msgstr "ОК"
+msgstr ""
 
 #: ui_mainwindow.h:277
-#, fuzzy
 msgid "Apply"
 msgstr "Применить"
 
 #: ui_mainwindow.h:278
-#, fuzzy
 msgid "Cancel"
 msgstr "Отмена"
 
-#: mainwindow.cpp:71
-#, fuzzy
+#: mainwindow.cpp:71 src/mainwindow.cpp:102
 msgid "Dropbox folder"
 msgstr "Каталог Dropbox"
 
@@ -112,91 +104,210 @@ msgid ""
 "running, and check that the settings are correct."
 msgstr ""
 
-#: core/DaemonConnection.cpp:76
+#: core/DaemonConnection.cpp:76 src/dropboxclient.cpp:164
 #, kde-format
 msgid "The following error occurred: %1."
-msgstr ""
+msgstr "Произошла следующая ошибка: %1."
 
 #: core/DropboxClient.cpp:37
-#, fuzzy
 msgid "Dropbox daemon started"
-msgstr "Каталог Dropbox"
+msgstr "Dropbox запущен"
 
 #: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
 msgid "Unable to start Dropbox daemon"
-msgstr ""
+msgstr "Не возможно запустить Dropbox"
 
-#: core/trayicon.cpp:41
-#, fuzzy
+#: core/trayicon.cpp:41 rc.cpp:192 rc.cpp:384 rc.cpp:576
 msgid "Open Dropbox Folder"
 msgstr "Открыть каталог Dropbox"
 
-#: core/trayicon.cpp:44
-#, fuzzy
+#: core/trayicon.cpp:44 rc.cpp:171 rc.cpp:363 rc.cpp:555
 msgid "Help Center"
 msgstr "Справка"
 
-#: core/trayicon.cpp:47
+#: core/trayicon.cpp:47 rc.cpp:150 rc.cpp:342 rc.cpp:534
 msgid "Launch Dropbox Website"
-msgstr ""
+msgstr "Открыть сайт Dropbox"
 
-#: core/trayicon.cpp:50
+#: core/trayicon.cpp:50 rc.cpp:180 rc.cpp:372 rc.cpp:564
 msgid "Get More Space"
-msgstr ""
+msgstr "Получить больше места"
 
-#: core/trayicon.cpp:53
-#, fuzzy
+#: core/trayicon.cpp:53 rc.cpp:174 rc.cpp:366 rc.cpp:558
 msgid "Tour"
 msgstr "Обзор"
 
-#: core/trayicon.cpp:56
-#, fuzzy
+#: core/trayicon.cpp:56 rc.cpp:177 rc.cpp:369 rc.cpp:561
 msgid "Forums"
 msgstr "Форум"
 
 #: core/trayicon.cpp:59
-#, fuzzy
 msgid "Preferences..."
-msgstr "Настройки..."
+msgstr "Настройки"
 
-#: core/trayicon.cpp:62 core/trayicon.cpp:202
-#, fuzzy
+#: core/trayicon.cpp:62 core/trayicon.cpp:202 rc.cpp:186 rc.cpp:378 rc.cpp:570
 msgid "Start Dropbox"
 msgstr "Запустить Dropbox"
 
-#: core/trayicon.cpp:65 core/trayicon.cpp:211
-#, fuzzy
+#: core/trayicon.cpp:65 core/trayicon.cpp:211 rc.cpp:189 rc.cpp:381 rc.cpp:573
 msgid "Stop Dropbox"
 msgstr "Остановить Dropbox"
 
-#: core/trayicon.cpp:77
-#, fuzzy
+#: core/trayicon.cpp:77 rc.cpp:147 rc.cpp:339 rc.cpp:531
 msgid "Help"
 msgstr "Помощь"
 
-#: core/trayicon.cpp:82
-#, fuzzy
+#: core/trayicon.cpp:82 rc.cpp:144 rc.cpp:336 rc.cpp:528
 msgid "Recently changed files"
-msgstr "Недавно добавленные файлы"
+msgstr "Недавно изменённые файлы"
 
-#: util/Downloader.cpp:76
+#: util/Downloader.cpp:76 src/installerform.cpp:138
 msgid "Error downloading file"
-msgstr ""
+msgstr "Ошибка скачивания файла"
 
 #: ui_installerform.h:69
 msgid "Daemon installer"
-msgstr ""
+msgstr "Инсталятор"
 
-#: ui_installerform.h:70
+#: ui_installerform.h:70 rc.cpp:6 rc.cpp:198 rc.cpp:390
 msgid "Downloading Dropbox Daemon..."
+msgstr "Скачивается Dropbox"
+
+#: src/installerform.cpp:80
+msgid "unpacking downloaded file"
+msgstr "распаковывается скачанный файл"
+
+#: src/installerform.cpp:100
+msgid "Choose action"
+msgstr "Выберите действие"
+
+#: src/dropboxclient.cpp:141
+#, kde-format
+msgid "Please visit <a href=\"%1\">url</a> to link this machine."
+msgstr "Нажмите на <a href=\"%1\">ссылку</a> чтобы разрешить синхронизацию."
+
+#: rc.cpp:3 rc.cpp:195 rc.cpp:387
+msgid "Dialog"
+msgstr "Диалог"
+
+#: rc.cpp:9 rc.cpp:201 rc.cpp:393
+msgid "Run gtk based installer"
+msgstr "Запустить Gtk версию установщика"
+
+#: rc.cpp:12 rc.cpp:204 rc.cpp:396
+msgid "Or simplly link account"
+msgstr "Или присоедениете к существующему аккаунту в браузере"
+
+#: rc.cpp:30 rc.cpp:222 rc.cpp:414
+msgid "Enable LAN sync"
+msgstr "Разрешить более быструю синхонизацию"
+
+#: rc.cpp:33 rc.cpp:225 rc.cpp:417
+msgid "hide Gtk UI from tray"
+msgstr "Скрыть Gtk интерфейс"
+
+#: rc.cpp:36 rc.cpp:48 rc.cpp:228 rc.cpp:240 rc.cpp:420 rc.cpp:432
+msgid "Account"
+msgstr "Учётная запись"
+
+#: rc.cpp:42 rc.cpp:234 rc.cpp:426
+msgid "Version"
+msgstr "Версия"
+
+#: rc.cpp:45 rc.cpp:237 rc.cpp:429
+msgid "Dropbox v1.0.20"
 msgstr ""
 
-#, fuzzy
-#~ msgid "&Exit"
-#~ msgstr "Выход"
+#: rc.cpp:51 rc.cpp:243 rc.cpp:435
+msgid "email"
+msgstr "электронная почта"
 
-#~ msgid "Dropbox.py location"
-#~ msgstr "Расположение Dropbox.py"
+#: rc.cpp:60 rc.cpp:252 rc.cpp:444
+msgid "Network"
+msgstr "Сеть"
 
-#~ msgid "Systray"
-#~ msgstr "Системный лоток"
+#: rc.cpp:63 rc.cpp:255 rc.cpp:447
+msgid "Download"
+msgstr "Скачивание"
+
+#: rc.cpp:66 rc.cpp:258 rc.cpp:450
+msgid "Don't limit download rate"
+msgstr "Не ограничивать скорость скачивания"
+
+#: rc.cpp:69 rc.cpp:261 rc.cpp:453
+msgid "Limit download rate to:"
+msgstr "Ограничивать скорость скачивания:"
+
+#: rc.cpp:72 rc.cpp:87 rc.cpp:264 rc.cpp:279 rc.cpp:456 rc.cpp:471
+msgid "kB/s"
+msgstr "КБ/с"
+
+#: rc.cpp:75 rc.cpp:267 rc.cpp:459
+msgid "Upload"
+msgstr "Отдача"
+
+#: rc.cpp:78 rc.cpp:270 rc.cpp:462
+msgid "Don't limit upload rate"
+msgstr "Не ограничивать скорость отдачи"
+
+#: rc.cpp:81 rc.cpp:273 rc.cpp:465
+msgid "Limit upload rate automatically"
+msgstr "Ограничивать скорость отдачи автоматически"
+
+#: rc.cpp:84 rc.cpp:276 rc.cpp:468
+msgid "Limit upload rate to:"
+msgstr "Ограничивать скорость отдачи:"
+
+#: rc.cpp:90 rc.cpp:282 rc.cpp:474
+msgid "Proxy"
+msgstr "Прокси"
+
+#: rc.cpp:93 rc.cpp:285 rc.cpp:477
+msgid "Without proxy"
+msgstr "Без прокси сервера"
+
+#: rc.cpp:96 rc.cpp:288 rc.cpp:480
+msgid "Auto detected"
+msgstr "Определять автоматически"
+
+#: rc.cpp:99 rc.cpp:291 rc.cpp:483
+msgid "Manually"
+msgstr "Вручную"
+
+#: rc.cpp:102 rc.cpp:294 rc.cpp:486
+msgid "HTTP"
+msgstr ""
+
+#: rc.cpp:105 rc.cpp:297 rc.cpp:489
+msgid "Socks4"
+msgstr ""
+
+#: rc.cpp:108 rc.cpp:300 rc.cpp:492
+msgid "Socks5"
+msgstr ""
+
+#: rc.cpp:111 rc.cpp:303 rc.cpp:495
+msgid "required password"
+msgstr "необходим пароль"
+
+#: rc.cpp:129 rc.cpp:321 rc.cpp:513
+msgid "Iconset"
+msgstr "Тема иконок"
+
+#: rc.cpp:132 rc.cpp:324 rc.cpp:516
+msgid "default"
+msgstr "по умолчанию"
+
+#: rc.cpp:135 rc.cpp:327 rc.cpp:519
+msgid "monochrome"
+msgstr "монохромная"
+
+#: rc.cpp:138 rc.cpp:330 rc.cpp:522
+msgid "white"
+msgstr "белая"
+
+#: rc.cpp:183 rc.cpp:375 rc.cpp:567
+msgid "Preferences"
+msgstr "Настройки"
+
+
