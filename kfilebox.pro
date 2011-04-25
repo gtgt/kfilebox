@@ -5,10 +5,8 @@
 # to fix bug in QtCreator
 INCLUDEPATH += /usr/include/
 
-QT += sql \
-    network \
-    dbus
-LIBS += -lkdeui
+QT += sql network dbus
+LIBS += -lkdeui -lkdecore
 TARGET = bin/kfilebox
 TEMPLATE = app
 SOURCES += main.cpp \
