@@ -39,7 +39,7 @@ private:
     QLocalSocket* m_socket;
     QProcess* m_ps;
     QString m_message, m_authUrl, m_socketPath;
-    DropboxStatus m_status, prev_status;
+    DropboxStatus prev_status;
     QMap<QString,QString>* m_sharedFolders;
 
 

@@ -7,7 +7,7 @@ DropboxClient::DropboxClient(QObject *parent) :
     m_ps(new QProcess(this)),
     m_timer(new QTimer(this))
 {
-    m_status = prev_status = DropboxUnkown;
+    prev_status = DropboxUnkown;
     m_message = "";
     m_authUrl = "";
 
@@ -90,8 +90,10 @@ void DropboxClient::processReply(const QString &message)
 {
     if(message.isEmpty()) return;
 
+    DropboxStatus m_status = DropboxUnkown;
+
     //! @todo coment first if{} block(or modify) if you want disable tray icon blinking on startup in green and blue color(default icons scheme)
-    if (message.contains("connecting")) {
+    if (message.contains("Connecting")||message.contains("Initializing")||message.contains("Starting")) {
         m_status=DropboxBussy;
     }
     else if ( message.contains("Idle")) {

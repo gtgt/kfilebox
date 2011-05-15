@@ -66,6 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+    //    delete iconsetList;
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -135,7 +136,7 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
         applySettings();
     }
 }
-//! @bug when by hand stoping the dropbox status is not changed..
+
 void MainWindow::applySettings()
 {
     dc->stop();
@@ -162,8 +163,6 @@ void MainWindow::applySettings()
         conf.setValue("AutoStart",ui->startDaemon->isChecked());
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
         db.setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt());
-
-        //! @todo add more options to save..
 
         dc->hideGtkUi(ui->hideGtkUI->isChecked());
 
@@ -215,7 +214,7 @@ void MainWindow::loadSettings()
     loadIcons(iconset);
 
     //    trayIcon->setStatus(KStatusNotifierItem::Active);
-    trayIcon->setContextMenu(static_cast<KMenu*>(ui->trayIconMenu));
+    trayIcon->setContextMenu(static_cast<KMenu*>(ui->trayIconMenu));   //! cast QMenu to KMenu. fail fail fail, but it's working
     trayIcon->setToolTipTitle("Kfilebox");
     trayIcon->setAssociatedWidget(ui->trayIconMenu);
 
@@ -333,11 +332,9 @@ void MainWindow::openGetMoreSpaceURL()
 void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
 {
     if(newStatus == DropboxStopped){
-        if(ui->stopAction->isVisible() || !ui->startAction->isVisible()) {
-            ui->startAction->setVisible(true);
-            ui->stopAction->setVisible(false);
-        }
-    } else{
+        ui->startAction->setVisible(true);
+        ui->stopAction->setVisible(false);
+    } else {
         if (!ui->stopAction->isVisible() || ui->startAction->isVisible()) {
             ui->startAction->setVisible(false);
             ui->stopAction->setVisible(true);
@@ -370,6 +367,7 @@ void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
 //! recent files from shared folders
 //! in db '/gp/lacrimoza.gp5'
 //! absolute path is '~/Dropbox/shared-folder/' + that file
+//! take a look resolveFileName()
 void MainWindow::prepareLastChangedFiles(){
     QStringList files;
     ConfigurationDBDriver conf;
@@ -396,7 +394,7 @@ void MainWindow::prepareLastChangedFiles(){
 
 //! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
 //! convert to `снимок38.png'
-//! hope somebody will find normal solution)
+//! hope somebody will suggest normal solution:)
 QString MainWindow::fixUnicodeChars(const QString &value)
 {
     QString humanResult;
