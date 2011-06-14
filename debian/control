@@ -4,12 +4,12 @@ Priority: extra
 Maintainer: Andriy Senkovych <jolly_roger@itblog.org.ua>
 Build-Depends: debhelper (>= 7.0.50~), qt4-qmake, libqt4-dev, kdelibs5-dev
 Standards-Version: 3.9.1
-Homepage: https://sourceforge.net/projects/kdropbox/
+Homepage: http://kdropbox.deuteros.es/
 #Vcs-Git: git://git.debian.org/collab-maint/kfilebox.git
 #Vcs-Browser: http://git.debian.org/?p=collab-maint/kfilebox.git;a=summary
 
 Package: kfilebox
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: <insert up to 60 chars description>
- <insert long description, indented with spaces>
+Description: Dropbox KDE frontend
+ Dropbox KDE frontend written in Qt.
