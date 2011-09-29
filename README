@@ -1,6 +1,21 @@
-Source install Howto
-====================
+about:
+Kfilebox is a KDE dropbox frontend. Previously known as kdropbox. Writen on C++ uses Qt/KDE.
+Originally writen by Guillermo Amat. Now supported by nib952051(mailto:nib952051@gmail.com).
+Debian mainteiner Andriy Senkovych(mailto:jolly_roger@itblog.org.ua).
 
-$qmake
-$make
-$sudo make install 
+features list:
+configure dropbox download/upload speed, most of proxy settings
+list of last modified files
+web links in tray menu
+ability to show/hide gtk based application in tray
+dbus bindings
+
+installation from source:
+qmake
+make
+sudo make install
+
+links:
+web site: http://kdropbox.deuteros.es/
+bugtracker: http://sourceforge.net/apps/trac/kdropbox/report/1
+git: http://gitorius.com/kfilebox

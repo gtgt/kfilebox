@@ -30,5 +30,6 @@ int main(int argc, char** argv)
 
     MainWindow w;
     Q_UNUSED(w);
+
     return a.exec();
 }

@@ -16,6 +16,50 @@ MainWindow::MainWindow(QWidget *parent) :
     if(Configuration().getValue("StartDaemon").toBool())
         dc->start();
 
+    //! []
+    openDropboxWebsite = new QAction("Launch Dropbox Website", this);
+    action0 = new QAction(this);
+    action1 = new QAction(this);
+    action2 = new QAction(this);
+    action3 = new QAction(this);
+    action4 = new QAction(this);
+    statusAction = new QAction("connecting", this);
+    statusAction->setEnabled(false);
+    openHelpCenter = new QAction("Help Center", this);
+    openTour = new QAction("Tour", this);
+    openForums = new QAction("Forums", this);
+    openGetMoreSpace = new QAction("Get More Space", this);
+    openPrefs = new QAction("Preferences", this);
+    startAction = new QAction("Start Dropbox", this);
+    stopAction = new QAction("Stop Dropbox", this);
+    openDir = new QAction("Open Dropbox Folder", this);
+    trayIconMenu = new KMenu("tray menu", this);
+    chFiles = new QMenu("Recently changed files", this);
+    helpMenu = new QMenu("Help", this);
+
+    trayIconMenu->addAction(openDir);
+    trayIconMenu->addAction(openDropboxWebsite);
+    trayIconMenu->addAction(chFiles->menuAction());
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(statusAction);
+    trayIconMenu->addSeparator();
+    trayIconMenu->addAction(helpMenu->menuAction());
+    trayIconMenu->addAction(openGetMoreSpace);
+    trayIconMenu->addAction(openPrefs);
+    trayIconMenu->addAction(startAction);
+    trayIconMenu->addAction(stopAction);
+    chFiles->addAction(action0);
+    chFiles->addAction(action1);
+    chFiles->addAction(action2);
+    chFiles->addAction(action3);
+    chFiles->addAction(action4);
+    helpMenu->addAction(openHelpCenter);
+    helpMenu->addAction(openTour);
+    helpMenu->addAction(openForums);
+
+    //! [/] and +
+
+
     connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(loadIcons())); //! not loadIcons(const QString&) cause contents is translated
@@ -35,19 +79,18 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->proxyRequiresAuth, SIGNAL(toggled(bool)), this, SLOT(proxyAuthRadioToggle()));
 
-    connect(ui->openDir, SIGNAL(triggered()), this, SLOT(openFileBrowser()));
-    connect(ui->openHelpCenter, SIGNAL(triggered()), this, SLOT(openHelpCenterURL()));
-    connect(ui->openDropboxWebsite, SIGNAL(triggered()), this, SLOT(openDropboxWebsiteURL()));
-    connect(ui->openGetMoreSpace, SIGNAL(triggered()), this, SLOT(openGetMoreSpaceURL()));
-    connect(ui->openTour, SIGNAL(triggered()), this, SLOT(openTourURL()));
-    connect(ui->openForums, SIGNAL(triggered()), this, SLOT(openForumsURL()));
-    connect(ui->openPrefs, SIGNAL(triggered()), this, SLOT(show()));
-    connect(ui->startAction, SIGNAL(triggered()), dc, SLOT(start()));
-    connect(ui->stopAction, SIGNAL(triggered()), dc, SLOT(stop()));
-    connect(ui->chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
+    connect(openDir, SIGNAL(triggered()), this, SLOT(openFileBrowser()));
+    connect(openHelpCenter, SIGNAL(triggered()), this, SLOT(openHelpCenterURL()));
+    connect(openDropboxWebsite, SIGNAL(triggered()), this, SLOT(openDropboxWebsiteURL()));
+    connect(openGetMoreSpace, SIGNAL(triggered()), this, SLOT(openGetMoreSpaceURL()));
+    connect(openTour, SIGNAL(triggered()), this, SLOT(openTourURL()));
+    connect(openForums, SIGNAL(triggered()), this, SLOT(openForumsURL()));
+    connect(openPrefs, SIGNAL(triggered()), this, SLOT(show()));
+    connect(startAction, SIGNAL(triggered()), dc, SLOT(start()));
+    connect(stopAction, SIGNAL(triggered()), dc, SLOT(stop()));
+    connect(chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
 
-    ui->startAction->setVisible(false);
-    ui->menuBar->setVisible(false);
+    startAction->setVisible(false);
 
     trayIcon = new KStatusNotifierItem(this);
     iconsetList =  new QStringList();
@@ -214,9 +257,9 @@ void MainWindow::loadSettings()
     loadIcons(iconset);
 
     //    trayIcon->setStatus(KStatusNotifierItem::Active);
-    trayIcon->setContextMenu(static_cast<KMenu*>(ui->trayIconMenu));   //! cast QMenu to KMenu. fail fail fail, but it's working
+    trayIcon->setContextMenu(trayIconMenu);
     trayIcon->setToolTipTitle("Kfilebox");
-    trayIcon->setAssociatedWidget(ui->trayIconMenu);
+    trayIcon->setAssociatedWidget(trayIconMenu);
 
     ui->dropboxFolder->setText(db.getValue("dropbox_path").toString());
     ui->fileManager->setCurrentIndex(ui->fileManager->findText(conf.getValue("FileManager").toString()));
@@ -332,16 +375,16 @@ void MainWindow::openGetMoreSpaceURL()
 void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
 {
     if(newStatus == DropboxStopped){
-        ui->startAction->setVisible(true);
-        ui->stopAction->setVisible(false);
-    } else {
-        if (!ui->stopAction->isVisible() || ui->startAction->isVisible()) {
-            ui->startAction->setVisible(false);
-            ui->stopAction->setVisible(true);
-        }
+        startAction->setVisible(true);
+        stopAction->setVisible(false);
+        qDebug() << "stopped..";
+    } else if (!stopAction->isVisible() || startAction->isVisible()) {
+            startAction->setVisible(false);
+            stopAction->setVisible(true);
+            qDebug() << "started..";
     }
 
-    ui->statusAction->setText(message);
+    statusAction->setText(message);
     trayIcon->setToolTipSubTitle(message);
 
     switch(newStatus) {
@@ -382,13 +425,13 @@ void MainWindow::prepareLastChangedFiles(){
 
     for (int i = 0; i < files.count(); ++i) {
         QString fileName = resolveFileName(files.at(i));
-        disconnect(ui->chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-        sm->removeMappings(ui->chFiles->actions().at(i));
-        ui->chFiles->actions().at(i)->setText(fileName.split("/").last());
-        ui->chFiles->actions().at(i)->setEnabled(QFile(fileName).exists());
+        disconnect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
+        sm->removeMappings(chFiles->actions().at(i));
+        chFiles->actions().at(i)->setText(fileName.split("/").last());
+        chFiles->actions().at(i)->setEnabled(QFile(fileName).exists());
 
-        connect(ui->chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-        sm->setMapping(ui->chFiles->actions().at(i), fileName);
+        connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
+        sm->setMapping(chFiles->actions().at(i), fileName);
     }
 }
 
