@@ -377,11 +377,9 @@ void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
     if(newStatus == DropboxStopped){
         startAction->setVisible(true);
         stopAction->setVisible(false);
-        qDebug() << "stopped..";
     } else if (!stopAction->isVisible() || startAction->isVisible()) {
             startAction->setVisible(false);
             stopAction->setVisible(true);
-            qDebug() << "started..";
     }
 
     statusAction->setText(message);

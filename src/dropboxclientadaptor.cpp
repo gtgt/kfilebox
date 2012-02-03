@@ -15,6 +15,7 @@ DropboxClientAdaptor::~DropboxClientAdaptor()
 
 void DropboxClientAdaptor::start()
 {
+
     QMetaObject::invokeMethod(parent(), "start");
 }
 
