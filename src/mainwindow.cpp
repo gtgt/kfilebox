@@ -16,7 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     if(Configuration().getValue("StartDaemon").toBool())
         dc->start();
 
-    connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
+    connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)),
+            SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(loadIcons())); //! not loadIcons(const QString&) cause contents is translated
 

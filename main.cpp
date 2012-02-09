@@ -23,10 +23,10 @@ int main(int argc, char** argv)
                 "http://kfilebox.deuteros.es/",
                 "nib952051@gmail.com");
 
+    aboutData.setBugAddress("http://sourceforge.net/apps/trac/kdropbox/report/1");
     KCmdLineArgs::init( argc, argv, &aboutData );
     KUniqueApplication a;
     KUniqueApplication::setQuitOnLastWindowClosed(false);
-
 
     MainWindow w;
     Q_UNUSED(w);
