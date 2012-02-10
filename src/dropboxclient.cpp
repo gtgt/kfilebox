@@ -11,7 +11,6 @@ DropboxClient::DropboxClient(QObject *parent) :
     m_message = "";
     m_authUrl = "";
 
-    m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
     m_timer->start(500);
@@ -27,7 +26,7 @@ DropboxClient::~DropboxClient()
 void DropboxClient::start()
 {
     if(!isRunning()) {
-        m_ps->start(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
+        m_ps->start(Configuration().getValue("DropboxDir").toString().append("dropboxd"));
     }
 }
 
@@ -37,21 +36,9 @@ void DropboxClient::stop()
     m_ps->waitForFinished();
 }
 
-/** Loop. I don't know what is worth(every m_timer->interval() ):
-  * - get dropbox pid from file, try to read file in /proc/PID/some_file
-  * - if m_socket isn't open - try to connect, got error
-  */
 void DropboxClient::getDropboxStatus()
 {
-    sendCommand("get_dropbox_status");
-}
-
-void DropboxClient::sendCommand(const QString &command)
-{
-    QString message = dc->sendCommand(command);
-    if(command=="tray_action_hard_exit") {
-        message = "Dropbox daemon isn't running";
-    }
+    QString message = sendCommand("get_dropbox_status");
 
     if(message.isEmpty()) return;
     DropboxStatus m_status = DropboxUnkown;
@@ -92,9 +79,18 @@ void DropboxClient::sendCommand(const QString &command)
     }
 
     if((m_status == DropboxIdle )) { //&& (m_sharedFolders->isEmpty())
-        updateSharedFolders("/home/nib/Dropbox/"); //! hard coded yeat
-        //        qDebug() << m_sharedFolders->count();
+        updateSharedFolders(ConfigurationDBDriver().getValue("dropbox_path").toString());
     }
+
+}
+
+QString DropboxClient::sendCommand(const QString &command)
+{
+//    QString message = ;
+//    if(command=="tray_action_hard_exit") {
+//        message = "Dropbox daemon isn't running";
+//    }
+    return dc->sendCommand(command);
 }
 
 void DropboxClient::readDaemonOutput()
@@ -109,7 +105,7 @@ void DropboxClient::readDaemonOutput()
 
 bool DropboxClient::isRunning()
 {
-    QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/dropbox.pid")));
+    QFile file(QDir::homePath().append("/.dropbox/dropbox.pid"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
@@ -122,24 +118,24 @@ bool DropboxClient::isRunning()
 
 bool DropboxClient::isInstalled()
 {
-    return QFile(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropbox"))).exists();
+    return QFile(Configuration().getValue("DropboxDir").toString().append("dropbox")).exists();
 }
 
-void DropboxClient::hideGtkUi(bool v)
+void DropboxClient::hideGtkUi(bool hide)
 {
-    if(v) {
-        if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_.so")).exists())
-            QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"));
-    } else {
-        if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so")).exists())
-            QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_.so"));
+    Configuration conf;
+    if(hide && QFile(conf.getValue("DropboxDir").toString().append("wx._controls_.so")).exists()) {
+        QDir().rename(conf.getValue("DropboxDir").toString().append("wx._controls_.so"), conf.getValue("DropboxDir").toString().append("wx._controls_orig.so"));
+    }
+    if(!hide && QFile(conf.getValue("DropboxDir").toString().append("wx._controls_orig.so")).exists()){
+        QDir().rename(conf.getValue("DropboxDir").toString().append("wx._controls_orig.so"), conf.getValue("DropboxDir").toString().append("wx._controls_.so"));
     }
 
 }
 
 QString DropboxClient::getVersion()
 {
-    QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/VERSION")));
+    QFile file(Configuration().getValue("DropboxDir").toString().append("VERSION"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return QString();
 

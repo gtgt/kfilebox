@@ -11,6 +11,9 @@
 #include <QTimer>
 
 #include "src/notification.h"
+#include "src/configuration.h"
+#include "src/configurationdbdriver.h"
+
 class SynchronousDropboxConnection;
 
 enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
@@ -23,13 +26,12 @@ public:
     explicit DropboxClient(QObject* parent = 0);
     ~DropboxClient();
 
-    void sendCommand(const QString& command);
     void updateSharedFolders(const QString& to);
     QStringList getSharedFolders();
 
     //! This functions not strongly related to this class..
     bool static isRunning();
-    void static hideGtkUi(bool v);
+    void static hideGtkUi(bool hide);
     bool static isInstalled();
     QString static getVersion();
 
@@ -38,7 +40,7 @@ public:
 private:
     QTimer* m_timer;
     QProcess* m_ps;
-    QString m_message, m_authUrl, m_socketPath;
+    QString m_message, m_authUrl;
     DropboxStatus prev_status;
     QMap<QString,QString>* m_sharedFolders;
 
@@ -46,6 +48,13 @@ private:
 public slots:
     void start();
     void stop();
+
+    QString sendCommand(const QString& command);
+
+    QString getPublicUrl(QString file) {
+        return sendCommand(QString("get_public_link\npath\t%1").arg(file)).remove("link\t");
+    }
+
     DropboxStatus getStatus() const {
         return prev_status;
     }
@@ -110,6 +119,7 @@ public:
         //! @todo if(reply.stripTONotEmptyStrings().count()==3) {reply.stripped().remove(1) AND remove(3)}
         //Strip out \ndone\n and ok\n
         reply = reply.remove("\ndone\n");
+        reply = reply.remove("notok\n");
         reply = reply.remove("ok\n");
 
         if (reply == "status")
