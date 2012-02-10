@@ -40,7 +40,9 @@ void DropboxClient::getDropboxStatus()
 {
     QString message = sendCommand("get_dropbox_status");
 
-    if(message.isEmpty()) return;
+	if(message.isEmpty()) {
+		message = "Dropbox daemon isn't running";
+	}
     DropboxStatus m_status = DropboxUnkown;
 
     //! @todo coment first if{} block(or modify) if you want disable tray icon blinking on startup in green and blue color(default icons scheme)

@@ -51,7 +51,7 @@ public slots:
 
     QString sendCommand(const QString& command);
 
-    QString getPublicUrl(QString file) {
+	QString getPublicLink(QString file) {
         return sendCommand(QString("get_public_link\npath\t%1").arg(file)).remove("link\t");
     }
 

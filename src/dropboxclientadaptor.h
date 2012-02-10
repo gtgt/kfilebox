@@ -13,15 +13,6 @@
 
 #include "src/dropboxclient.h" //! for DropboxClient::DropboxStatus
 
-//QT_BEGIN_NAMESPACE
-//class QByteArray;
-//template<class T> class QList;
-//template<class Key, class Value> class QMap;
-//class QString;
-//class QStringList;
-//class QVariant;
-//QT_END_NAMESPACE
-
 class DropboxClientAdaptor: public QDBusAbstractAdaptor
 {
     Q_OBJECT
@@ -29,7 +20,8 @@ class DropboxClientAdaptor: public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Introspection", ""
                 "  <interface name=\"org.kde.Kfilebox\">\n"
                 "    <method name=\"start\"/>\n"
-                "    <method name=\"stop\"/>\n"
+				"    <method name=\"stop\"/>\n"
+				"    <method name=\"get_public_link\"/>\n"
                 "    <signal name=\"updateStatus\"/>\n"
                 "  </interface>\n"
                 "")
@@ -41,6 +33,7 @@ public:
 public Q_SLOTS:
     void start();
     void stop();
+	QString get_public_link(QString filename);
 
 Q_SIGNALS:
     void updateStatus(DropboxStatus, QString);
