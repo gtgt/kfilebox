@@ -3,21 +3,15 @@
 DropboxClient::DropboxClient(QObject *parent) :
     QObject(parent),
     m_sharedFolders(new QMap<QString,QString>()),
-    m_socket(new QLocalSocket(this)),
     m_ps(new QProcess(this)),
-    m_timer(new QTimer(this))
+    m_timer(new QTimer(this)),
+    dc(new SynchronousDropboxConnection(this))
 {
     prev_status = DropboxUnkown;
     m_message = "";
     m_authUrl = "";
 
-    m_socketPath = QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/command_socket"));
-
-    connect(m_socket, SIGNAL(error(QLocalSocket::LocalSocketError)),this, SLOT(displayError(QLocalSocket::LocalSocketError)));
-    connect(m_socket, SIGNAL(readyRead()), SLOT(receiveReply()));
-
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
-
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
     m_timer->start(500);
 }
@@ -32,71 +26,30 @@ DropboxClient::~DropboxClient()
 void DropboxClient::start()
 {
     if(!isRunning()) {
-        m_ps->start(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropboxd")));
-        m_ps->waitForStarted(500);
+        m_ps->start(Configuration().getValue("DropboxDir").toString().append("dropboxd"));
     }
-    m_socket->connectToServer(m_socketPath);
 }
 
 void DropboxClient::stop()
 {
     sendCommand("tray_action_hard_exit");
     m_ps->waitForFinished();
-    processReply("Dropbox isn't running");
 }
 
-/** Loop. I don't know what is worth(every m_timer->interval() ):
-  * - get dropbox pid from file, try to read file in /proc/PID/some_file
-  * - if m_socket isn't open - try to connect, got error
-  */
 void DropboxClient::getDropboxStatus()
 {
-    sendCommand("get_dropbox_status");
-}
+    QString message = sendCommand("get_dropbox_status");
 
-void DropboxClient::sendCommand(const QString &command)
-{
-    if(!m_socket->isOpen())
-    {
-        m_socket->connectToServer(m_socketPath);
-        return; // "Dropbox isn't running";
-    }
-
-    m_socket->write(command.toUtf8());
-    m_socket->write(QString("\ndone\n").toUtf8());
-    m_socket->flush();
-
-}
-
-void DropboxClient::receiveReply()
-{
-    QString reply = m_socket->readAll();
-
-    reply = reply.remove("\ndone\n");
-    reply = reply.remove("done\n"); //! @todo
-    reply = reply.remove("ok\n");
-
-    //Remove status\t or Replace status to Idle
-    QStringList list = reply.split("\t");
-    if (list.length()==1 && list[0].trimmed()=="status")
-        reply = "Idle";
-    else if (list.length()>1 && list[0].trimmed()=="status")
-        reply = list[1];
-
-    processReply(reply);
-}
-
-void DropboxClient::processReply(const QString &message)
-{
-    if(message.isEmpty()) return;
-
+	if(message.isEmpty()) {
+		message = "Dropbox daemon isn't running";
+	}
     DropboxStatus m_status = DropboxUnkown;
 
     //! @todo coment first if{} block(or modify) if you want disable tray icon blinking on startup in green and blue color(default icons scheme)
-    if (message.contains("Connecting")||message.contains("Initializing")||message.contains("Starting")) {
+    if (message.contains("Initializing")||message.contains("Starting")) {
         m_status=DropboxBussy;
     }
-    else if ( message.contains("Idle")) {
+    else if (message == "Idle" || message.contains("Connecting")) {
         m_status=DropboxIdle;
     }
     else if (message.contains("Up")) {
@@ -128,11 +81,19 @@ void DropboxClient::processReply(const QString &message)
     }
 
     if((m_status == DropboxIdle )) { //&& (m_sharedFolders->isEmpty())
-        updateSharedFolders("/home/nib/Dropbox/"); //! hard coded yeat
-        //        qDebug() << m_sharedFolders->count();
+        updateSharedFolders(ConfigurationDBDriver().getValue("dropbox_path").toString());
     }
+
 }
 
+QString DropboxClient::sendCommand(const QString &command)
+{
+//    QString message = ;
+//    if(command=="tray_action_hard_exit") {
+//        message = "Dropbox daemon isn't running";
+//    }
+    return dc->sendCommand(command);
+}
 
 void DropboxClient::readDaemonOutput()
 {
@@ -144,71 +105,43 @@ void DropboxClient::readDaemonOutput()
     }
 }
 
-void DropboxClient::displayError(QLocalSocket::LocalSocketError socketError)
-{
-    switch (socketError) {
-    case QLocalSocket::ServerNotFoundError:
-        //! socket isn't exists > is dropbox exists? can I run installer?
-        //        notify.send(tr("The host was not found. Please check Dropbox daemon installation."));
-        break;
-    case QLocalSocket::ConnectionRefusedError:
-        //! this is not an error
-        //        notify.send(tr("The connection was refused by the peer.\nMake sure the Dropbox daemon is running, and check that the settings are correct."));
-        break;
-    case QLocalSocket::SocketTimeoutError:
-    case QLocalSocket::PeerClosedError:
-        //        m_status = DropboxStopped;
-        //        emit updateStatus(m_status, "Dropbox isn't running");
-        processReply("Dropbox isn't running");
-        //        notify.send(tr("Dropbox daemon stoped"));
-        break;
-    default:
-        Notification().send(tr("The following error occurred: %1.").arg(m_socket->errorString()));
-    }
-
-}
-
 bool DropboxClient::isRunning()
 {
-    QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox/dropbox.pid")));
+    QFile file(QDir::homePath().append("/.dropbox/dropbox.pid"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
     int pid = 0;
     QTextStream in(&file);
     in >> pid;
-
-    return QFile(QString("/proc/%1/cmdline").arg(QString::number(pid))).open(QIODevice::ReadOnly | QIODevice::Text);
+    file.close();
+    return QFile::exists(QString("/proc/%1/cmdline").arg(QString::number(pid)));
 }
 
 bool DropboxClient::isInstalled()
 {
-    return QFile(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/dropbox"))).exists();
+    return QFile(Configuration().getValue("DropboxDir").toString().append("dropbox")).exists();
 }
 
-void DropboxClient::hideGtkUi(bool v)
+void DropboxClient::hideGtkUi(bool hide)
 {
-    if(v) {
-        if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_.so")).exists())
-            QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"));
-        //        else
-        //            qDebug() << "HideGtkUi: Failed to move /.dropbox-dist/wx._controls_.so";
-    } else {
-        if(QFile(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so")).exists())
-            QDir().rename(QDir::homePath().append("/.dropbox-dist/wx._controls_orig.so"), QDir::homePath().append("/.dropbox-dist/wx._controls_.so"));
-        //        else
-        //            qDebug() << "ShowGtkUi: Failed to move /.dropbox-dist/wx._controls_orig.so";
+    Configuration conf;
+    if(hide && QFile(conf.getValue("DropboxDir").toString().append("wx._controls_.so")).exists()) {
+        QDir().rename(conf.getValue("DropboxDir").toString().append("wx._controls_.so"), conf.getValue("DropboxDir").toString().append("wx._controls_orig.so"));
+    }
+    if(!hide && QFile(conf.getValue("DropboxDir").toString().append("wx._controls_orig.so")).exists()){
+        QDir().rename(conf.getValue("DropboxDir").toString().append("wx._controls_orig.so"), conf.getValue("DropboxDir").toString().append("wx._controls_.so"));
     }
 
 }
 
 QString DropboxClient::getVersion()
 {
-    QFile file(QDir::toNativeSeparators(QDir::homePath().append("/.dropbox-dist/VERSION")));
+    QFile file(Configuration().getValue("DropboxDir").toString().append("VERSION"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return QString();
 
-    QString contents = "" ;
+    QString contents = "";
     QTextStream in(&file);
     in >> contents;
 
@@ -222,11 +155,10 @@ void DropboxClient::updateSharedFolders(const QString& to)
 {
     //! (shared, dropbox, public, photos, "")
     QString reply;
-    SynchronousDropboxConnection dc;
 
     foreach (QString filename, QDir(to).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
         QString tmpPath = to+QDir::separator()+filename+QDir::separator();
-        reply = dc.sendCommand(QString("get_folder_tag\npath\t%1").arg(tmpPath));
+        reply = dc->sendCommand(QString("get_folder_tag\npath\t%1").arg(tmpPath));
         reply = reply.remove("tag\t");
 
         if(reply.isEmpty())

@@ -9,6 +9,7 @@
 
 #include "src/mainwindow.h"
 
+
 int main(int argc, char** argv)
 {
     KAboutData aboutData(
@@ -19,8 +20,8 @@ int main(int argc, char** argv)
                 ki18n("KDE Dropbox frontend"),
                 KAboutData::License_GPL_V3,
                 ki18n("(c) 2011"),
-                ki18n("Kfilebox is a KDE Dropbox frontend"),
-                "http://kfilebox.deuteros.es/",
+				ki18n("Kfilebox is a KDE frontend to Dropbox"),
+				"http://sourceforge.net/projects/kdropbox/",
                 "nib952051@gmail.com");
 
     aboutData.setBugAddress("http://sourceforge.net/apps/trac/kdropbox/report/1");
@@ -30,5 +31,6 @@ int main(int argc, char** argv)
 
     MainWindow w;
     Q_UNUSED(w);
+
     return a.exec();
 }

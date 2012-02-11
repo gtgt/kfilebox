@@ -15,10 +15,16 @@ DropboxClientAdaptor::~DropboxClientAdaptor()
 
 void DropboxClientAdaptor::start()
 {
+
     QMetaObject::invokeMethod(parent(), "start");
 }
 
 void DropboxClientAdaptor::stop()
 {
     QMetaObject::invokeMethod(parent(), "stop");
+}
+
+QString DropboxClientAdaptor::get_public_link(QString filename) {
+	QMetaObject::invokeMethod(parent(), "getPublicLink"); // filename
+	return "---";
 }

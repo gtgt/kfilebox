@@ -2,6 +2,7 @@
 #define CONFIGURATION_H
 
 #include <QDebug>
+#include <QDir>
 #include <QObject>
 #include <QVariant>
 
