@@ -30,17 +30,20 @@ public:
     QStringList getSharedFolders();
 
     //! This functions not strongly related to this class..
-    bool static isRunning();
-    void static hideGtkUi(bool hide);
+	bool isRunning();
+	void hideGtkUi(bool hide);
     bool static isInstalled();
-    QString static getVersion();
+	QString getVersion();
 
     inline QString getAuthUrl() const {return m_authUrl;}
 
 private:
     QTimer* m_timer;
     QProcess* m_ps;
-    QString m_message, m_authUrl;
+	QString m_message;
+	QString m_authUrl;
+	QString m_dropboxDir; // from kfilebox config
+	QString m_dropbox_path; // from sqlite db
     DropboxStatus prev_status;
     QMap<QString,QString>* m_sharedFolders;
 
@@ -51,7 +54,7 @@ public slots:
 
     QString sendCommand(const QString& command);
 
-	QString getPublicLink(QString file) {
+	QString getPublicLink(const QString& file) {
         return sendCommand(QString("get_public_link\npath\t%1").arg(file)).remove("link\t");
     }
 

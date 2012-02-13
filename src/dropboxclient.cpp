@@ -5,11 +5,13 @@ DropboxClient::DropboxClient(QObject *parent) :
     m_sharedFolders(new QMap<QString,QString>()),
     m_ps(new QProcess(this)),
     m_timer(new QTimer(this)),
-    dc(new SynchronousDropboxConnection(this))
+	dc(new SynchronousDropboxConnection(this)),
+	prev_status(DropboxUnkown),
+	m_message(""),
+	m_authUrl("")
 {
-    prev_status = DropboxUnkown;
-    m_message = "";
-    m_authUrl = "";
+	m_dropboxDir = Configuration().getValue("DropboxDir").toString();
+	m_dropbox_path = ConfigurationDBDriver().getValue("dropbox_path").toString();
 
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
@@ -26,7 +28,7 @@ DropboxClient::~DropboxClient()
 void DropboxClient::start()
 {
     if(!isRunning()) {
-        m_ps->start(Configuration().getValue("DropboxDir").toString().append("dropboxd"));
+		m_ps->start(m_dropboxDir.append("dropboxd"));
     }
 }
 
@@ -81,7 +83,7 @@ void DropboxClient::getDropboxStatus()
     }
 
     if((m_status == DropboxIdle )) { //&& (m_sharedFolders->isEmpty())
-        updateSharedFolders(ConfigurationDBDriver().getValue("dropbox_path").toString());
+		updateSharedFolders(m_dropbox_path);
     }
 
 }
@@ -120,24 +122,23 @@ bool DropboxClient::isRunning()
 
 bool DropboxClient::isInstalled()
 {
-    return QFile(Configuration().getValue("DropboxDir").toString().append("dropbox")).exists();
+	return QFile(Configuration().getValue("DropboxDir").toString().append("dropbox")).exists();
 }
 
 void DropboxClient::hideGtkUi(bool hide)
 {
-    Configuration conf;
-    if(hide && QFile(conf.getValue("DropboxDir").toString().append("wx._controls_.so")).exists()) {
-        QDir().rename(conf.getValue("DropboxDir").toString().append("wx._controls_.so"), conf.getValue("DropboxDir").toString().append("wx._controls_orig.so"));
+	if(hide && QFile(m_dropboxDir.append("wx._controls_.so")).exists()) {
+		QDir().rename(m_dropboxDir.append("wx._controls_.so"), m_dropboxDir.append("wx._controls_orig.so"));
     }
-    if(!hide && QFile(conf.getValue("DropboxDir").toString().append("wx._controls_orig.so")).exists()){
-        QDir().rename(conf.getValue("DropboxDir").toString().append("wx._controls_orig.so"), conf.getValue("DropboxDir").toString().append("wx._controls_.so"));
+	if(!hide && QFile(m_dropboxDir.append("wx._controls_orig.so")).exists()){
+		QDir().rename(m_dropboxDir.append("wx._controls_orig.so"), m_dropboxDir.append("wx._controls_.so"));
     }
 
 }
 
 QString DropboxClient::getVersion()
 {
-    QFile file(Configuration().getValue("DropboxDir").toString().append("VERSION"));
+	QFile file(m_dropboxDir.append("VERSION"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return QString();
 

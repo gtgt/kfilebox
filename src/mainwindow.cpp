@@ -129,8 +129,6 @@ void MainWindow::changeEvent(QEvent *e)
 void MainWindow::initializeDBus()
 {
     adaptor = new DropboxClientAdaptor(dc);
-    connect(dc, SIGNAL(updateStatus(DropboxStatus,QString)), adaptor, SIGNAL(updateStatus(DropboxStatus,QString)));
-    //! @todo a lot of work:)
 }
 
 void MainWindow::changeDropboxFolder()
