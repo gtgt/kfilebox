@@ -36,6 +36,7 @@ public:
 	QString getVersion();
 
     inline QString getAuthUrl() const {return m_authUrl;}
+	QStringList prepareLastChangedFiles();
 
 private:
     QTimer* m_timer;
@@ -48,6 +49,10 @@ private:
     QMap<QString,QString>* m_sharedFolders;
 
     SynchronousDropboxConnection* dc;
+
+QString fixUnicodeChars(const QString &value);
+QString resolveFileName(const QString& filename);
+
 public slots:
     void start();
     void stop();
@@ -58,13 +63,9 @@ public slots:
         return sendCommand(QString("get_public_link\npath\t%1").arg(file)).remove("link\t");
     }
 
-    DropboxStatus getStatus() const {
-        return prev_status;
-    }
+    DropboxStatus getStatus() const {return prev_status;}
 
-    QString getStatusMessage() const {
-        return m_message;
-    }
+	QString getStatusMessage() const {return m_message;}
 
 private slots:
     void readDaemonOutput();

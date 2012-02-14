@@ -24,7 +24,6 @@ class MainWindow;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
-
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
@@ -35,8 +34,6 @@ protected:
 private:
     void loadSettings();
     void initializeDBus();
-    QString fixUnicodeChars(const QString& value);
-    QString resolveFileName(const QString& filename);
 
     Ui::MainWindow* ui;
     DropboxClient* dc;

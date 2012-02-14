@@ -405,62 +405,15 @@ void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
     }
 }
 
-//! recent files from shared folders
-//! in db '/gp/lacrimoza.gp5'
-//! absolute path is '~/Dropbox/shared-folder/' + that file
-//! take a look resolveFileName()
 void MainWindow::prepareLastChangedFiles(){
-    QStringList files;
-    ConfigurationDBDriver conf;
-    QString recentlyChanged = conf.getValue("recently_changed3").toString();
+	QStringList files = dc->prepareLastChangedFiles();
+	for (int i = 0; i < files.count(); ++i) {
+		disconnect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
+		sm->removeMappings(chFiles->actions().at(i));
+		chFiles->actions().at(i)->setText(files.at(i).split("/").last());
+		chFiles->actions().at(i)->setEnabled(QFile(files.at(i)).exists());
 
-    if(recentlyChanged.isEmpty()) return;
-    foreach (QString elem, recentlyChanged.split("\n")) {
-        QStringList list = elem.split(":");
-        if(list.length()>1)
-            files.push_back(fixUnicodeChars(list.value(1)));
-    }
-
-    for (int i = 0; i < files.count(); ++i) {
-        QString fileName = resolveFileName(files.at(i));
-        disconnect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-        sm->removeMappings(chFiles->actions().at(i));
-        chFiles->actions().at(i)->setText(fileName.split("/").last());
-        chFiles->actions().at(i)->setEnabled(QFile(fileName).exists());
-
-        connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-        sm->setMapping(chFiles->actions().at(i), fileName);
-    }
-}
-
-//! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
-//! convert to `снимок38.png'
-//! hope somebody will suggest normal solution:)
-// mb replace by regexp?
-QString MainWindow::fixUnicodeChars(const QString &value)
-{
-    QString humanResult;
-    QStringList toHumanable = value.split("\\u");
-    if(toHumanable.length()>1) {
-        humanResult = toHumanable.first();
-        for(int i=1; i<toHumanable.length(); i++ ) {
-            if(toHumanable.at(i).length()!=4)
-                humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
-            else
-                humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
-        }
-        return humanResult;
-    } else
-        return value;
-}
-
-QString MainWindow::resolveFileName(const QString& filename)
-{
-    QStringList foldersList = dc->getSharedFolders();
-    foldersList.push_front(ui->dropboxFolder->text() + QDir::separator());
-    foreach (QString folderPath, foldersList) {
-        QString tmpPath = QDir::toNativeSeparators(folderPath+filename);
-        if(QFile(tmpPath).exists()) return tmpPath;
-    }
-    return filename; //! for example, file was deleted
+		connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
+		sm->setMapping(chFiles->actions().at(i), files.at(i));
+	}
 }

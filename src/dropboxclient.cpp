@@ -180,3 +180,55 @@ QStringList DropboxClient::getSharedFolders()
     }
     return retVal;
 }
+
+//! recent files from shared folders
+//! in db '/gp/lacrimoza.gp5'
+//! absolute path is '~/Dropbox/shared-folder/' + that file
+//! take a look resolveFileName()
+QStringList DropboxClient::prepareLastChangedFiles(){
+	QStringList files;
+	ConfigurationDBDriver conf;
+	QString recentlyChanged = conf.getValue("recently_changed3").toString();
+
+//	if(recentlyChanged.isEmpty())
+//		return files;
+	foreach (QString elem, recentlyChanged.split("\n")) {
+		QStringList list = elem.split(":");
+		if(list.length()>1) {
+			files.push_back(resolveFileName(fixUnicodeChars(list.value(1))));
+		}
+	}
+	return files;
+}
+
+//! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
+//! convert to `снимок38.png'
+//! hope somebody will suggest normal solution:)
+// mb replace by regexp?
+QString DropboxClient::fixUnicodeChars(const QString &value)
+{
+	QString humanResult;
+	QStringList toHumanable = value.split("\\u");
+	if(toHumanable.length()>1) {
+		humanResult = toHumanable.first();
+		for(int i=1; i<toHumanable.length(); i++ ) {
+			if(toHumanable.at(i).length()!=4)
+				humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
+			else
+				humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
+		}
+		return humanResult;
+	} else
+		return value;
+}
+
+QString DropboxClient::resolveFileName(const QString& filename)
+{
+	QStringList foldersList = this->getSharedFolders();
+	foldersList.push_front(m_dropbox_path + QDir::separator());
+	foreach (QString folderPath, foldersList) {
+		QString tmpPath = QDir::toNativeSeparators(folderPath+filename);
+		if(QFile(tmpPath).exists()) return tmpPath;
+	}
+	return filename; //! for example, file was deleted
+}
