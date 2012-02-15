@@ -2,7 +2,6 @@
 
 DropboxClient::DropboxClient(QObject *parent) :
     QObject(parent),
-    m_sharedFolders(new QMap<QString,QString>()),
     m_ps(new QProcess(this)),
     m_timer(new QTimer(this)),
 	dc(new SynchronousDropboxConnection(this)),
@@ -22,7 +21,6 @@ DropboxClient::~DropboxClient()
 {
     if(m_ps->isOpen())
         m_ps->close();
-    delete m_sharedFolders;
 }
 
 void DropboxClient::start()
@@ -81,11 +79,6 @@ void DropboxClient::getDropboxStatus()
         m_message = message;
         emit updateStatus(m_status, message);
     }
-
-    if((m_status == DropboxIdle )) { //&& (m_sharedFolders->isEmpty())
-		updateSharedFolders(m_dropbox_path);
-    }
-
 }
 
 QString DropboxClient::sendCommand(const QString &command)
@@ -151,34 +144,46 @@ QString DropboxClient::getVersion()
 
 /**
   * I assume that inside shared folder you can't share subfolder
+  * @todo merge method
   */
-void DropboxClient::updateSharedFolders(const QString& to)
-{
-    //! (shared, dropbox, public, photos, "")
-    QString reply;
-
-    foreach (QString filename, QDir(to).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
-        QString tmpPath = to+QDir::separator()+filename+QDir::separator();
-        reply = dc->sendCommand(QString("get_folder_tag\npath\t%1").arg(tmpPath));
-        reply = reply.remove("tag\t");
-
-        if(reply.isEmpty())
-            updateSharedFolders(to+QDir::separator()+filename);
-        else
-            m_sharedFolders->insert(tmpPath, reply);
-    }
-}
-
 QStringList DropboxClient::getSharedFolders()
 {
-    QStringList retVal;
-    QMap<QString,QString>::const_iterator i = m_sharedFolders->constBegin();
-    while (i != m_sharedFolders->constEnd()) {
-        if(i.value() != "dropbox")
-            retVal.push_back(i.key());
-        ++i;
-    }
-    return retVal;
+	QMap<QString,QString>* m_sharedFolders;
+	QString to = m_dropbox_path;
+    //! (shared, dropbox, public, photos, "")
+    QString reply;
+	QStringList entries;
+	entries.append(to);
+	QString tmpPath;
+
+	QStringListIterator i(entries);
+	while(i.hasNext()) {
+		tmpPath = i.next()+QDir::separator();
+		qDebug() << tmpPath;
+		reply = getFolderTag(tmpPath);
+
+		if(reply.isEmpty()) {
+			foreach(QString sub_folder, QDir(tmpPath).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
+				entries.append(tmpPath+sub_folder);
+				qDebug() << "aaa" << (tmpPath+sub_folder);
+			}
+			//! hi I'm bug, buggy bug
+			Q_ASSERT(!i.hasNext());
+		} else {
+			qDebug() << reply;
+			m_sharedFolders->insert(tmpPath, reply);
+		}
+	}
+
+	QStringList retVal;
+	QMapIterator<QString,QString> it(*m_sharedFolders);
+	while(it.hasNext()) {
+		it.next();
+		if(it.value() != "dropbox")
+			retVal.push_back(it.key());
+
+	}
+	return retVal;
 }
 
 //! recent files from shared folders
@@ -190,14 +195,16 @@ QStringList DropboxClient::prepareLastChangedFiles(){
 	ConfigurationDBDriver conf;
 	QString recentlyChanged = conf.getValue("recently_changed3").toString();
 
-//	if(recentlyChanged.isEmpty())
-//		return files;
+	QString fixed;
 	foreach (QString elem, recentlyChanged.split("\n")) {
 		QStringList list = elem.split(":");
 		if(list.length()>1) {
-			files.push_back(resolveFileName(fixUnicodeChars(list.value(1))));
+			fixed = fixUnicodeChars(list.value(1));
+			fixed = fixed.right(fixed.length() - 1);
+			files.push_back(resolveFileName(fixed));
 		}
 	}
+	qDebug() << files;
 	return files;
 }
 

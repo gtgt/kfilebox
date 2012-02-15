@@ -46,7 +46,6 @@ private:
 	QString m_dropboxDir; // from kfilebox config
 	QString m_dropbox_path; // from sqlite db
     DropboxStatus prev_status;
-    QMap<QString,QString>* m_sharedFolders;
 
     SynchronousDropboxConnection* dc;
 
@@ -62,6 +61,10 @@ public slots:
 	QString getPublicLink(const QString& file) {
         return sendCommand(QString("get_public_link\npath\t%1").arg(file)).remove("link\t");
     }
+
+	QString getFolderTag(const QString& command) {
+		return sendCommand(QString("get_folder_tag\npath\t%1").arg(command)).remove("tag\t");
+	}
 
     DropboxStatus getStatus() const {return prev_status;}
 
