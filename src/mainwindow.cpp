@@ -112,6 +112,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     //    delete iconsetList;
+	ConfigurationDBDriver::drop();
 }
 
 void MainWindow::changeEvent(QEvent *e)

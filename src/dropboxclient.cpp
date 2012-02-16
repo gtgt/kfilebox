@@ -193,23 +193,17 @@ QStringList DropboxClient::getRecentlyChangedFiles(){
 
 //! `\u0441\u043D\u0438\u043C\u043E\u043A38.png'
 //! convert to `снимок38.png'
-//! hope somebody will suggest normal solution:)
-// mb replace by regexp?
 QString DropboxClient::fixUnicodeChars(const QString &value)
 {
-	QString humanResult;
-	QStringList toHumanable = value.split("\\u");
-	if(toHumanable.length()>1) {
-		humanResult = toHumanable.first();
-		for(int i=1; i<toHumanable.length(); i++ ) {
-			if(toHumanable.at(i).length()!=4)
-				humanResult.append(QChar(toHumanable.at(i).mid(0, 4).toInt(0, 16))).append(toHumanable.at(i).mid(4));
-			else
-				humanResult.append(QChar(toHumanable.at(i).toInt(0, 16)));
-		}
-		return humanResult;
-	} else
-		return value;
+	//	:( wanna value.replace(rx, function(m){ m = .., return m; });
+	//	return value.replace(QRegExp("\\\\u([0-9A-F]{4})"), QChar(QString("\\1").toInt(0, 16)));
+
+	QString result = value;
+	QRegExp rx("\\\\u([0-9A-F]{4})");
+	while (rx.indexIn(result) != -1) {
+		result = result.replace(rx.cap(0), QChar(rx.cap(1).toInt(0,16)));
+	}
+	return result;
 }
 
 QString DropboxClient::resolveFileName(const QString& filename)
