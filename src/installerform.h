@@ -12,7 +12,7 @@
 #include <QString>
 #include <QUrl>
 
-#include "src/dropboxclient.h"
+#include "dropboxclient.h"
 
 namespace Ui {
 class InstallerForm;

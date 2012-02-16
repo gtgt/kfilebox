@@ -11,7 +11,7 @@
 #include <QtDBus>
 #include <QVariant>
 
-#include "src/dropboxclient.h" //! for DropboxClient::DropboxStatus
+#include "dropboxclient.h" //! for DropboxClient::DropboxStatus
 
 class DropboxClientAdaptor: public QDBusAbstractAdaptor
 {
@@ -33,6 +33,25 @@ class DropboxClientAdaptor: public QDBusAbstractAdaptor
 				"        <arg name=\"arg\" type=\"s\" direction=\"in\" />\n"
 				"        <arg type=\"s\" direction=\"out\" />\n"
 				"    </method>\n"
+				"    <method name=\"get_status_message\">\n"
+				"        <arg type=\"s\" direction=\"out\" />\n"
+				"    </method>\n"
+				"    <method name=\"get_version\">\n"
+				"        <arg type=\"s\" direction=\"out\" />\n"
+				"    </method>\n"
+				"    <method name=\"get_auth_url\">\n"
+				"        <arg type=\"s\" direction=\"out\" />\n"
+				"    </method>\n"
+				"    <method name=\"get_folder_tag\">\n"
+				"        <arg name=\"filename\" type=\"s\" direction=\"in\" />\n"
+				"        <arg type=\"s\" direction=\"out\" />\n"
+				"    </method>\n"
+				"    <method name=\"get_shared_folders\">\n"
+				"        <arg type=\"as\" direction=\"out\" />\n"
+				"    </method>\n"
+				"    <method name=\"get_recently_changed\">\n"
+				"        <arg type=\"as\" direction=\"out\" />\n"
+				"    </method>\n"
 				"  </interface>\n"
 				"")
 public:
@@ -48,8 +67,9 @@ public Q_SLOTS:
 	QString get_status_message();
 	QString get_version();
 	QStringList get_shared_folders();
-//	QStringList get_recently_changed();
+	QStringList get_recently_changed();
 	QString get_auth_url();
+	QString get_folder_tag(const QString& filename);
 
 Q_SIGNALS:
 	void update_status(DropboxStatus, QString);

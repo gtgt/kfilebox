@@ -10,9 +10,9 @@
 #include <QStringList>
 #include <QTimer>
 
-#include "src/notification.h"
-#include "src/configuration.h"
-#include "src/configurationdbdriver.h"
+#include "notification.h"
+#include "configuration.h"
+#include "configurationdbdriver.h"
 
 class SynchronousDropboxConnection;
 
@@ -36,7 +36,7 @@ public:
 	QString getVersion();
 
     inline QString getAuthUrl() const {return m_authUrl;}
-	QStringList prepareLastChangedFiles();
+	QStringList getRecentlyChangedFiles();
 
 private:
     QTimer* m_timer;
@@ -44,10 +44,10 @@ private:
 	QString m_message;
 	QString m_authUrl;
 	QString m_dropboxDir; // from kfilebox config
-	QString m_dropbox_path; // from sqlite db
     DropboxStatus prev_status;
 
     SynchronousDropboxConnection* dc;
+	ConfigurationDBDriver* dropbox_db;
 
 QString fixUnicodeChars(const QString &value);
 QString resolveFileName(const QString& filename);

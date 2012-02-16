@@ -11,11 +11,11 @@
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
 
-#include "src/dropboxclient.h"
-#include "src/dropboxclientadaptor.h"
-#include "src/configuration.h"
-#include "src/configurationdbdriver.h"
-#include "src/installerform.h"
+#include "dropboxclient.h"
+#include "dropboxclientadaptor.h"
+#include "configuration.h"
+#include "configurationdbdriver.h"
+#include "installerform.h"
 
 namespace Ui {
 class MainWindow;

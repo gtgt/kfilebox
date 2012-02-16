@@ -52,12 +52,18 @@ QStringList DropboxClientAdaptor::get_shared_folders() {
 	return dc->getSharedFolders();
 }
 
-//QStringList DropboxClientAdaptor::get_recently_changed() {
-//	DropboxClient* dc = qobject_cast<DropboxClient*>(parent());
-//	return dc->get?
-//}
+QStringList DropboxClientAdaptor::get_recently_changed() {
+	DropboxClient* dc = qobject_cast<DropboxClient*>(parent());
+	return dc->getRecentlyChangedFiles();
+}
 
 QString DropboxClientAdaptor::get_auth_url() {
 	DropboxClient* dc = qobject_cast<DropboxClient*>(parent());
 	return dc->getAuthUrl();
 }
+
+QString DropboxClientAdaptor::get_folder_tag(const QString &filename) {
+	DropboxClient* dc = qobject_cast<DropboxClient*>(parent());
+	return dc->getFolderTag(filename);
+}
+

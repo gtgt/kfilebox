@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QDir>
 #include <QFile>
+#include <QMutex>
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlError>
@@ -12,17 +13,32 @@
 #include <QString>
 #include <QVariant>
 
-// Different ways to get list of recently changed files
-//        if(dbVersion == DROPBOX_DB)
-//            query = db->exec("SELECT active_server_path FROM file_journal ORDER BY active_sjid DESC LIMIT 5");
-//        else if (dbVersion == CONFIG_DB)
-//            query = db->exec("SELECT value FROM config WHERE key='recently_changed3'");
-
 class ConfigurationDBDriver : public QObject
 {
     Q_OBJECT
-public:
+	static ConfigurationDBDriver* m_Instance;
+
     explicit ConfigurationDBDriver(QObject *parent = 0);
+public:
+	static ConfigurationDBDriver* instance() {
+		static QMutex mutex;
+		if (!m_Instance) {
+			mutex.lock();
+			if (!m_Instance)
+				m_Instance = new ConfigurationDBDriver();
+			mutex.unlock();
+		}
+		return m_Instance;
+	}
+
+	static void drop() {
+		static QMutex mutex;
+		mutex.lock();
+		delete m_Instance;
+		m_Instance = 0;
+		mutex.unlock();
+	}
+
     ~ConfigurationDBDriver();
 
     QStringList listKeys() const;

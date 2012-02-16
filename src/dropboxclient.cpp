@@ -1,16 +1,16 @@
 #include "dropboxclient.h"
 
 DropboxClient::DropboxClient(QObject *parent) :
-    QObject(parent),
-    m_ps(new QProcess(this)),
-    m_timer(new QTimer(this)),
-	dc(new SynchronousDropboxConnection(this)),
-	prev_status(DropboxUnkown),
-	m_message(""),
-	m_authUrl("")
+	QObject(parent)
 {
+	m_ps = new QProcess(this);
+	m_timer = new QTimer(this);
+	dc =new SynchronousDropboxConnection(this);
+	dropbox_db = ConfigurationDBDriver::instance();
+	prev_status = DropboxUnkown;
+	m_message = m_authUrl = "";
+
 	m_dropboxDir = Configuration().getValue("DropboxDir").toString();
-	m_dropbox_path = ConfigurationDBDriver().getValue("dropbox_path").toString();
 
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
@@ -83,10 +83,6 @@ void DropboxClient::getDropboxStatus()
 
 QString DropboxClient::sendCommand(const QString &command)
 {
-//    QString message = ;
-//    if(command=="tray_action_hard_exit") {
-//        message = "Dropbox daemon isn't running";
-//    }
     return dc->sendCommand(command);
 }
 
@@ -144,56 +140,44 @@ QString DropboxClient::getVersion()
 
 /**
   * I assume that inside shared folder you can't share subfolder
-  * @todo merge method
   */
 QStringList DropboxClient::getSharedFolders()
 {
-	QMap<QString,QString>* m_sharedFolders;
-	QString to = m_dropbox_path;
-    //! (shared, dropbox, public, photos, "")
+	//reply: (shared, dropbox, public, photos, "")
     QString reply;
+	QStringList shared_folders;
 	QStringList entries;
-	entries.append(to);
-	QString tmpPath;
+	QStringList sub_entries;
+	sub_entries.append(dropbox_db->getValue("dropbox_path").toString());
+	QString dir;
 
-	QStringListIterator i(entries);
-	while(i.hasNext()) {
-		tmpPath = i.next()+QDir::separator();
-		qDebug() << tmpPath;
-		reply = getFolderTag(tmpPath);
-
-		if(reply.isEmpty()) {
-			foreach(QString sub_folder, QDir(tmpPath).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
-				entries.append(tmpPath+sub_folder);
-				qDebug() << "aaa" << (tmpPath+sub_folder);
+	while(!sub_entries.isEmpty()){
+		entries = sub_entries;
+		sub_entries.clear();
+		QMutableStringListIterator i(entries);
+		while(i.hasNext()) {
+			dir = i.next()+QDir::separator();
+			reply = getFolderTag(dir);
+			if(reply.isEmpty()) {
+				foreach(QString sub_folder, QDir(dir).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
+					sub_entries.append(dir+sub_folder);
+				}
+			} else if(reply!="dropbox") {
+				shared_folders.push_back(dir);
 			}
-			//! hi I'm bug, buggy bug
-			Q_ASSERT(!i.hasNext());
-		} else {
-			qDebug() << reply;
-			m_sharedFolders->insert(tmpPath, reply);
 		}
 	}
 
-	QStringList retVal;
-	QMapIterator<QString,QString> it(*m_sharedFolders);
-	while(it.hasNext()) {
-		it.next();
-		if(it.value() != "dropbox")
-			retVal.push_back(it.key());
-
-	}
-	return retVal;
+	return shared_folders;
 }
 
 //! recent files from shared folders
 //! in db '/gp/lacrimoza.gp5'
 //! absolute path is '~/Dropbox/shared-folder/' + that file
 //! take a look resolveFileName()
-QStringList DropboxClient::prepareLastChangedFiles(){
+QStringList DropboxClient::getRecentlyChangedFiles(){
 	QStringList files;
-	ConfigurationDBDriver conf;
-	QString recentlyChanged = conf.getValue("recently_changed3").toString();
+	QString recentlyChanged = dropbox_db->getValue("recently_changed3").toString();
 
 	QString fixed;
 	foreach (QString elem, recentlyChanged.split("\n")) {
@@ -204,7 +188,6 @@ QStringList DropboxClient::prepareLastChangedFiles(){
 			files.push_back(resolveFileName(fixed));
 		}
 	}
-	qDebug() << files;
 	return files;
 }
 
@@ -232,7 +215,7 @@ QString DropboxClient::fixUnicodeChars(const QString &value)
 QString DropboxClient::resolveFileName(const QString& filename)
 {
 	QStringList foldersList = this->getSharedFolders();
-	foldersList.push_front(m_dropbox_path + QDir::separator());
+	foldersList.push_front(dropbox_db->getValue("dropbox_path").toString() + QDir::separator());
 	foreach (QString folderPath, foldersList) {
 		QString tmpPath = QDir::toNativeSeparators(folderPath+filename);
 		if(QFile(tmpPath).exists()) return tmpPath;

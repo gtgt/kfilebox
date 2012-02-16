@@ -1,5 +1,7 @@
 #include "configurationdbdriver.h"
 
+ConfigurationDBDriver* ConfigurationDBDriver::m_Instance = 0;
+
 //! @todo play with old dropbox if need
 ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     QObject(parent)

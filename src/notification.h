@@ -10,7 +10,7 @@
 #include <QVariant>
 #include <QVariantMap>
 
-#include "src/configuration.h"
+#include "configuration.h"
 
 class Notification : public QObject
 {
