@@ -45,12 +45,14 @@ private:
 	QString m_authUrl;
 	QString m_dropboxDir; // from kfilebox config
     DropboxStatus prev_status;
+	QStringList recently_changed;
 
     SynchronousDropboxConnection* dc;
 	ConfigurationDBDriver* dropbox_db;
 
-QString fixUnicodeChars(const QString &value);
-QString resolveFileName(const QString& filename);
+	QString fixUnicodeChars(const QString &value);
+	QString resolveFileName(const QString& filename);
+	void updateRecentlyChangedFiles();
 
 public slots:
     void start();
@@ -76,6 +78,7 @@ private slots:
 
 signals:
     void updateStatus(DropboxStatus status, const QString& message);
+	void newFileAdded(const QString filename);
 
 };
 

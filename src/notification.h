@@ -18,7 +18,7 @@ class Notification : public QObject
     bool ShowNotifications;
 public:
     explicit Notification(QObject *parent = 0);
-    ~Notification();
+	~Notification() {}
     void send(const QString &message);
 
 signals:

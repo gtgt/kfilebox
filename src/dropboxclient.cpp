@@ -78,6 +78,7 @@ void DropboxClient::getDropboxStatus()
         prev_status = m_status;
         m_message = message;
         emit updateStatus(m_status, message);
+		updateRecentlyChangedFiles();
     }
 }
 
@@ -215,4 +216,20 @@ QString DropboxClient::resolveFileName(const QString& filename)
 		if(QFile(tmpPath).exists()) return tmpPath;
 	}
 	return filename; //! for example, file was deleted
+}
+
+void DropboxClient::updateRecentlyChangedFiles() {
+	QStringList list = getRecentlyChangedFiles();
+	if(!recently_changed.isEmpty()) {
+		foreach (QString item, list) {
+			if(!recently_changed.contains(item)) {
+				Notification n;
+				n.send(tr("File updated: <a href=\"file://%1\">%1</a>").arg(item));
+				emit newFileAdded(item);
+			}
+		}
+		recently_changed = list;
+	} else {
+		recently_changed = list;
+	}
 }

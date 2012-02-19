@@ -25,6 +25,9 @@ class DropboxClientAdaptor: public QDBusAbstractAdaptor
 				"        <arg name=\"state\" type=\"i\" direction=\"out\"/>\n"
 				"        <arg name=\"message\" type=\"s\" direction=\"out\"/>\n"
 				"    </signal>\n"
+				"    <signal name=\"update_status\">\n"
+				"        <arg type=\"s\" direction=\"out\"/>\n"
+				"    </signal>\n"
 				"    <method name=\"get_public_link\">\n"
 				"        <arg name=\"filename\" type=\"s\" direction=\"in\" />\n"
 				"        <arg type=\"s\" direction=\"out\" />\n"
@@ -73,6 +76,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 	void update_status(DropboxStatus, QString);
+	void new_file_added(const QString&);
 };
 
 #endif // DROPBOXCLIENTADAPTOR_H
