@@ -16,7 +16,7 @@ int main(int argc, char** argv)
                 "kfilebox",
                 0,
                 ki18n("kfilebox"),
-                "0.4.8",
+                "0.4.9",
                 ki18n("KDE Dropbox frontend"),
                 KAboutData::License_GPL_V3,
                 ki18n("(c) 2011"),

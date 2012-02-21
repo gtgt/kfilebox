@@ -9,5 +9,158 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-%:
-	dh $@ 
+
+# These are used for cross-compiling and for saving the configure script
+# from having to guess our platform (since we know it already)
+DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+ifneq ($(DEB_HOST_GNU_TYPE),$(DEB_BUILD_GNU_TYPE))
+CROSS= --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
+else
+CROSS= --build $(DEB_BUILD_GNU_TYPE)
+endif
+
+
+
+config.status: #configure
+	dh_testdir
+	# Add here commands to configure the package.
+ifneq "$(wildcard /usr/share/misc/config.sub)" ""
+	cp -f /usr/share/misc/config.sub config.sub
+endif
+ifneq "$(wildcard /usr/share/misc/config.guess)" ""
+	cp -f /usr/share/misc/config.guess config.guess
+endif
+#	./configure $(CROSS) --prefix=/usr --mandir=\$${prefix}/share/man --infodir=\$${prefix}/share/info CFLAGS="$(CFLAGS)" LDFLAGS="-Wl,-z,defs"
+
+
+build: build-stamp
+
+build-stamp:  config.status 
+	dh_testdir
+
+	# Add here commands to compile the package.
+	#./configure
+	qmake
+	$(MAKE)	all
+	#docbook-to-man debian/kfilebox.sgml > kfilebox.1
+
+	touch $@
+
+clean: 
+	dh_testdir
+	dh_testroot
+	rm -f build-stamp 
+
+	# Add here commands to clean up after the build process.
+	#[ ! -f Makefile ] || $(MAKE) distclean
+	#rm -f config.sub config.guess
+
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_clean -k #dh_prep
+	dh_installdirs
+
+	# Add here commands to install the package into debian/kfilebox.
+	# The DESTDIR Has To Be Exactly /usr/src/packages/BUILD/debian/debian/<nameOfPackage>
+	$(MAKE) install DESTDIR=/usr/src/packages/BUILD/debian/kfilebox
+	#prefix=$(CURDIR)/debian/kfilebox/usr
+	mv bin/* debian/kfilebox/usr/bin
+	mkdir -p debian/kfilebox/usr/share/kfilebox/
+	cp img/kfilebox.png debian/kfilebox/usr/share/kfilebox/
+	mkdir debian/kfilebox/usr/share/applications/
+	cp kfilebox.desktop debian/kfilebox/usr/share/applications/
+	mkdir -p debian/kfilebox//usr/share/autostart/
+	cp kfilebox.desktop debian/kfilebox//usr/share/autostart/
+	mkdir -p debian/kfilebox/usr/share/kde4/apps/kfilebox/
+	cp kfilebox.notifyrc debian/kfilebox/usr/share/kde4/apps/kfilebox/
+	
+	mkdir -p debian/kfilebox/usr/share/qt4/translations/
+	
+	mkdir -p debian/kfilebox/usr/share/icons/hicolor/
+	mkdir -p debian/kfilebox/usr/share/icons/oxygen/  
+	mkdir -p debian/kfilebox/usr/share/locale/ar/LC_MESSAGES/ 
+	mkdir -p debian/kfilebox/usr/share/locale/br/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/cs/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/de/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/el/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/en/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/en_GB/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/es/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/fr/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/gl/LC_MESSAGES/ 
+	mkdir -p debian/kfilebox/usr/share/locale/it/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/lt/LC_MESSAGES/
+	mkdir -p debian/kfilebox/usr/share/locale/nl/LC_MESSAGES/    
+	mkdir -p debian/kfilebox/usr/share/locale/pl/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/ru/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/si/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/tr/LC_MESSAGES/  
+	mkdir -p debian/kfilebox/usr/share/locale/zh/LC_MESSAGES/ 
+	mkdir -p debian/kfilebox/usr/share/locale/zh_CN/LC_MESSAGES/ 
+	mkdir -p debian/kfilebox/usr/share/locale/zh_TW/LC_MESSAGES/ 
+
+	cp -r img/hicolor/* debian/kfilebox/usr/share/icons/hicolor/  
+	cp -r img/hicolor/* debian/kfilebox/usr/share/icons/oxygen/  
+	cp locale/ar/kfilebox.mo debian/kfilebox/usr/share/locale/ar/LC_MESSAGES/  
+	cp locale/br/kfilebox.mo debian/kfilebox/usr/share/locale/br/LC_MESSAGES/  
+	cp locale/cs/kfilebox.mo debian/kfilebox/usr/share/locale/cs/LC_MESSAGES/  
+	cp locale/de/kfilebox.mo debian/kfilebox/usr/share/locale/de/LC_MESSAGES/ 
+	cp locale/el/kfilebox.mo debian/kfilebox/usr/share/locale/el/LC_MESSAGES/  
+	cp locale/en/kfilebox.mo debian/kfilebox/usr/share/locale/en/LC_MESSAGES/    
+	cp locale/en/kfilebox.mo debian/kfilebox/usr/share/locale/en_GB/LC_MESSAGES/  
+	cp locale/es/kfilebox.mo debian/kfilebox/usr/share/locale/es/LC_MESSAGES/  
+	cp locale/fr/kfilebox.mo debian/kfilebox/usr/share/locale/fr/LC_MESSAGES/  
+	cp locale/gl/kfilebox.mo debian/kfilebox/usr/share/locale/gl/LC_MESSAGES/  
+	cp locale/it/kfilebox.mo debian/kfilebox/usr/share/locale/it/LC_MESSAGES/  
+	cp locale/lt/kfilebox.mo debian/kfilebox/usr/share/locale/lt/LC_MESSAGES/  
+	cp locale/nl/kfilebox.mo debian/kfilebox/usr/share/locale/nl/LC_MESSAGES/  
+	cp locale/pl/kfilebox.mo debian/kfilebox/usr/share/locale/pl/LC_MESSAGES/  
+	cp locale/ru/kfilebox.mo debian/kfilebox/usr/share/locale/ru/LC_MESSAGES/  
+	cp locale/si/kfilebox.mo debian/kfilebox/usr/share/locale/si/LC_MESSAGES/  
+	cp locale/tr/kfilebox.mo debian/kfilebox/usr/share/locale/tr/LC_MESSAGES/  
+	cp locale/zh/kfilebox.mo debian/kfilebox/usr/share/locale/zh/LC_MESSAGES/   
+	cp locale/zh/kfilebox.mo debian/kfilebox/usr/share/locale/zh_CN/LC_MESSAGES/   
+	cp locale/tw/kfilebox.mo debian/kfilebox/usr/share/locale/zh_TW/LC_MESSAGES/   
+
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_installexamples
+#	dh_install
+#	dh_installmenu
+#	dh_installdebconf
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_python
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+	dh_installman
+	dh_link
+	dh_strip
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install 
