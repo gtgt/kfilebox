@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     dc = new DropboxClient(this);
+	db = ConfigurationDBDriver::instance();
     if(Configuration().getValue("StartDaemon").toBool())
         dc->start();
 
@@ -110,9 +111,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+	db = 0;
     delete ui;
-    //    delete iconsetList;
-	ConfigurationDBDriver::drop();
+	delete iconsetList;
+	delete dc;
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -247,7 +249,6 @@ void MainWindow::applySettings()
 void MainWindow::loadSettings()
 {
     Configuration conf;
-	ConfigurationDBDriver* db = ConfigurationDBDriver::instance();
 
     QString iconset=conf.getValue("IconSet").toString();
     if (iconset.isEmpty())

@@ -21,6 +21,9 @@ DropboxClient::~DropboxClient()
 {
     if(m_ps->isOpen())
         m_ps->close();
+	dropbox_db = 0;
+	qDebug() << Q_FUNC_INFO << "will drop";
+	ConfigurationDBDriver::drop();
 }
 
 void DropboxClient::start()
@@ -138,6 +141,7 @@ QString DropboxClient::getVersion()
     QTextStream in(&file);
     in >> contents;
 
+	Q_ASSERT(!contents.isEmpty());
     return contents;
 }
 

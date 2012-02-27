@@ -1,9 +1,9 @@
 #include "configurationdbdriver.h"
 
-ConfigurationDBDriver* ConfigurationDBDriver::m_Instance = 0;
+ConfigurationDBDriverPrivate* ConfigurationDBDriver::m_Instance = 0;
 
 //! @todo play with old dropbox if need
-ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
+ConfigurationDBDriverPrivate::ConfigurationDBDriverPrivate(QObject *parent) :
     QObject(parent)
 {
     QString dbFilename = QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/config.db");
@@ -40,7 +40,7 @@ ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
 }
 
 
-ConfigurationDBDriver::~ConfigurationDBDriver()
+ConfigurationDBDriverPrivate::~ConfigurationDBDriverPrivate()
 {
     if(dbVersion != CONFIG_DB)
         return;
@@ -50,9 +50,10 @@ ConfigurationDBDriver::~ConfigurationDBDriver()
     delete db;
     db=0;
     QSqlDatabase::removeDatabase(connectionName);
+	qDebug() << Q_FUNC_INFO << "all done";
 }
 
-bool ConfigurationDBDriver::hasKey(const QString& key) {
+bool ConfigurationDBDriverPrivate::hasKey(const QString& key) {
     QSqlQuery query = justQuery(QString("SELECT COUNT(`key`) FROM `config` WHERE `key`='%1'").arg(key));
     if (query.next()) {
         if(query.value(0).toInt() == 1)
@@ -61,7 +62,7 @@ bool ConfigurationDBDriver::hasKey(const QString& key) {
     return false;
 }
 
-QVariant ConfigurationDBDriver::getValue(const QString& key, QVariant defaultValue) {
+QVariant ConfigurationDBDriverPrivate::getValue(const QString& key, QVariant defaultValue) {
     QSqlQuery query = justQuery(QString("SELECT `value` FROM `config` WHERE `key`='%1' LIMIT 1").arg(key));
     if (query.next()) {
         return query.value(0);
@@ -69,10 +70,10 @@ QVariant ConfigurationDBDriver::getValue(const QString& key, QVariant defaultVal
     return defaultValue;
 }
 
-void ConfigurationDBDriver::setValue(const QString &key, const QVariant& value) {
+void ConfigurationDBDriverPrivate::setValue(const QString &key, const QVariant& value) {
     justQuery(QString("REPLACE INTO `config` (`key`, `value`) VALUES ('%1', %2)").arg(key).arg(value.toString()));
 }
 
-void ConfigurationDBDriver::deleteValue(const QString& key) {
+void ConfigurationDBDriverPrivate::deleteValue(const QString& key) {
     justQuery(QString("DELETE FROM `config` WHERE `key`='%1'").arg(key));
 }

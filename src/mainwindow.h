@@ -38,6 +38,7 @@ private:
     Ui::MainWindow* ui;
     DropboxClient* dc;
     DropboxClientAdaptor* adaptor;
+	ConfigurationDBDriver* db;
 
     QSignalMapper* sm;
     KStatusNotifierItem* trayIcon;
