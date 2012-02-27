@@ -60,9 +60,7 @@ class DropboxClientAdaptor: public QDBusAbstractAdaptor
 public:
 	DropboxClientAdaptor(DropboxClient *parent);
     virtual ~DropboxClientAdaptor();
-
-public:
-public Q_SLOTS:
+public slots:
     void start();
     void stop();
 	QString get_public_link(const QString& filename);
@@ -74,7 +72,7 @@ public Q_SLOTS:
 	QString get_auth_url();
 	QString get_folder_tag(const QString& filename);
 
-Q_SIGNALS:
+signals:
 	void update_status(DropboxStatus, QString);
 	void new_file_added(const QString&);
 };
