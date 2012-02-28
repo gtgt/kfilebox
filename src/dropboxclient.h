@@ -48,7 +48,7 @@ private:
 	QStringList recently_changed;
 
     SynchronousDropboxConnection* dc;
-	ConfigurationDBDriver* dropbox_db;
+	ConfigurationDBDriverPrivate* dropbox_db;
 
 	QString fixUnicodeChars(const QString &value);
 	QString resolveFileName(const QString& filename);

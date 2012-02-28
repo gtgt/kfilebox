@@ -114,7 +114,7 @@ MainWindow::~MainWindow()
 	db = 0;
     delete ui;
 	delete iconsetList;
-	delete dc;
+//	delete dc;
 }
 
 void MainWindow::changeEvent(QEvent *e)
@@ -191,7 +191,6 @@ void MainWindow::applySettings()
     //! to destroy conf..
     {
         Configuration conf;
-		ConfigurationDBDriver* db = ConfigurationDBDriver::instance();
 
         conf.setValue("Browser",ui->browser->text());
         conf.setValue("FileManager",ui->fileManager->currentText());
