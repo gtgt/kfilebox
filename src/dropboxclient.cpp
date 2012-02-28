@@ -6,7 +6,7 @@ DropboxClient::DropboxClient(QObject *parent) :
 	m_ps = new QProcess(this);
 	m_timer = new QTimer(this);
 	dc =new SynchronousDropboxConnection(this);
-	dropbox_db = ConfigurationDBDriver::instance();
+	dropbox_db = Singleton::instance();
 	prev_status = DropboxUnkown;
 	m_message = m_authUrl = "";
 
@@ -22,8 +22,7 @@ DropboxClient::~DropboxClient()
     if(m_ps->isOpen())
         m_ps->close();
 	dropbox_db = 0;
-	qDebug() << Q_FUNC_INFO << "will drop";
-	ConfigurationDBDriver::drop();
+	Singleton::drop();
 }
 
 void DropboxClient::start()

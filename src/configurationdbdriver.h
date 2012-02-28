@@ -15,16 +15,16 @@
 
 enum DROPBOX_DB_VERSION {DROPBOX_DB, CONFIG_DB, UNKNOWN};
 
-class ConfigurationDBDriverPrivate: public QObject
+class ConfigurationDBDriver: public QObject
 {
 	Q_OBJECT
 	Q_ENUMS(DROPBOX_DB_VERSION)
 	QSqlDatabase* db;
 	DROPBOX_DB_VERSION dbVersion;
 public:
-	explicit ConfigurationDBDriverPrivate(QObject *parent = 0);
+	explicit ConfigurationDBDriver(QObject *parent = 0);
 
-	~ConfigurationDBDriverPrivate();
+	~ConfigurationDBDriver();
 
 	QStringList listKeys() const;
 
@@ -46,28 +46,28 @@ private:
 	}
 };
 
-class ConfigurationDBDriver : public QObject
+class Singleton
 {
-    Q_OBJECT
-	static ConfigurationDBDriverPrivate* m_Instance;
+	static ConfigurationDBDriver* d;
 
-	explicit ConfigurationDBDriver(QObject *parent = 0) : QObject(parent) {}
+	Singleton() {}
+	Singleton(const Singleton &);
+	Singleton& operator=(const Singleton &);
 public:
-	static ConfigurationDBDriverPrivate* instance() {
+	static ConfigurationDBDriver* instance() {
 		static QMutex mutex;
 		QMutexLocker locker(&mutex);
-		if (!m_Instance) {
-				m_Instance = new ConfigurationDBDriverPrivate();
+		if (!d) {
+			d = new ConfigurationDBDriver();
 		}
-		return m_Instance;
+		return d;
 	}
 
 	static void drop() {
 		static QMutex mutex;
 		QMutexLocker locker(&mutex);
-		delete m_Instance;
-		m_Instance = 0;
-		qDebug() << Q_FUNC_INFO << "droppped";
+		delete d;
+		d = 0;
 	}
 };
 
