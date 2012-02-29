@@ -8,13 +8,18 @@ DropboxClientAdaptor::DropboxClientAdaptor(DropboxClient *parent)
     connection.registerObject("/Kfilebox", parent);
     connection.registerService("org.kde.Kfilebox");
 
-	connect(parent, SIGNAL(updateStatus(DropboxStatus,QString)),SIGNAL(update_status(DropboxStatus,QString)));
+	connect(parent, SIGNAL(updateStatus(DropboxStatus,QString)), SLOT(i_update_status(DropboxStatus,QString)));
 	connect(parent, SIGNAL(newFileAdded(QString)), SIGNAL(new_file_added(QString)));
 }
 
 DropboxClientAdaptor::~DropboxClientAdaptor()
 {
 }
+
+void DropboxClientAdaptor::i_update_status(DropboxStatus s, const QString& m) {
+	emit update_status(s, m);
+}
+
 
 void DropboxClientAdaptor::start()
 {
