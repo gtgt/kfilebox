@@ -121,7 +121,7 @@ public:
                 return QString();
             }
 
-            reply.append(m_socket->readAll());
+            reply.append(QString::fromUtf8(m_socket->readAll().constData()));
 
             if(reply.endsWith("done\n")) break;
         }
