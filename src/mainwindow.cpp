@@ -3,10 +3,11 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    status(DropboxUnknown)
 {
     ui->setupUi(this);
-    this->move(QApplication::desktop()->screenGeometry().center() - this->rect().center());
+    move(QApplication::desktop()->screenGeometry().center() - rect().center());
 
     if(!DropboxClient::isInstalled()) {
         InstallerForm di(this);
@@ -97,7 +98,7 @@ MainWindow::MainWindow(QWidget *parent) :
     startAction->setVisible(false);
 
     trayIcon = new KStatusNotifierItem(this);
-    iconsetList =  new QStringList();
+    iconsetList = new QStringList();
     iconsetList->push_back("default");
     iconsetList->push_back("monochrome");
     iconsetList->push_back("white");
@@ -312,9 +313,7 @@ void MainWindow::loadSettings()
 
 }
 
-
 //! cutted from TrayIcon keep watching
-
 void MainWindow::loadIcons(const QString &iconset)
 {
     //! due to translated Iconset
@@ -335,9 +334,8 @@ void MainWindow::loadIcons(const QString &iconset)
     ui->lblIdleIcon->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_idle.png").arg(iconset_)));
     ui->lblStopIcons->setPixmap(QPixmap(QString(":/icons/img/%1/kfilebox_error.png").arg(iconset_)));
 
-    trayIcon->setIconByPixmap(defaultIcon);
-    //    trayIcon->setIconByName(QString(":/icons/img/%1/kfilebox.png").arg(iconset_));
     trayIcon->setToolTipIconByPixmap(appIcon);
+    updateTrayIcon();
 }
 
 //! if path is file - open parent folder for it; if is empty - open Dropbox location
@@ -381,36 +379,43 @@ void MainWindow::openGetMoreSpaceURL()
 
 void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
 {
-    if(newStatus == DropboxStopped){
+    status = newStatus;
+
+    if (status == DropboxStopped) {
         startAction->setVisible(true);
         stopAction->setVisible(false);
     } else if (!stopAction->isVisible() || startAction->isVisible()) {
-            startAction->setVisible(false);
-            stopAction->setVisible(true);
+        startAction->setVisible(false);
+        stopAction->setVisible(true);
     }
 
     statusAction->setText(message);
     trayIcon->setToolTipSubTitle(message);
 
-    switch(newStatus) {
-    case DropboxIdle:
-        trayIcon->setIconByPixmap(idleIcon);
-        break;
-    case DropboxBussy:
-    case DropboxUploading:
-    case DropboxDownloading:
-    case DropboxSaving:
-    case DropboxIndexing:
-        trayIcon->setIconByPixmap(bussyIcon);
-        break;
-    case DropboxUnknown:
-    case DropboxStopped:
-    case DropboxDisconnected:
-        trayIcon->setIconByPixmap(defaultIcon);
-        break;
-    case DropboxError:
-        trayIcon->setIconByPixmap(errorIcon);
-        break;
+    updateTrayIcon();
+}
+
+void MainWindow::updateTrayIcon()
+{
+    switch (status) {
+        case DropboxIdle:
+            trayIcon->setIconByPixmap(idleIcon);
+            break;
+        case DropboxBussy:
+        case DropboxUploading:
+        case DropboxDownloading:
+        case DropboxSaving:
+        case DropboxIndexing:
+            trayIcon->setIconByPixmap(bussyIcon);
+            break;
+        case DropboxError:
+            trayIcon->setIconByPixmap(errorIcon);
+            break;
+        case DropboxUnknown:
+        case DropboxStopped:
+        case DropboxDisconnected:
+        default:
+            trayIcon->setIconByPixmap(defaultIcon);
     }
 }
 

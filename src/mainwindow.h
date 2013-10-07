@@ -35,11 +35,13 @@ protected:
 private:
     void loadSettings();
     void initializeDBus();
+    void updateTrayIcon();
 
     Ui::MainWindow* ui;
     DropboxClient* dc;
     DropboxClientAdaptor* adaptor;
 	ConfigurationDBDriver* db;
+    DropboxStatus status;
 
     QSignalMapper* sm;
     KStatusNotifierItem* trayIcon;
