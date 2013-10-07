@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QDesktopWidget>
 #include <QAbstractButton>
 #include <QDebug>
 #include <QDesktopServices>

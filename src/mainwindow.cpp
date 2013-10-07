@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    this->move(QApplication::desktop()->screenGeometry().center() - this->rect().center());
 
     if(!DropboxClient::isInstalled()) {
         InstallerForm di(this);
