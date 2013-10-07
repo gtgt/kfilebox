@@ -77,7 +77,7 @@ void DropboxClient::getDropboxStatus()
         prev_status = m_status;
         m_message = message;
         emit updateStatus(m_status, message);
-		updateRecentlyChangedFiles();
+		//updateRecentlyChangedFiles(); // FIXME: doesn't work
     }
 }
 
@@ -149,6 +149,7 @@ QString DropboxClient::getVersion()
     QString contents = "";
     QTextStream in(&file);
     in >> contents;
+    file.close();
 
 	Q_ASSERT(!contents.isEmpty());
     return contents;
@@ -243,8 +244,6 @@ void DropboxClient::updateRecentlyChangedFiles() {
 				emit newFileAdded(item);
 			}
 		}
-		recently_changed = list;
-	} else {
-		recently_changed = list;
 	}
+	recently_changed = list;
 }
