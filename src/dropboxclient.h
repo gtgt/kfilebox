@@ -16,7 +16,7 @@
 
 class SynchronousDropboxConnection;
 
-enum DropboxStatus {DropboxUnkown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
+enum DropboxStatus {DropboxUnknown, DropboxIdle, DropboxBussy, DropboxError, DropboxUploading, DropboxDownloading,
                     DropboxSaving, DropboxIndexing, DropboxStopped, DropboxDisconnected};
 class DropboxClient : public QObject
 {

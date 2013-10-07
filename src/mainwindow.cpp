@@ -396,9 +396,11 @@ void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
     case DropboxIndexing:
         trayIcon->setIconByPixmap(bussyIcon);
         break;
-    case DropboxUnkown:
+    case DropboxUnknown:
     case DropboxStopped:
     case DropboxDisconnected:
+        trayIcon->setIconByPixmap(defaultIcon);
+        break;
     case DropboxError:
         trayIcon->setIconByPixmap(errorIcon);
         break;

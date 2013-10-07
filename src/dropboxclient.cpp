@@ -7,7 +7,7 @@ DropboxClient::DropboxClient(QObject *parent) :
 	m_timer = new QTimer(this);
 	dc =new SynchronousDropboxConnection(this);
 	dropbox_db = Singleton::instance();
-	prev_status = DropboxUnkown;
+	prev_status = DropboxUnknown;
 	m_message = m_authUrl = "";
 
 	m_dropboxDir = Configuration().getValue("DropboxDir").toString();
@@ -45,35 +45,32 @@ void DropboxClient::getDropboxStatus()
 	if(message.isEmpty()) {
 		message = "Dropbox daemon isn't running";
 	}
-    DropboxStatus m_status = DropboxUnkown;
+    DropboxStatus m_status = DropboxUnknown;
 
     //! @todo coment first if{} block(or modify) if you want disable tray icon blinking on startup in green and blue color(default icons scheme)
-    if (message.contains("Initializing")||message.contains("Starting")) {
-        m_status=DropboxBussy;
+    if (message == "Idle") {
+        m_status = DropboxIdle;
     }
-    else if (message == "Idle" || message.contains("Connecting")) {
-        m_status=DropboxIdle;
+    else if (message.contains("dopped")) {
+        m_status = DropboxError;
     }
-    else if (message.contains("Up")) {
-        m_status=DropboxUploading;
+    else if (message.contains("Initializing") || message.contains("Starting") || message.contains("isn't")) {
+        m_status = DropboxStopped;
     }
-    else if (message.contains("Downloading")) {
-        m_status=DropboxDownloading;
-    }
-    else if (message.contains("Saving")) {
-        m_status=DropboxSaving;
+    else if (message.contains("Syncing paused") || message.contains("Connecting") || message.contains("Waiting to be linked") || message.contains("couldn't")) {
+        m_status = DropboxDisconnected;
     }
     else if (message.contains("Indexing")) {
-        m_status=DropboxIndexing;
+        m_status = DropboxIndexing;
     }
-    else if(message.contains("isn't")) {
-        m_status=DropboxStopped;
+    else if (message.contains("Saving")) {
+        m_status = DropboxSaving;
     }
-    else if(message.contains("couldn't")||message.contains("Syncing paused")||message.contains("Waiting to be linked")){
-        m_status=DropboxDisconnected;
+    else if (message.contains("Downloading")) {
+        m_status = DropboxDownloading;
     }
-    else if(message.contains("dopped")){
-        m_status=DropboxError;
+    else if (message.contains("Updating") || message.contains("Uploading")) {
+        m_status = DropboxUploading;
     }
 
     if((prev_status != m_status) || (m_message != message)) {
