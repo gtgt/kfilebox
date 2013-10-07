@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
         dc->start();
 
     //! []
-    openDropboxWebsite = new QAction("Launch Dropbox Website", this);
+    openDropboxWebsite = new QAction(tr("Launch Dropbox Website"), this);
     action0 = new QAction(this);
     action1 = new QAction(this);
     action2 = new QAction(this);
@@ -26,17 +26,17 @@ MainWindow::MainWindow(QWidget *parent) :
     action4 = new QAction(this);
     statusAction = new QAction("connecting", this);
     statusAction->setEnabled(false);
-    openHelpCenter = new QAction("Help Center", this);
-    openTour = new QAction("Tour", this);
-    openForums = new QAction("Forums", this);
-    openGetMoreSpace = new QAction("Get More Space", this);
-    openPrefs = new QAction("Preferences", this);
-    startAction = new QAction("Start Dropbox", this);
-    stopAction = new QAction("Stop Dropbox", this);
-    openDir = new QAction("Open Dropbox Folder", this);
+    openHelpCenter = new QAction(tr("Help Center"), this);
+    openTour = new QAction(tr("Tour"), this);
+    openForums = new QAction(tr("Forums"), this);
+    openGetMoreSpace = new QAction(tr("Get More Space"), this);
+    openPrefs = new QAction(tr("Preferences"), this);
+    startAction = new QAction(tr("Start Dropbox"), this);
+    stopAction = new QAction(tr("Stop Dropbox"), this);
+    openDir = new QAction(tr("Open Dropbox Folder"), this);
     trayIconMenu = new KMenu("tray menu", this);
-    chFiles = new QMenu("Recently changed files", this);
-    helpMenu = new QMenu("Help", this);
+    chFiles = new QMenu(tr("Recently changed files"), this);
+    helpMenu = new QMenu(tr("Help"), this);
 
     trayIconMenu->addAction(openDir);
     trayIconMenu->addAction(openDropboxWebsite);
