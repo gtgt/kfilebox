@@ -117,6 +117,12 @@ MainWindow::~MainWindow()
 	delete iconsetList;
 }
 
+void MainWindow::show()
+{
+    ui->displayVersion->setText("Dropbox v" + dc->getVersion());
+    QMainWindow::show();
+}
+
 void MainWindow::changeEvent(QEvent *e)
 {
     QMainWindow::changeEvent(e);
@@ -268,7 +274,7 @@ void MainWindow::loadSettings()
     ui->showNotifications->setChecked(conf.getValue("ShowNotifications").toBool());
     ui->startDaemon->setChecked(conf.getValue("StartDaemon").toBool());
 
-    ui->displayVersion->setText("Dropbox v" + dc->getVersion());
+    // ui->displayVersion->setText("Dropbox v" + dc->getVersion());
 	ui->displayAccount->setText(db->getValue("email").toString());
 	ui->useP2P->setChecked(db->getValue("p2p_enabled", 1).toBool());
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());

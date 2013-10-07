@@ -72,6 +72,8 @@ private:
     QMenu *helpMenu;
 
 public slots:
+    void show();
+
     void applySettings();
     void dialogButtonBoxTriggered(QAbstractButton* button);
     void changeDropboxFolder();
