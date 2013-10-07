@@ -101,15 +101,28 @@ void DropboxClient::readDaemonOutput()
 
 bool DropboxClient::isRunning()
 {
-    QFile file(QDir::homePath().append("/.dropbox/dropbox.pid"));
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    QFile pid_file(QDir::homePath().append("/.dropbox/dropbox.pid"));
+    if (!pid_file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
     int pid = 0;
-    QTextStream in(&file);
-    in >> pid;
-    file.close();
-    return QFile::exists(QString("/proc/%1/cmdline").arg(QString::number(pid)));
+    QTextStream pid_in(&pid_file);
+    pid_in >> pid;
+    pid_file.close();
+
+    QString stat_path = QString("/proc/%1/stat").arg(QString::number(pid));
+    if (!QFile::exists(stat_path))
+        return false;
+
+    QFile stat_file(stat_path);
+    if (!stat_file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return false;
+
+    QTextStream stat_in(&stat_file);
+    QString stat = stat_in.readAll();
+    stat_file.close();
+
+    return stat.contains("(dropbox)");
 }
 
 bool DropboxClient::isInstalled()
