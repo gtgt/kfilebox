@@ -2,11 +2,9 @@
 # Project created by QtCreator 2010-01-28T13:45:03
 # -------------------------------------------------
 
-# to fix bug in QtCreator
-INCLUDEPATH += /usr/include/
-
 QT += sql network dbus
 LIBS += -lkdeui -lkdecore
+INCLUDEPATH += /usr/include/kde4
 TARGET = bin/kfilebox
 TEMPLATE = app
 SOURCES += main.cpp \
@@ -163,7 +161,7 @@ transinstallfr.files = locale/fr/kfilebox.mo
 INSTALLS += transinstallfr
 transinstallgl.path = $$DATADIR/locale/gl/LC_MESSAGES
 transinstallgl.files = locale/gl/kfilebox.mo
-INSTALLS += transinstallbr
+INSTALLS += transinstallgl
 transinstalltr.path = $$DATADIR/locale/tr/LC_MESSAGES
 transinstalltr.files = locale/tr/kfilebox.mo
 INSTALLS += transinstalltr
