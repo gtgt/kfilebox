@@ -14,20 +14,14 @@ InstallerForm::InstallerForm(QWidget *parent) :
     connect(ui->launchBrowser, SIGNAL(clicked()), SLOT(authThroughBrowser()));
     connect(ui->showWizard, SIGNAL(clicked()), SLOT(runGtkInstaller()));
 
-    //! @todo download to temp file name
     //! @todo KIO::NetAccess::download(daemonUrl, tmpFile,this) .... and possibly uncompress?
-    downloadPath=QDir::toNativeSeparators(QDir::homePath().append("/daemon.tar.gz"));
+    downloadPath = QDir(QDir::tempPath()).filePath("dropbox-lnx.tar.gz");
+    daemonUrl = QString("http://www.dropbox.com/download?plat=lnx.%1").arg(QSysInfo::WordSize == 64 ? "x86_64" : "x86");
 
-    if(QSysInfo::WordSize==64)
-        daemonUrl="http://www.dropbox.com/download?plat=lnx.x86_64";
-    else
-        daemonUrl="http://www.dropbox.com/download?plat=lnx.x86";
-
-    if(DropboxClient::isInstalled())
+    if (DropboxClient::isInstalled())
         runConfiguration();
     else
         downloadDaemon();
-
 }
 
 InstallerForm::~InstallerForm()
@@ -78,11 +72,10 @@ void InstallerForm::setProgressValue(qint64 bytesReceived, qint64 bytesTotal){
 void InstallerForm::processFile()
 {
     ui->label->setText(tr("unpacking downloaded file"));
-    QProcess sc;
-    sc.execute("tar -xf "+downloadPath+" -C "+QDir::homePath());
-    sc.waitForFinished();
 
-    sc.startDetached("rm -f "+ downloadPath);
+    QProcess::execute("tar", QStringList() << "-xf" << downloadPath << "-C" << QDir::homePath());
+
+    QFile::remove(downloadPath);
 
     runConfiguration();
 }
@@ -115,13 +108,12 @@ void InstallerForm::runGtkInstaller()
     hide();
 }
 
-
 void InstallerForm::downloadFinished()
 {
     file.close();
     QVariant possible_redirect=reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
     if (!possible_redirect.toString().isEmpty() && possible_redirect.toString()!=daemonUrl) {
-        daemonUrl=possible_redirect.toUrl().toString();
+        daemonUrl = possible_redirect.toUrl().toString();
         downloadDaemon();
     } else {
         reply->close();
