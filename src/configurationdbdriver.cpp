@@ -6,12 +6,12 @@ ConfigurationDBDriver* Singleton::d = 0;
 ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     QObject(parent)
 {
-    QString dbFilename = QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/config.db");
+    QString dbFilename = QDir(QDir::homePath()).filePath(".dropbox/config.db");
     if(QFile(dbFilename).exists())
     {
         dbVersion = CONFIG_DB;
         // config.db, can be upgraded, lets check schema
-        db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE","DROPBOX_CONF"));
+        db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "DROPBOX_CONF"));
         db->setDatabaseName(dbFilename);
         if (!db->open())
             return;
@@ -26,10 +26,10 @@ ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
             }
         }
 
-    } else if (QFile(QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/dropbox.db")).exists())
+    } else if (QFile(QDir(QDir::homePath()).filePath(".dropbox/dropbox.db")).exists())
     {
         // dropbox.db, old-style
-        dbFilename = QDir::toNativeSeparators(QDir::homePath()+"/.dropbox/dropbox.db");
+        dbFilename = QDir(QDir::homePath()).filePath(".dropbox/dropbox.db");
         dbVersion = DROPBOX_DB;
     } else
     {

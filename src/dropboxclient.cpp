@@ -10,8 +10,7 @@ DropboxClient::DropboxClient(QObject *parent) :
     prev_status = DropboxUnknown;
     m_message = m_authUrl = "";
     m_showAuthUrlNotification = true;
-
-    m_dropboxDir = Configuration().getValue("DropboxDir").toString();
+    m_dropboxDir.setPath(Configuration().getValue("DropboxDir").toString());
 
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
@@ -29,7 +28,7 @@ DropboxClient::~DropboxClient()
 void DropboxClient::start()
 {
     if(!isRunning()) {
-        m_ps->start(QString("%1dropboxd").arg(m_dropboxDir));
+        m_ps->start(m_dropboxDir.filePath("dropboxd"));
     }
 }
 
@@ -99,7 +98,7 @@ void DropboxClient::readDaemonOutput()
 
 bool DropboxClient::isRunning()
 {
-    QFile pid_file(QDir::homePath().append("/.dropbox/dropbox.pid"));
+    QFile pid_file(QDir(QDir::homePath()).filePath(".dropbox/dropbox.pid"));
     if (!pid_file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
@@ -125,13 +124,12 @@ bool DropboxClient::isRunning()
 
 bool DropboxClient::isInstalled()
 {
-    return QFile(Configuration().getValue("DropboxDir").toString().append("dropbox")).exists();
+    return QFile(QDir(Configuration().getValue("DropboxDir").toString()).filePath("dropbox")).exists();
 }
 
 void DropboxClient::hideGtkUi(bool hide)
 {
-    QString src = QString("%1wx._controls_.so").arg(m_dropboxDir);
-    QString dst = QString("%1wx._controls_orig.so").arg(m_dropboxDir);
+    QString src = m_dropboxDir.filePath("wx._controls_.so"), dst = m_dropboxDir.filePath("wx._controls_orig.so");
     if(hide && QFile(src).exists()) {
         QDir().rename(src, dst);
         return;
@@ -143,7 +141,7 @@ void DropboxClient::hideGtkUi(bool hide)
 
 QString DropboxClient::getVersion()
 {
-    QFile file(QString("%1VERSION").arg(m_dropboxDir));
+    QFile file(m_dropboxDir.filePath("VERSION"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return QString();
 
@@ -174,11 +172,11 @@ QStringList DropboxClient::getSharedFolders()
         sub_entries.clear();
         QMutableStringListIterator i(entries);
         while(i.hasNext()) {
-            dir = i.next()+QDir::separator();
+            dir = i.next() + QDir::separator();
             reply = getFolderTag(dir);
             if(reply.isEmpty()) {
                 foreach(QString sub_folder, QDir(dir).entryList(QDir::Dirs|QDir::NoDotAndDotDot)) {
-                    sub_entries.append(dir+sub_folder);
+                    sub_entries.append(QDir::cleanPath(dir + sub_folder));
                 }
             } else if(reply!="dropbox") {
                 shared_folders.push_back(dir);
@@ -227,9 +225,9 @@ QString DropboxClient::fixUnicodeChars(const QString &value)
 QString DropboxClient::resolveFileName(const QString& filename)
 {
     QStringList foldersList = this->getSharedFolders();
-    foldersList.push_front(dropbox_db->getValue("dropbox_path").toString() + QDir::separator());
+    foldersList.push_front(dropbox_db->getValue("dropbox_path").toString());
     foreach (QString folderPath, foldersList) {
-        QString tmpPath = QDir::toNativeSeparators(folderPath+filename);
+        QString tmpPath = QDir::cleanPath(folderPath + QDir::separator() + filename);
         if(QFile(tmpPath).exists()) return tmpPath;
     }
     return filename; //! for example, file was deleted

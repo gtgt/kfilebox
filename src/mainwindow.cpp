@@ -204,9 +204,8 @@ void MainWindow::applySettings()
         conf.setValue("IconSet",iconsetList->at(ui->cbIconSet->currentIndex()));
 
 		if(ui->dropboxFolder->text() != db->getValue("dropbox_path").toString()) {
-
             //! @todo test this
-			qDebug() << QDir(db->getValue("dropbox_path").toString()).rename(db->getValue("dropbox_path").toString(), ui->dropboxFolder->text());
+			qDebug() << QDir().rename(db->getValue("dropbox_path").toString(), ui->dropboxFolder->text());
 			db->setValue("dropbox_path",ui->dropboxFolder->text());
         }
 

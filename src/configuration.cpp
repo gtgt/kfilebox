@@ -30,7 +30,7 @@ void Configuration::initConfigurationFile()
     generalGroup->writeEntry("AutoStart", true);
     generalGroup->writeEntry("StartDaemon", true);
     generalGroup->writeEntry("GtkUiDisabled", true);
-    generalGroup->writeEntry("DropboxDir", QDir::homePath().append("/.dropbox-dist/"));
+    generalGroup->writeEntry("DropboxDir", QDir::cleanPath(QDir::homePath() + QDir::separator() + ".dropbox-dist"));
     //! @todo add more pairs
 
     settings->sync();
