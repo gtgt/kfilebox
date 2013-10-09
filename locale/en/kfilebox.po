@@ -196,7 +196,7 @@ msgid "Run gtk based installer"
 msgstr ""
 
 #: rc.cpp:12 rc.cpp:204
-msgid "Or simplly link account"
+msgid "Or simply link account"
 msgstr ""
 
 #: rc.cpp:30 rc.cpp:222

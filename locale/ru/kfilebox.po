@@ -195,7 +195,7 @@ msgid "Run gtk based installer"
 msgstr "Запустить Gtk версию установщика"
 
 #: rc.cpp:12 rc.cpp:204 rc.cpp:396
-msgid "Or simplly link account"
+msgid "Or simply link account"
 msgstr "Или присоедениете к существующему аккаунту в браузере"
 
 #: rc.cpp:30 rc.cpp:222 rc.cpp:414

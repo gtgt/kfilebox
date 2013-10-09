@@ -84,6 +84,7 @@ void InstallerForm::processFile()
 void InstallerForm::runConfiguration()
 {
     dc = new DropboxClient(this);
+    dc->setShowAuthUrlNotification(false);
     dc->hideGtkUi(true);
     dc->start();
 
@@ -98,11 +99,13 @@ void InstallerForm::authThroughBrowser()
     hide();
     QDesktopServices::openUrl(dc->getAuthUrl());
     dc->stop();
+    dc->setShowAuthUrlNotification(true);
 }
 
 void InstallerForm::runGtkInstaller()
 {
     dc->stop();
+    dc->setShowAuthUrlNotification(true);
     dc->hideGtkUi(false);
     dc->start();
     hide();

@@ -53,7 +53,7 @@
      <item>
       <widget class="QPushButton" name="launchBrowser">
        <property name="text">
-        <string>Or simplly link account</string>
+        <string>Or simply link account</string>
        </property>
       </widget>
      </item>

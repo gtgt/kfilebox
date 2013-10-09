@@ -30,29 +30,33 @@ public:
     QStringList getSharedFolders();
 
     //! This functions not strongly related to this class..
-	bool isRunning();
-	void hideGtkUi(bool hide);
+    bool isRunning();
+    void hideGtkUi(bool hide);
     bool static isInstalled();
-	QString getVersion();
+    QString getVersion();
 
     inline QString getAuthUrl() const {return m_authUrl;}
-	QStringList getRecentlyChangedFiles();
+    QStringList getRecentlyChangedFiles();
+
+    bool showAuthUrlNotification() const { return m_showAuthUrlNotification; }
+    void setShowAuthUrlNotification(bool show) { m_showAuthUrlNotification = show; }
 
 private:
     QTimer* m_timer;
     QProcess* m_ps;
-	QString m_message;
-	QString m_authUrl;
-	QString m_dropboxDir; // from kfilebox config
+    QString m_message;
+    QString m_authUrl;
+    QString m_dropboxDir; // from kfilebox config
     DropboxStatus prev_status;
-	QStringList recently_changed;
+    QStringList recently_changed;
+    bool m_showAuthUrlNotification;
 
     SynchronousDropboxConnection* dc;
-	ConfigurationDBDriver* dropbox_db;
+    ConfigurationDBDriver* dropbox_db;
 
-	QString fixUnicodeChars(const QString &value);
-	QString resolveFileName(const QString& filename);
-	void updateRecentlyChangedFiles();
+    QString fixUnicodeChars(const QString &value);
+    QString resolveFileName(const QString& filename);
+    void updateRecentlyChangedFiles();
 
 public slots:
     void start();
@@ -60,17 +64,17 @@ public slots:
 
     QString sendCommand(const QString& command);
 
-	QString getPublicLink(const QString& file) {
+    QString getPublicLink(const QString& file) {
         return sendCommand(QString("get_public_link\npath\t%1").arg(file)).remove("link\t");
     }
 
-	QString getFolderTag(const QString& command) {
-		return sendCommand(QString("get_folder_tag\npath\t%1").arg(command)).remove("tag\t");
-	}
+    QString getFolderTag(const QString& command) {
+        return sendCommand(QString("get_folder_tag\npath\t%1").arg(command)).remove("tag\t");
+    }
 
     DropboxStatus getStatus() const {return prev_status;}
 
-	QString getStatusMessage() const {return m_message;}
+    QString getStatusMessage() const {return m_message;}
 
 private slots:
     void readDaemonOutput();
@@ -78,8 +82,7 @@ private slots:
 
 signals:
     void updateStatus(DropboxStatus status, const QString& message);
-	void newFileAdded(const QString filename);
-
+    void newFileAdded(const QString filename);
 };
 
 class SynchronousDropboxConnection : public QObject
