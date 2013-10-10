@@ -53,12 +53,14 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
     
-    connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
+    // connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(loadIcons())); //! not loadIcons(const QString&) cause contents is translated
 
     connect(dc, SIGNAL(updateStatus(DropboxStatus,QString)), this, SLOT(updateStatus(DropboxStatus,QString)));
 
-    connect(ui->downloadDontLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
+    connect(ui->useP2P, SIGNAL(toggled(bool)), this, SLOT(useP2PToggle(bool)));
+
+    /*connect(ui->downloadDontLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
     connect(ui->downloadLimitRate, SIGNAL(toggled(bool)), this, SLOT(downloadRadioToggle()));
 
     connect(ui->uploadDontLimitRate, SIGNAL(toggled(bool)), this, SLOT(uploadRadioToggle()));
@@ -69,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->proxyAutoDetect, SIGNAL(toggled(bool)), this, SLOT(proxyRadioToggle()));
     connect(ui->proxySetManually, SIGNAL(toggled(bool)), this, SLOT(proxyRadioToggle()));
 
-    connect(ui->proxyRequiresAuth, SIGNAL(toggled(bool)), this, SLOT(proxyAuthRadioToggle()));
+    connect(ui->proxyRequiresAuth, SIGNAL(toggled(bool)), this, SLOT(proxyAuthRadioToggle()));*/
 
     connect(openDir, SIGNAL(triggered()), this, SLOT(openFileBrowser()));
     connect(openHelpCenter, SIGNAL(triggered()), this, SLOT(openHelpCenterURL()));
@@ -128,15 +130,20 @@ void MainWindow::initializeDBus()
     adaptor = new DropboxClientAdaptor(dc);
 }
 
-void MainWindow::changeDropboxFolder()
+/*void MainWindow::changeDropboxFolder()
 {
     QString dir = QFileDialog::getExistingDirectory(this,tr("Dropbox folder"), ui->dropboxFolder->text(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
     if ( (dir.length()!=0) && (ui->dropboxFolder->text() != dir) )
         ui->dropboxFolder->setText(dir);
+}*/
+
+void MainWindow::useP2PToggle(bool checked)
+{
+    dc->setP2PEnabled(checked);
 }
 
-void MainWindow::downloadRadioToggle()
+/*void MainWindow::downloadRadioToggle()
 {
     ui->downloadLimitValue->setEnabled(ui->downloadLimitRate->isChecked());
 }
@@ -160,8 +167,7 @@ void MainWindow::proxyAuthRadioToggle()
 {
     ui->proxyUsername->setEnabled(ui->proxyRequiresAuth->isChecked());
     ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());
-}
-
+}*/
 
 void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
 {
@@ -170,7 +176,7 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
         applySettings();
         hide();
     } else if (m_type == QDialogButtonBox::Cancel) {
-        loadSettings(); // @todo don't reload when cancelling
+        loadSettings(); //! @todo don't reload when cancelling
         hide();
     } else if (m_type == QDialogButtonBox::Apply) {
         applySettings();
@@ -180,7 +186,7 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
 void MainWindow::applySettings()
 {
     dc->stop();
-    loadIcons();
+    // loadIcons(); //! already loaded by signal
 
     //! to destroy conf..
     {
@@ -201,7 +207,7 @@ void MainWindow::applySettings()
         conf.setValue("StartDaemon",ui->startDaemon->isChecked());
         conf.setValue("AutoStart",ui->startDaemon->isChecked());
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
-        conf.setValue("P2PEnabled", ui->useP2P->isChecked()); //! @todo send lan_sync command
+        conf.setValue("P2PEnabled", ui->useP2P->isChecked());
 
         dc->hideGtkUi(ui->hideGtkUI->isChecked());
 
@@ -265,6 +271,7 @@ void MainWindow::loadSettings()
 
 	ui->displayAccount->setText("");
     ui->useP2P->setChecked(conf.getValue("P2PEnabled").toBool());
+    dc->setP2PEnabled(ui->useP2P->isChecked());
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
 
     //! @todo doesn't work with newer dropbox daemon

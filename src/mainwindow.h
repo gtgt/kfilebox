@@ -78,12 +78,13 @@ public slots:
 
     void applySettings();
     void dialogButtonBoxTriggered(QAbstractButton* button);
-    void changeDropboxFolder();
+    // void changeDropboxFolder();
     void loadIcons(const QString &iconset=QString());
-    void downloadRadioToggle();
+    void useP2PToggle(bool checked);
+    /*void downloadRadioToggle();
     void uploadRadioToggle();
     void proxyRadioToggle();
-    void proxyAuthRadioToggle();
+    void proxyAuthRadioToggle();*/
 
     void updateStatus(DropboxStatus newStatus, const QString &message);
 

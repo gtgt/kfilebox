@@ -5,7 +5,7 @@ DropboxClient::DropboxClient(QObject *parent) :
 {
     m_ps = new QProcess(this);
     m_timer = new QTimer(this);
-    dc =new SynchronousDropboxConnection(this);
+    dc = new SynchronousDropboxConnection(this);
     // dropbox_db = Singleton::instance();
     prev_status = DropboxUnknown;
     m_message = m_authUrl = "";
@@ -21,7 +21,7 @@ DropboxClient::DropboxClient(QObject *parent) :
 DropboxClient::~DropboxClient()
 {
     if(m_ps->isOpen())
-    m_ps->close();
+        m_ps->close();
     // dropbox_db = 0;
     // Singleton::drop();
 }
@@ -138,6 +138,11 @@ void DropboxClient::hideGtkUi(bool hide)
     if(!hide && QFile(dst).exists()){
         QDir().rename(dst, src);
     }
+}
+
+void DropboxClient::setP2PEnabled(bool enabled)
+{
+    sendCommand(QString("set_lan_sync\nlansync\t%1").arg(enabled ? "enabled" : "disabled"));
 }
 
 QString DropboxClient::getVersion()

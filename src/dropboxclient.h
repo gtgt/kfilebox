@@ -31,6 +31,7 @@ public:
     //! This functions not strongly related to this class..
     bool isRunning();
     void hideGtkUi(bool hide);
+    void setP2PEnabled(bool enabled);
     bool static isInstalled();
     QString getVersion();
 
