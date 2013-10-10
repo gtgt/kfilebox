@@ -12,7 +12,7 @@
 
 #include "notification.h"
 #include "configuration.h"
-#include "configurationdbdriver.h"
+// #include "configurationdbdriver.h"
 
 class SynchronousDropboxConnection;
 
@@ -26,8 +26,7 @@ public:
     explicit DropboxClient(QObject* parent = 0);
     ~DropboxClient();
 
-    void updateSharedFolders(const QString& to);
-    QStringList getSharedFolders();
+    // QStringList getSharedFolders();
 
     //! This functions not strongly related to this class..
     bool isRunning();
@@ -36,7 +35,7 @@ public:
     QString getVersion();
 
     inline QString getAuthUrl() const {return m_authUrl;}
-    QStringList getRecentlyChangedFiles();
+    // QStringList getRecentlyChangedFiles();
 
     bool showAuthUrlNotification() const { return m_showAuthUrlNotification; }
     void setShowAuthUrlNotification(bool show) { m_showAuthUrlNotification = show; }
@@ -47,16 +46,17 @@ private:
     QString m_message;
     QString m_authUrl;
     QDir m_dropboxDir; // from kfilebox config
+    QDir m_syncDir;
     DropboxStatus prev_status;
     QStringList recently_changed;
     bool m_showAuthUrlNotification;
 
     SynchronousDropboxConnection* dc;
-    ConfigurationDBDriver* dropbox_db;
+    // ConfigurationDBDriver* dropbox_db;
 
-    QString fixUnicodeChars(const QString &value);
+    /*QString fixUnicodeChars(const QString &value);
     QString resolveFileName(const QString& filename);
-    void updateRecentlyChangedFiles();
+    void updateRecentlyChangedFiles();*/
 
 public slots:
     void start();

@@ -93,7 +93,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(openPrefs, SIGNAL(triggered()), this, SLOT(show()));
     connect(startAction, SIGNAL(triggered()), dc, SLOT(start()));
     connect(stopAction, SIGNAL(triggered()), dc, SLOT(stop()));
-    connect(chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
+    // connect(chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
 
     startAction->setVisible(false);
 
@@ -203,22 +203,25 @@ void MainWindow::applySettings()
         conf.setValue("FileManager",ui->fileManager->currentText());
         conf.setValue("IconSet",iconsetList->at(ui->cbIconSet->currentIndex()));
 
-		if(ui->dropboxFolder->text() != db->getValue("dropbox_path").toString()) {
+        //! @fixme doesn't work with newer dropbox daemon
+		/*if(ui->dropboxFolder->text() != db->getValue("dropbox_path").toString()) {
             //! @todo test this
 			qDebug() << QDir().rename(db->getValue("dropbox_path").toString(), ui->dropboxFolder->text());
 			db->setValue("dropbox_path",ui->dropboxFolder->text());
-        }
+        }*/
 
         conf.setValue("ShowNotifications",ui->showNotifications->isChecked());
         conf.setValue("StartDaemon",ui->startDaemon->isChecked());
         conf.setValue("AutoStart",ui->startDaemon->isChecked());
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
-		db->setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt());
+        conf.setValue("P2PEnabled", ui->useP2P->isChecked());
+		// db->setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt()); //! @fixme send lan_sync command
 
         dc->hideGtkUi(ui->hideGtkUI->isChecked());
 
+        //! @fixme doesn't work with newer dropbox daemon
         // Network
-		db->setValue("throttle_download_style", (ui->downloadLimitRate->isChecked()?2:0));
+		/*db->setValue("throttle_download_style", (ui->downloadLimitRate->isChecked()?2:0));
 		db->setValue("throttle_download_speed", QString::number(ui->downloadLimitValue->value()).append(".0"));
 
         int _swap = 0;
@@ -245,7 +248,7 @@ void MainWindow::applySettings()
 			db->setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
 			db->setValue("proxy_username", "'"+ui->proxyUsername->text()+"'");
         }
-		db->setValue("proxy_mode", _swap);
+		db->setValue("proxy_mode", _swap);*/
     }
 
     dc->start();
@@ -268,20 +271,20 @@ void MainWindow::loadSettings()
     trayIcon->setToolTipTitle("Kfilebox");
     trayIcon->setAssociatedWidget(trayIconMenu);
 
-	ui->dropboxFolder->setText(db->getValue("dropbox_path").toString());
+	ui->dropboxFolder->setText(conf.getValue("SyncDir").toString());
     ui->fileManager->setCurrentIndex(ui->fileManager->findText(conf.getValue("FileManager").toString()));
     ui->browser->setText(conf.getValue("Browser").toString());
     ui->showNotifications->setChecked(conf.getValue("ShowNotifications").toBool());
     ui->startDaemon->setChecked(conf.getValue("StartDaemon").toBool());
 
-    // ui->displayVersion->setText("Dropbox v" + dc->getVersion());
-	ui->displayAccount->setText(db->getValue("email").toString());
-	ui->useP2P->setChecked(db->getValue("p2p_enabled", 1).toBool());
+	ui->displayAccount->setText("");
+	ui->useP2P->setChecked(conf.getValue("P2PEnabled").toBool());
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
 
+    //! @fixme doesn't work with newer dropbox daemon
     // Network
     // (0: false, 1: auto, 2: true)
-	int _swap = db->getValue("throttle_download_style", 0).toInt();
+	/*int _swap = db->getValue("throttle_download_style", 0).toInt();
     ui->downloadDontLimitRate->setChecked(_swap == 0);
     ui->downloadLimitRate->setChecked(_swap == 2);
 	ui->downloadLimitValue->setValue(db->getValue("throttle_download_speed", 50).toInt());
@@ -308,7 +311,7 @@ void MainWindow::loadSettings()
 	ui->proxyRequiresAuth->setChecked(db->getValue("proxy_requires_auth").toBool());
 	ui->proxyUsername->setText(db->getValue("proxy_username").toString());
     ui->proxyUsername->setEnabled(ui->proxyRequiresAuth->isChecked());
-    ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());
+    ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());*/
 
 }
 
@@ -418,7 +421,7 @@ void MainWindow::updateTrayIcon()
     }
 }
 
-void MainWindow::prepareLastChangedFiles(){
+/*void MainWindow::prepareLastChangedFiles(){
 	QStringList files = dc->getRecentlyChangedFiles();
 	for (int i = 0; i < files.count(); ++i) {
 		disconnect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
@@ -429,4 +432,4 @@ void MainWindow::prepareLastChangedFiles(){
 		connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
 		sm->setMapping(chFiles->actions().at(i), files.at(i));
 	}
-}
+}*/

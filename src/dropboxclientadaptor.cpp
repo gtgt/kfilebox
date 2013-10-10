@@ -53,7 +53,7 @@ QString DropboxClientAdaptor::get_version() {
 	return dc->getVersion();
 }
 
-QStringList DropboxClientAdaptor::get_shared_folders() {
+/*QStringList DropboxClientAdaptor::get_shared_folders() {
 	DropboxClient* dc = qobject_cast<DropboxClient*>(parent());
 	return dc->getSharedFolders();
 }
@@ -61,7 +61,7 @@ QStringList DropboxClientAdaptor::get_shared_folders() {
 QStringList DropboxClientAdaptor::get_recently_changed() {
 	DropboxClient* dc = qobject_cast<DropboxClient*>(parent());
 	return dc->getRecentlyChangedFiles();
-}
+}*/
 
 QString DropboxClientAdaptor::get_auth_url() {
 	DropboxClient* dc = qobject_cast<DropboxClient*>(parent());

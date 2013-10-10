@@ -13,7 +13,7 @@
 #include <QString>
 #include <QVariant>
 
-enum DROPBOX_DB_VERSION {DROPBOX_DB, CONFIG_DB, UNKNOWN};
+enum DROPBOX_DB_VERSION {DROPBOX_DB, CONFIG_DB, UNKNOWN_DB};
 
 class ConfigurationDBDriver: public QObject
 {

@@ -67,8 +67,8 @@ public slots:
 	QString send_command(const QString& arg);
 	QString get_status_message();
 	QString get_version();
-	QStringList get_shared_folders();
-	QStringList get_recently_changed();
+	// QStringList get_shared_folders();
+	// QStringList get_recently_changed();
 	QString get_auth_url();
 	QString get_folder_tag(const QString& filename);
 

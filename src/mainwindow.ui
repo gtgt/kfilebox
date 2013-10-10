@@ -168,6 +168,9 @@
         </item>
         <item>
          <widget class="QLabel" name="titleAccount">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="font">
            <font>
             <weight>75</weight>
@@ -181,6 +184,9 @@
         </item>
         <item>
          <widget class="QLabel" name="displayAccount">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>email</string>
           </property>
@@ -207,6 +213,9 @@
           </item>
           <item>
            <widget class="QToolButton" name="moveDropboxFolder">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="text">
              <string>Move...</string>
             </property>
@@ -236,6 +245,9 @@
         </item>
         <item>
          <widget class="QGroupBox" name="downloadBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="title">
            <string>Download</string>
           </property>
@@ -246,7 +258,7 @@
               <string>Don't limit download rate</string>
              </property>
              <property name="checked">
-              <bool>false</bool>
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -299,6 +311,9 @@
         </item>
         <item>
          <widget class="QGroupBox" name="uploadBox">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="title">
            <string>Upload</string>
           </property>
@@ -386,6 +401,9 @@
         </item>
         <item>
          <widget class="QRadioButton" name="proxyDontUse">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Without proxy</string>
           </property>
@@ -396,6 +414,9 @@
         </item>
         <item>
          <widget class="QRadioButton" name="proxyAutoDetect">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Auto detected</string>
           </property>
@@ -403,6 +424,9 @@
         </item>
         <item>
          <widget class="QRadioButton" name="proxySetManually">
+          <property name="enabled">
+           <bool>false</bool>
+          </property>
           <property name="text">
            <string>Manually</string>
           </property>

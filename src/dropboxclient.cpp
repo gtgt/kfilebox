@@ -6,11 +6,12 @@ DropboxClient::DropboxClient(QObject *parent) :
     m_ps = new QProcess(this);
     m_timer = new QTimer(this);
     dc =new SynchronousDropboxConnection(this);
-    dropbox_db = Singleton::instance();
+    // dropbox_db = Singleton::instance();
     prev_status = DropboxUnknown;
     m_message = m_authUrl = "";
     m_showAuthUrlNotification = true;
     m_dropboxDir.setPath(Configuration().getValue("DropboxDir").toString());
+    m_syncDir.setPath(Configuration().getValue("SyncDir").toString());
 
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
@@ -21,8 +22,8 @@ DropboxClient::~DropboxClient()
 {
     if(m_ps->isOpen())
     m_ps->close();
-    dropbox_db = 0;
-    Singleton::drop();
+    // dropbox_db = 0;
+    // Singleton::drop();
 }
 
 void DropboxClient::start()
@@ -157,7 +158,7 @@ QString DropboxClient::getVersion()
 /**
   * I assume that inside shared folder you can't share subfolder
   */
-QStringList DropboxClient::getSharedFolders()
+/*QStringList DropboxClient::getSharedFolders()
 {
     //reply: (shared, dropbox, public, photos, "")
     QString reply;
@@ -245,4 +246,4 @@ void DropboxClient::updateRecentlyChangedFiles() {
         }
     }
     recently_changed = list;
-}
+}*/

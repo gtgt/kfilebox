@@ -93,7 +93,7 @@ public slots:
     void openForumsURL();
     void openDropboxWebsiteURL();
     void openGetMoreSpaceURL();
-    void prepareLastChangedFiles();
+    // void prepareLastChangedFiles();
 };
 
 #endif // MAINWINDOW_H

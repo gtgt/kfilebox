@@ -34,7 +34,7 @@ ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     } else
     {
         dbFilename = "";
-        dbVersion = UNKNOWN;
+        dbVersion = UNKNOWN_DB;
         qDebug() << "~/.dropbox/[config.db,dropbox.db] was not found";
     }
 }
