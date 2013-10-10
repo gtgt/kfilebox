@@ -4,75 +4,58 @@ ConfigurationDBDriver* Singleton::d = 0;
 
 //! @todo play with old dropbox if need
 ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    dbVersion(DropboxDBUnknown)
 {
-    QString dbFilename = QDir(QDir::homePath()).filePath(".dropbox/config.db");
-    if(QFile(dbFilename).exists())
+    QString dbFilename = QDir(QDir::homePath()).filePath(".dropbox/aggregation.dbx");
+    if (QFile(dbFilename).exists())
     {
-        dbVersion = CONFIG_DB;
-        // config.db, can be upgraded, lets check schema
         db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "DROPBOX_CONF"));
         db->setDatabaseName(dbFilename);
         if (!db->open())
             return;
 
-        QSqlQuery query = justQuery("SELECT value FROM `config` WHERE `key`='config_schema_version'");
-        if (query.next()) {
-            if(query.value(0).toInt() != 1)
-            {
-                dbVersion = DROPBOX_DB;
-                //! destroy this connection :(
-                //! create new connection to old-style db
-            }
-        }
-
-    } else if (QFile(QDir(QDir::homePath()).filePath(".dropbox/dropbox.db")).exists())
-    {
-        // dropbox.db, old-style
-        dbFilename = QDir(QDir::homePath()).filePath(".dropbox/dropbox.db");
-        dbVersion = DROPBOX_DB;
-    } else
-    {
-        dbFilename = "";
-        dbVersion = UNKNOWN_DB;
-        qDebug() << "~/.dropbox/[config.db,dropbox.db] was not found";
+        dbVersion = DropboxDBAggregation;
+    }
+    else {
+        qDebug() << QString("\"%1\" was not found").arg(dbFilename);
     }
 }
 
 
 ConfigurationDBDriver::~ConfigurationDBDriver()
 {
-    if(dbVersion != CONFIG_DB)
+    if (dbVersion != DropboxDBAggregation)
         return;
 
     QString connectionName = db->connectionName();
     db->close();
     delete db;
-    db=0;
+    db = 0;
     QSqlDatabase::removeDatabase(connectionName);
 }
 
 bool ConfigurationDBDriver::hasKey(const QString& key) {
-    QSqlQuery query = justQuery(QString("SELECT COUNT(`key`) FROM `config` WHERE `key`='%1'").arg(key));
+    QSqlQuery query = justQuery(QString("SELECT COUNT(`key`) FROM `snapshot` WHERE `key`='%1'").arg(key));
     if (query.next()) {
-        if(query.value(0).toInt() == 1)
+        if (query.value(0).toInt() == 1)
             return true;
     }
     return false;
 }
 
 QVariant ConfigurationDBDriver::getValue(const QString& key, QVariant defaultValue) {
-    QSqlQuery query = justQuery(QString("SELECT `value` FROM `config` WHERE `key`='%1' LIMIT 1").arg(key));
+    QSqlQuery query = justQuery(QString("SELECT `value` FROM `snapshot` WHERE `key`='%1' LIMIT 1").arg(key));
     if (query.next()) {
         return query.value(0);
     }
     return defaultValue;
 }
 
-void ConfigurationDBDriver::setValue(const QString &key, const QVariant& value) {
-    justQuery(QString("REPLACE INTO `config` (`key`, `value`) VALUES ('%1', %2)").arg(key).arg(value.toString()));
+/*void ConfigurationDBDriver::setValue(const QString &key, const QVariant& value) {
+    justQuery(QString("REPLACE INTO `snapshot` (`key`, `value`) VALUES ('%1', %2)").arg(key).arg(value.toString()));
 }
 
 void ConfigurationDBDriver::deleteValue(const QString& key) {
-    justQuery(QString("DELETE FROM `config` WHERE `key`='%1'").arg(key));
-}
+    justQuery(QString("DELETE FROM `snapshot` WHERE `key`='%1'").arg(key));
+}*/

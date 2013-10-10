@@ -21,11 +21,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //! []
     openDropboxWebsite = new QAction(tr("Launch Dropbox Website"), this);
-    action0 = new QAction(this);
-    action1 = new QAction(this);
-    action2 = new QAction(this);
-    action3 = new QAction(this);
-    action4 = new QAction(this);
     statusAction = new QAction("connecting", this);
     statusAction->setEnabled(false);
     openHelpCenter = new QAction(tr("Help Center"), this);
@@ -51,20 +46,12 @@ MainWindow::MainWindow(QWidget *parent) :
     trayIconMenu->addAction(openPrefs);
     trayIconMenu->addAction(startAction);
     trayIconMenu->addAction(stopAction);
-    chFiles->addAction(action0);
-    chFiles->addAction(action1);
-    chFiles->addAction(action2);
-    chFiles->addAction(action3);
-    chFiles->addAction(action4);
     helpMenu->addAction(openHelpCenter);
     helpMenu->addAction(openTour);
     helpMenu->addAction(openForums);
-
     //! [/] and +
 
-
     connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
-    
     
     connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(loadIcons())); //! not loadIcons(const QString&) cause contents is translated
@@ -93,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(openPrefs, SIGNAL(triggered()), this, SLOT(show()));
     connect(startAction, SIGNAL(triggered()), dc, SLOT(start()));
     connect(stopAction, SIGNAL(triggered()), dc, SLOT(stop()));
-    // connect(chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
+    connect(chFiles, SIGNAL(aboutToShow()), this, SLOT(prepareLastChangedFiles()));
 
     startAction->setVisible(false);
 
@@ -183,7 +170,7 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
         applySettings();
         hide();
     } else if (m_type == QDialogButtonBox::Cancel) {
-        loadSettings();
+        loadSettings(); // @todo don't reload when cancelling
         hide();
     } else if (m_type == QDialogButtonBox::Apply) {
         applySettings();
@@ -203,7 +190,7 @@ void MainWindow::applySettings()
         conf.setValue("FileManager",ui->fileManager->currentText());
         conf.setValue("IconSet",iconsetList->at(ui->cbIconSet->currentIndex()));
 
-        //! @fixme doesn't work with newer dropbox daemon
+        //! @todo doesn't work with newer dropbox daemon
 		/*if(ui->dropboxFolder->text() != db->getValue("dropbox_path").toString()) {
             //! @todo test this
 			qDebug() << QDir().rename(db->getValue("dropbox_path").toString(), ui->dropboxFolder->text());
@@ -214,12 +201,11 @@ void MainWindow::applySettings()
         conf.setValue("StartDaemon",ui->startDaemon->isChecked());
         conf.setValue("AutoStart",ui->startDaemon->isChecked());
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
-        conf.setValue("P2PEnabled", ui->useP2P->isChecked());
-		// db->setValue("p2p_enabled", QVariant(ui->useP2P->isChecked()).toInt()); //! @fixme send lan_sync command
+        conf.setValue("P2PEnabled", ui->useP2P->isChecked()); //! @todo send lan_sync command
 
         dc->hideGtkUi(ui->hideGtkUI->isChecked());
 
-        //! @fixme doesn't work with newer dropbox daemon
+        //! @todo doesn't work with newer dropbox daemon
         // Network
 		/*db->setValue("throttle_download_style", (ui->downloadLimitRate->isChecked()?2:0));
 		db->setValue("throttle_download_speed", QString::number(ui->downloadLimitValue->value()).append(".0"));
@@ -278,10 +264,10 @@ void MainWindow::loadSettings()
     ui->startDaemon->setChecked(conf.getValue("StartDaemon").toBool());
 
 	ui->displayAccount->setText("");
-	ui->useP2P->setChecked(conf.getValue("P2PEnabled").toBool());
+    ui->useP2P->setChecked(conf.getValue("P2PEnabled").toBool());
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
 
-    //! @fixme doesn't work with newer dropbox daemon
+    //! @todo doesn't work with newer dropbox daemon
     // Network
     // (0: false, 1: auto, 2: true)
 	/*int _swap = db->getValue("throttle_download_style", 0).toInt();
@@ -421,15 +407,28 @@ void MainWindow::updateTrayIcon()
     }
 }
 
-/*void MainWindow::prepareLastChangedFiles(){
-	QStringList files = dc->getRecentlyChangedFiles();
-	for (int i = 0; i < files.count(); ++i) {
-		disconnect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-		sm->removeMappings(chFiles->actions().at(i));
-		chFiles->actions().at(i)->setText(files.at(i).split("/").last());
-		chFiles->actions().at(i)->setEnabled(QFile(files.at(i)).exists());
+void MainWindow::prepareLastChangedFiles()
+{
+    chFiles->clear();
 
-		connect(chFiles->actions().at(i), SIGNAL(triggered()), sm, SLOT(map()));
-		sm->setMapping(chFiles->actions().at(i), files.at(i));
-	}
-}*/
+    bool ok;
+    QVariant result = jsonParser.parse(db->getValue("recent").toByteArray(), &ok);
+    if (!ok) return;
+
+    typedef QPair<double, QString> FilePair;
+    QList<FilePair> files;
+    foreach (const QVariant &e, result.toList())
+    {
+        const QVariantMap file = e.toMap();
+        if (file.contains("timestamp") && file.contains("server_path")) {
+            files.append(qMakePair(file["timestamp"].toDouble(), file["server_path"].toString()));
+        }
+    }
+    if (files.isEmpty()) return;
+
+    qSort(files);
+    for (QList<FilePair>::size_type i = files.size() - 1, j = 0; i >= 0 && j < 3; --i, ++j)
+    {
+        chFiles->addAction(files[i].second.split("/").last());
+    }
+}

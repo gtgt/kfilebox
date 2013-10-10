@@ -8,6 +8,7 @@
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QSignalMapper>
+#include <qjson/parser.h>
 
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
@@ -42,16 +43,15 @@ private:
     DropboxClientAdaptor* adaptor;
 	ConfigurationDBDriver* db;
     DropboxStatus status;
+    QJson::Parser jsonParser;
 
     QSignalMapper* sm;
     KStatusNotifierItem* trayIcon;
-
     QIcon defaultIcon;
     QIcon idleIcon;
     QIcon bussyIcon;
     QIcon errorIcon;
     QIcon appIcon;
-
     QStringList* iconsetList;
 
     QAction *openDropboxWebsite;
@@ -93,7 +93,7 @@ public slots:
     void openForumsURL();
     void openDropboxWebsiteURL();
     void openGetMoreSpaceURL();
-    // void prepareLastChangedFiles();
+    void prepareLastChangedFiles();
 };
 
 #endif // MAINWINDOW_H

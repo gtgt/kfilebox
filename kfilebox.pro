@@ -3,7 +3,7 @@
 # -------------------------------------------------
 
 QT += sql network dbus
-LIBS += -lkdeui -lkdecore
+LIBS += -lkdeui -lkdecore -lqjson
 INCLUDEPATH += /usr/include/kde4
 TARGET = bin/kfilebox
 TEMPLATE = app

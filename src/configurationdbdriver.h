@@ -13,14 +13,14 @@
 #include <QString>
 #include <QVariant>
 
-enum DROPBOX_DB_VERSION {DROPBOX_DB, CONFIG_DB, UNKNOWN_DB};
+enum DropboxDBVersion {DropboxDBUnknown, DropboxDBAggregation};
 
 class ConfigurationDBDriver: public QObject
 {
 	Q_OBJECT
-	Q_ENUMS(DROPBOX_DB_VERSION)
+	Q_ENUMS(DropboxDBVersion)
 	QSqlDatabase* db;
-	DROPBOX_DB_VERSION dbVersion;
+	DropboxDBVersion dbVersion;
 public:
 	explicit ConfigurationDBDriver(QObject *parent = 0);
 
@@ -30,17 +30,18 @@ public:
 
 	bool hasKey(const QString& key);
 	QVariant getValue(const QString& key, QVariant defaultValue=QVariant());
-	void setValue(const QString &key, const QVariant& value);
-	void deleteValue(const QString& key);
+	//! disabled for safety
+	/*void setValue(const QString &key, const QVariant& value);
+	void deleteValue(const QString& key);*/
 
 private:
 	inline QSqlQuery justQuery(const QString& query)
 	{
-		if(dbVersion != CONFIG_DB)
+		if (dbVersion != DropboxDBAggregation)
 			return QSqlQuery();
 
 		QSqlQuery result = db->exec(query);
-		if(db->lastError().isValid())
+		if (db->lastError().isValid())
 			qDebug() << db->lastError() << "\nquery:" << query;
 		return result;
 	}
