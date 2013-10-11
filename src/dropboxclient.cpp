@@ -10,8 +10,11 @@ DropboxClient::DropboxClient(QObject *parent) :
     prev_status = DropboxUnknown;
     m_message = m_authUrl = "";
     m_showAuthUrlNotification = true;
-    m_dropboxDir.setPath(Configuration().getValue("DropboxDir").toString());
-    m_syncDir.setPath(Configuration().getValue("SyncDir").toString());
+
+    Configuration conf;
+    m_distDir.setPath(conf.getValue("DistDir").toString());
+    m_configDir.setPath(conf.getValue("ConfigDir").toString());
+    m_syncDir.setPath(conf.getValue("SyncDir").toString());
 
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
@@ -29,7 +32,7 @@ DropboxClient::~DropboxClient()
 void DropboxClient::start()
 {
     if(!isRunning()) {
-        m_ps->start(m_dropboxDir.filePath("dropboxd"));
+        m_ps->start(m_distDir.filePath("dropboxd"));
     }
 }
 
@@ -99,7 +102,7 @@ void DropboxClient::readDaemonOutput()
 
 bool DropboxClient::isRunning()
 {
-    QFile pid_file(QDir(QDir::homePath()).filePath(".dropbox/dropbox.pid"));
+    QFile pid_file(m_configDir.filePath("dropbox.pid"));
     if (!pid_file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
@@ -125,12 +128,12 @@ bool DropboxClient::isRunning()
 
 bool DropboxClient::isInstalled()
 {
-    return QFile(QDir(Configuration().getValue("DropboxDir").toString()).filePath("dropbox")).exists();
+    return QFile(QDir(Configuration().getValue("DistDir").toString()).filePath("dropbox")).exists();
 }
 
 void DropboxClient::hideGtkUi(bool hide)
 {
-    QString src = m_dropboxDir.filePath("wx._controls_.so"), dst = m_dropboxDir.filePath("wx._controls_orig.so");
+    QString src = m_distDir.filePath("wx._controls_.so"), dst = m_distDir.filePath("wx._controls_orig.so");
     if(hide && QFile(src).exists()) {
         QDir().rename(src, dst);
         return;
@@ -147,7 +150,7 @@ void DropboxClient::setP2PEnabled(bool enabled)
 
 QString DropboxClient::getVersion()
 {
-    QFile file(m_dropboxDir.filePath("VERSION"));
+    QFile file(m_distDir.filePath("VERSION"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return QString();
 
@@ -245,7 +248,7 @@ void DropboxClient::updateRecentlyChangedFiles() {
         foreach (QString item, list) {
             if(!recently_changed.contains(item)) {
                 Notification n;
-                n.send(tr("File updated: <a href=\"file://%1\">%1</a>").arg(item));
+                n.send(tr("File updated: <a href=\"file://%1\">%1</a>").arg(item)); //! @todo fix notifications
                 emit newFileAdded(item);
             }
         }

@@ -45,7 +45,7 @@ private:
     DropboxStatus status;
     QJson::Parser jsonParser;
 
-    QSignalMapper* sm;
+    QSignalMapper* actionMapper;
     KStatusNotifierItem* trayIcon;
     QIcon defaultIcon;
     QIcon idleIcon;

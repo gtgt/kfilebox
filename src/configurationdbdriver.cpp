@@ -7,7 +7,7 @@ ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     QObject(parent),
     dbVersion(DropboxDBUnknown)
 {
-    QString dbFilename = QDir(QDir::homePath()).filePath(".dropbox/aggregation.dbx");
+    QString dbFilename = QDir(Configuration().getValue("ConfigDir").toString()).filePath("aggregation.dbx");
     if (QFile(dbFilename).exists())
     {
         db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "DROPBOX_CONF"));

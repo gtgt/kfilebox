@@ -94,8 +94,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     loadSettings();
 
-    sm = new QSignalMapper(this);
-    connect(sm, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
+    actionMapper = new QSignalMapper(this);
+    connect(actionMapper, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
 
     initializeDBus();
 }
@@ -205,7 +205,6 @@ void MainWindow::applySettings()
 
         conf.setValue("ShowNotifications",ui->showNotifications->isChecked());
         conf.setValue("StartDaemon",ui->startDaemon->isChecked());
-        conf.setValue("AutoStart",ui->startDaemon->isChecked());
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
         conf.setValue("P2PEnabled", ui->useP2P->isChecked());
 
@@ -360,7 +359,7 @@ void MainWindow::openTourURL()
 
 void MainWindow::openForumsURL()
 {
-    QDesktopServices::openUrl(QUrl("http://forums.dropbox.com/"));
+    QDesktopServices::openUrl(QUrl("https://forums.dropbox.com/"));
 }
 
 void MainWindow::openDropboxWebsiteURL()
@@ -416,6 +415,11 @@ void MainWindow::updateTrayIcon()
 
 void MainWindow::prepareLastChangedFiles()
 {
+    foreach (QAction *action, chFiles->actions())
+    {
+        disconnect(action, SIGNAL(triggered()), actionMapper, SLOT(map()));
+        actionMapper->removeMappings(action);
+    }
     chFiles->clear();
 
     bool ok;
@@ -433,9 +437,17 @@ void MainWindow::prepareLastChangedFiles()
     }
     if (files.isEmpty()) return;
 
+    QDir dir;
+    QFileInfo fileInfo;
     qSort(files);
     for (QList<FilePair>::size_type i = files.size() - 1, j = 0; i >= 0 && j < 3; --i, ++j)
     {
-        chFiles->addAction(files[i].second.split("/").last());
+        dir.setPath(ui->dropboxFolder->text());
+        fileInfo.setFile(dir.filePath(files[i].second.remove(QRegExp("^\\d+:/"))));
+
+        QAction *action = new QAction(fileInfo.fileName(), this);
+        connect(action, SIGNAL(triggered()), actionMapper, SLOT(map()));
+        actionMapper->setMapping(action, fileInfo.dir().path());
+        chFiles->addAction(action);
     }
 }

@@ -46,7 +46,8 @@ private:
     QProcess* m_ps;
     QString m_message;
     QString m_authUrl;
-    QDir m_dropboxDir; // from kfilebox config
+    QDir m_distDir;
+    QDir m_configDir;
     QDir m_syncDir;
     DropboxStatus prev_status;
     QStringList recently_changed;
@@ -94,7 +95,7 @@ public:
         QObject(parent),
         m_socket(new QLocalSocket(this))
     {
-        m_socketpath = QDir(QDir::homePath()).filePath(".dropbox/command_socket");
+        m_socketpath = QDir(Configuration().getValue("ConfigDir").toString()).filePath("command_socket");
         m_socket->connectToServer(m_socketpath);
     }
     virtual ~SynchronousDropboxConnection() {}

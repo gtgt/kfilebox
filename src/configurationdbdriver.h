@@ -13,6 +13,8 @@
 #include <QString>
 #include <QVariant>
 
+#include "configuration.h"
+
 enum DropboxDBVersion {DropboxDBUnknown, DropboxDBAggregation};
 
 class ConfigurationDBDriver: public QObject

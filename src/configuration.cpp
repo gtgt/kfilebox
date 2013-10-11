@@ -6,7 +6,7 @@ Configuration::Configuration(QObject *parent) :
     settings = new KConfig("kfileboxrc");
     generalGroup = new KConfigGroup(settings, "General");
 
-    if(!generalGroup->hasKey("DropboxDir") || !generalGroup->hasKey("SyncDir")) {
+    if(!generalGroup->hasKey("DistDir") || !generalGroup->hasKey("ConfigDir") || !generalGroup->hasKey("SyncDir")) {
         initConfigurationFile();
     }
 }
@@ -27,11 +27,11 @@ void Configuration::initConfigurationFile()
     generalGroup->writeEntry("FileManager", "dolphin"); //! @todo do nothing
     generalGroup->writeEntry("IconSet", "default");
     generalGroup->writeEntry("ShowNotifications", true);
-    generalGroup->writeEntry("AutoStart", true); //! @todo do nothing
     generalGroup->writeEntry("StartDaemon", true);
     generalGroup->writeEntry("GtkUiDisabled", true);
     generalGroup->writeEntry("P2PEnabled", true);
-    generalGroup->writeEntry("DropboxDir", QDir::cleanPath(QDir::homePath() + QDir::separator() + ".dropbox-dist")); //! @todo rename for clarity
+    generalGroup->writeEntry("DistDir", QDir::cleanPath(QDir::homePath() + QDir::separator() + ".dropbox-dist"));
+    generalGroup->writeEntry("ConfigDir", QDir::cleanPath(QDir::homePath() + QDir::separator() + ".dropbox"));
     generalGroup->writeEntry("SyncDir", QDir::cleanPath(QDir::homePath() + QDir::separator() + "Dropbox"));
 
     settings->sync();
