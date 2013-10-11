@@ -8,7 +8,6 @@
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QSignalMapper>
-#include <qjson/parser.h>
 
 #include <kstatusnotifieritem.h>
 #include <kmenu.h>
@@ -16,7 +15,7 @@
 #include "dropboxclient.h"
 #include "dropboxclientadaptor.h"
 #include "configuration.h"
-#include "configurationdbdriver.h"
+//#include "configurationdbdriver.h"
 #include "installerform.h"
 
 namespace Ui {
@@ -41,9 +40,8 @@ private:
     Ui::MainWindow* ui;
     DropboxClient* dc;
     DropboxClientAdaptor* adaptor;
-	ConfigurationDBDriver* db;
+//	ConfigurationDBDriver* db;
     DropboxStatus status;
-    QJson::Parser jsonParser;
 
     QSignalMapper* actionMapper;
     KStatusNotifierItem* trayIcon;

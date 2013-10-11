@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     dc = new DropboxClient(this);
-	db = Singleton::instance();
+//	db = Singleton::instance();
     if(Configuration().getValue("StartDaemon").toBool())
         dc->start();
 
@@ -102,7 +102,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-	db = 0;
+//	db = 0;
     delete ui;
 	delete iconsetList;
 }
@@ -304,7 +304,6 @@ void MainWindow::loadSettings()
 	ui->proxyUsername->setText(db->getValue("proxy_username").toString());
     ui->proxyUsername->setEnabled(ui->proxyRequiresAuth->isChecked());
     ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());*/
-
 }
 
 //! cutted from TrayIcon keep watching
@@ -422,32 +421,17 @@ void MainWindow::prepareLastChangedFiles()
     }
     chFiles->clear();
 
-    bool ok;
-    QVariant result = jsonParser.parse(db->getValue("recent").toByteArray(), &ok);
-    if (!ok) return;
-
-    typedef QPair<double, QString> FilePair;
-    QList<FilePair> files;
-    foreach (const QVariant &e, result.toList())
-    {
-        const QVariantMap file = e.toMap();
-        if (file.contains("timestamp") && file.contains("server_path")) {
-            files.append(qMakePair(file["timestamp"].toDouble(), file["server_path"].toString()));
-        }
-    }
-    if (files.isEmpty()) return;
-
-    QDir dir;
+    QStringList files = dc->getRecentlyChangedFiles();
     QFileInfo fileInfo;
-    qSort(files);
-    for (QList<FilePair>::size_type i = files.size() - 1, j = 0; i >= 0 && j < 3; --i, ++j)
+    for (QStringList::size_type i = files.size() - 1, j = 0; i >= 0 && j < 3; --i, ++j)
     {
-        dir.setPath(ui->dropboxFolder->text());
-        fileInfo.setFile(dir.filePath(files[i].second.remove(QRegExp("^\\d+:/"))));
+        fileInfo.setFile(files[i]);
 
         QAction *action = new QAction(fileInfo.fileName(), this);
+        action->setEnabled(fileInfo.exists());
+
         connect(action, SIGNAL(triggered()), actionMapper, SLOT(map()));
-        actionMapper->setMapping(action, fileInfo.dir().path());
+        actionMapper->setMapping(action, fileInfo.dir().absolutePath());
         chFiles->addAction(action);
     }
 }

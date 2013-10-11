@@ -9,10 +9,11 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
+#include <qjson/parser.h>
 
 #include "notification.h"
 #include "configuration.h"
-// #include "configurationdbdriver.h"
+#include "configurationdbdriver.h"
 
 class SynchronousDropboxConnection;
 
@@ -26,8 +27,6 @@ public:
     explicit DropboxClient(QObject* parent = 0);
     ~DropboxClient();
 
-    // QStringList getSharedFolders();
-
     //! This functions not strongly related to this class..
     bool isRunning();
     void hideGtkUi(bool hide);
@@ -36,7 +35,8 @@ public:
     QString getVersion();
 
     inline QString getAuthUrl() const {return m_authUrl;}
-    // QStringList getRecentlyChangedFiles();
+    QStringList getSharedFolders();
+    QStringList getRecentlyChangedFiles() const {return m_recentlyChanged;}
 
     bool showAuthUrlNotification() const { return m_showAuthUrlNotification; }
     void setShowAuthUrlNotification(bool show) { m_showAuthUrlNotification = show; }
@@ -49,16 +49,18 @@ private:
     QDir m_distDir;
     QDir m_configDir;
     QDir m_syncDir;
-    DropboxStatus prev_status;
-    QStringList recently_changed;
+    DropboxStatus m_prevStatus;
+    QStringList m_recentlyChanged;
+    QByteArray m_recentlyChangedBlob;
     bool m_showAuthUrlNotification;
 
     SynchronousDropboxConnection* dc;
-    // ConfigurationDBDriver* dropbox_db;
+    ConfigurationDBDriver* dropbox_db;
+    QJson::Parser jsonParser;
 
-    /*QString fixUnicodeChars(const QString &value);
-    QString resolveFileName(const QString& filename);
-    void updateRecentlyChangedFiles();*/
+    void buildTree(const QDir &root, QStringList &tree);
+    QString findFile(const QString &file, const QStringList &tree);
+    void updateRecentlyChangedFiles();
 
 public slots:
     void start();
@@ -74,7 +76,7 @@ public slots:
         return sendCommand(QString("get_folder_tag\npath\t%1").arg(command)).remove("tag\t");
     }
 
-    DropboxStatus getStatus() const {return prev_status;}
+    DropboxStatus getStatus() const {return m_prevStatus;}
 
     QString getStatusMessage() const {return m_message;}
 
