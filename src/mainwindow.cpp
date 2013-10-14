@@ -340,7 +340,7 @@ void MainWindow::openFileBrowser(const QString &path)
 
     QFileInfo fileInfo(dirName);
     if(fileInfo.isFile())
-        dirName = fileInfo.dir().path();
+        dirName = fileInfo.path();
 
     QDesktopServices::openUrl(QUrl(dirName));
 }
@@ -428,10 +428,10 @@ void MainWindow::prepareLastChangedFiles()
         fileInfo.setFile(files[i]);
 
         QAction *action = new QAction(fileInfo.fileName(), this);
-        action->setEnabled(fileInfo.exists());
+//        action->setEnabled(fileInfo.exists());
 
         connect(action, SIGNAL(triggered()), actionMapper, SLOT(map()));
-        actionMapper->setMapping(action, fileInfo.dir().absolutePath());
+        actionMapper->setMapping(action, fileInfo.path());
         chFiles->addAction(action);
     }
 }

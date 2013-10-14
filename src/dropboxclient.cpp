@@ -111,11 +111,7 @@ bool DropboxClient::isRunning()
     pid_in >> pid;
     pid_file.close();
 
-    QString stat_path = QString("/proc/%1/stat").arg(QString::number(pid));
-    if (!QFile::exists(stat_path))
-        return false;
-
-    QFile stat_file(stat_path);
+    QFile stat_file(QString("/proc/%1/stat").arg(QString::number(pid)));
     if (!stat_file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
 
@@ -128,7 +124,7 @@ bool DropboxClient::isRunning()
 
 bool DropboxClient::isInstalled()
 {
-    return QFile(QDir(Configuration().getValue("DistDir").toString()).filePath("dropbox")).exists();
+    return QFileInfo(QDir(Configuration().getValue("DistDir").toString()), "dropbox").exists();
 }
 
 void DropboxClient::hideGtkUi(bool hide)
@@ -163,48 +159,54 @@ QString DropboxClient::getVersion()
     return contents;
 }
 
-void DropboxClient::buildTree(const QDir &root, QStringList &tree)
+/**
+  * I assume that inside shared folder you can't share subfolder
+  */
+QStringList DropboxClient::getSharedFolders()
 {
-    tree.append(root.absolutePath());
+    //reply: (shared, dropbox, public, photos, "")
+    QString reply;
+    QStringList shared_folders;
+    QStringList entries;
+    QStringList sub_entries;
+    QString dir;
+
+    sub_entries.append(m_syncDir.path());
+    while(!sub_entries.isEmpty()){
+        entries = sub_entries;
+        sub_entries.clear();
+        QMutableStringListIterator i(entries);
+        while(i.hasNext()) {
+            dir = i.next() + QDir::separator();
+            reply = getFolderTag(dir);
+            if(reply.isEmpty()) {
+                foreach(QString sub_folder, QDir(dir).entryList(QDir::AllDirs|QDir::NoDotAndDotDot)) {
+                    sub_entries.append(QDir::cleanPath(dir + sub_folder));
+                }
+            } else if(reply!="dropbox") {
+                shared_folders.push_back(dir);
+            }
+        }
+    }
+
+    return shared_folders;
+}
+
+void DropboxClient::buildFileTree(const QDir &root, QStringList &tree)
+{
+    foreach (const QString &file, root.entryList(QDir::Files))
+    {
+        tree.append(root.filePath(file));
+    }
 
     foreach (const QString &dir, root.entryList(QDir::AllDirs | QDir::NoDotAndDotDot))
     {
         QDir child(root);
-        if (child.cd(dir)) buildTree(child, tree);
+        if (child.cd(dir)) buildFileTree(child, tree);
     }
 }
 
-QString DropboxClient::findFile(const QString &file, const QStringList &tree)
-{
-    QDir dir;
-    QString tmpFile;
-    foreach (const QString &path, tree) {
-        dir.setPath(path);
-        tmpFile = dir.filePath(file);
-        if (QFile(tmpFile).exists()) return tmpFile;
-    }
-
-    return file; //! file not found
-}
-
-QStringList DropboxClient::getSharedFolders()
-{
-    QStringList tree;
-    buildTree(m_syncDir, tree);
-
-    QStringList shared;
-    QString reply;
-    foreach (const QString &dir, tree)
-    {
-        reply = getFolderTag(dir);
-        if (!reply.isEmpty() && reply != "dropbox") {
-            shared.append(dir + ": " + reply);
-        }
-    }
-
-    return shared;
-}
-
+#include <QMessageBox>
 void DropboxClient::updateRecentlyChangedFiles() {
     const QByteArray blob = dropbox_db->getValue("recent").toByteArray();
     if (blob == m_recentlyChangedBlob) return;
@@ -227,12 +229,21 @@ void DropboxClient::updateRecentlyChangedFiles() {
     qSort(files);
 
     QStringList tree;
-    buildTree(m_syncDir, tree);
+    buildFileTree(m_syncDir, tree);
 
     QStringList newRecentlyChanged;
+    QString cleanPath;
+    const QRegExp reRemoveId("^\\d+:");
     foreach (const FilePair &pair, files)
     {
-        newRecentlyChanged.append(findFile(pair.second.split("/").last(), tree));
+        cleanPath = QString(pair.second).remove(reRemoveId);
+
+        foreach (const QString &file, tree) {
+            if (file.endsWith(cleanPath, Qt::CaseInsensitive)) {
+                newRecentlyChanged.append(file);
+                break;
+            }
+        }
     }
 
     if (!m_recentlyChanged.isEmpty()) {
@@ -242,13 +253,13 @@ void DropboxClient::updateRecentlyChangedFiles() {
         foreach (const QString &file, newRecentlyChanged) {
             if (!m_recentlyChanged.contains(file)) {
                 fileInfo.setFile(file);
-                if (fileInfo.exists()) {
-                    reply = getFolderTag(fileInfo.dir().absolutePath());
+//                if (fileInfo.exists()) {
+                    reply = getFolderTag(fileInfo.path());
                     if (!reply.isEmpty() && reply != "dropbox") {
                         notify.send(tr("File updated: <a href=\"file://%1\">%1</a>").arg(file));
                         emit newFileAdded(file);
                     }
-                }
+//                }
             }
         }
     }

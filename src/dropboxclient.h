@@ -58,8 +58,7 @@ private:
     ConfigurationDBDriver* dropbox_db;
     QJson::Parser jsonParser;
 
-    void buildTree(const QDir &root, QStringList &tree);
-    QString findFile(const QString &file, const QStringList &tree);
+    void buildFileTree(const QDir &root, QStringList &tree);
     void updateRecentlyChangedFiles();
 
 public slots:
