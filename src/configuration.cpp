@@ -27,6 +27,7 @@ void Configuration::initConfigurationFile()
     generalGroup->writeEntry("FileManager", "dolphin"); //! @todo do nothing
     generalGroup->writeEntry("IconSet", "default");
     generalGroup->writeEntry("ShowNotifications", true);
+    generalGroup->writeEntry("AutoStart", true);
     generalGroup->writeEntry("StartDaemon", true);
     generalGroup->writeEntry("GtkUiDisabled", true);
     generalGroup->writeEntry("P2PEnabled", true);

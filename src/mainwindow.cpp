@@ -205,6 +205,7 @@ void MainWindow::applySettings()
 
         conf.setValue("ShowNotifications",ui->showNotifications->isChecked());
         conf.setValue("StartDaemon",ui->startDaemon->isChecked());
+        conf.setValue("AutoStart",ui->startDaemon->isChecked());
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
         conf.setValue("P2PEnabled", ui->useP2P->isChecked());
 
