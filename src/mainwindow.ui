@@ -213,9 +213,6 @@
           </item>
           <item>
            <widget class="QToolButton" name="moveDropboxFolder">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
             <property name="text">
              <string>Move...</string>
             </property>

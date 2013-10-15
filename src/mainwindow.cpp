@@ -53,7 +53,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
     
-    // connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
+    connect(ui->moveDropboxFolder, SIGNAL(clicked()), this, SLOT(changeDropboxFolder()));
     connect(ui->cbIconSet, SIGNAL(currentIndexChanged(const QString&)), this, SLOT(loadIcons())); //! not loadIcons(const QString&) cause contents is translated
 
     connect(dc, SIGNAL(updateStatus(DropboxStatus,QString)), this, SLOT(updateStatus(DropboxStatus,QString)));
@@ -130,13 +130,13 @@ void MainWindow::initializeDBus()
     adaptor = new DropboxClientAdaptor(dc);
 }
 
-/*void MainWindow::changeDropboxFolder()
+void MainWindow::changeDropboxFolder()
 {
-    QString dir = QFileDialog::getExistingDirectory(this,tr("Dropbox folder"), ui->dropboxFolder->text(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Dropbox folder"), ui->dropboxFolder->text(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
-    if ( (dir.length()!=0) && (ui->dropboxFolder->text() != dir) )
+    if (!dir.isEmpty() && ui->dropboxFolder->text() != dir)
         ui->dropboxFolder->setText(dir);
-}*/
+}
 
 void MainWindow::useP2PToggle(bool checked)
 {
@@ -176,7 +176,7 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
         applySettings();
         hide();
     } else if (m_type == QDialogButtonBox::Cancel) {
-        loadSettings(); //! @todo don't reload when cancelling
+        loadSettings();
         hide();
     } else if (m_type == QDialogButtonBox::Apply) {
         applySettings();
@@ -192,22 +192,18 @@ void MainWindow::applySettings()
     {
         Configuration conf;
 
-        conf.setValue("Browser",ui->browser->text());
-        conf.setValue("FileManager",ui->fileManager->currentText());
-        conf.setValue("IconSet",iconsetList->at(ui->cbIconSet->currentIndex()));
-
-        //! @todo doesn't work with newer dropbox daemon
-		/*if(ui->dropboxFolder->text() != db->getValue("dropbox_path").toString()) {
-            //! @todo test this
-			qDebug() << QDir().rename(db->getValue("dropbox_path").toString(), ui->dropboxFolder->text());
-			db->setValue("dropbox_path",ui->dropboxFolder->text());
-        }*/
-
-        conf.setValue("ShowNotifications",ui->showNotifications->isChecked());
-        conf.setValue("StartDaemon",ui->startDaemon->isChecked());
-        conf.setValue("AutoStart",ui->startDaemon->isChecked());
+        conf.setValue("ShowNotifications", ui->showNotifications->isChecked());
+        conf.setValue("StartDaemon", ui->startDaemon->isChecked());
+        conf.setValue("AutoStart", ui->startDaemon->isChecked());
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
         conf.setValue("P2PEnabled", ui->useP2P->isChecked());
+        conf.setValue("Browser", ui->browser->text());
+        conf.setValue("FileManager", ui->fileManager->currentText());
+        conf.setValue("IconSet", iconsetList->at(ui->cbIconSet->currentIndex()));
+
+        if (conf.getValue("SyncDir").toString() != ui->dropboxFolder->text()) {
+            conf.setValue("SyncDir", ui->dropboxFolder->text());
+        }
 
         dc->hideGtkUi(ui->hideGtkUI->isChecked());
 

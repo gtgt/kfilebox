@@ -14,7 +14,6 @@ DropboxClient::DropboxClient(QObject *parent) :
     Configuration conf;
     m_distDir.setPath(conf.getValue("DistDir").toString());
     m_configDir.setPath(conf.getValue("ConfigDir").toString());
-    m_syncDir.setPath(conf.getValue("SyncDir").toString());
 
     connect(m_ps, SIGNAL(readyReadStandardOutput()), this, SLOT(readDaemonOutput()));
     connect(m_timer, SIGNAL(timeout()), this, SLOT(getDropboxStatus()));
@@ -171,7 +170,7 @@ QStringList DropboxClient::getSharedFolders()
     QStringList sub_entries;
     QString dir;
 
-    sub_entries.append(m_syncDir.path());
+    sub_entries.append(Configuration().getValue("SyncDir").toString());
     while(!sub_entries.isEmpty()){
         entries = sub_entries;
         sub_entries.clear();
@@ -206,7 +205,6 @@ void DropboxClient::buildFileTree(const QDir &root, QStringList &tree)
     }
 }
 
-#include <QMessageBox>
 void DropboxClient::updateRecentlyChangedFiles() {
     const QByteArray blob = dropbox_db->getValue("recent").toByteArray();
     if (blob == m_recentlyChangedBlob) return;
@@ -229,7 +227,7 @@ void DropboxClient::updateRecentlyChangedFiles() {
     qSort(files);
 
     QStringList tree;
-    buildFileTree(m_syncDir, tree);
+    buildFileTree(QDir(Configuration().getValue("SyncDir").toString()), tree);
 
     QStringList newRecentlyChanged;
     QString cleanPath;

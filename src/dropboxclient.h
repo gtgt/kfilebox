@@ -48,7 +48,6 @@ private:
     QString m_authUrl;
     QDir m_distDir;
     QDir m_configDir;
-    QDir m_syncDir;
     DropboxStatus m_prevStatus;
     QStringList m_recentlyChanged;
     QByteArray m_recentlyChangedBlob;

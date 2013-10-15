@@ -76,7 +76,7 @@ public slots:
 
     void applySettings();
     void dialogButtonBoxTriggered(QAbstractButton* button);
-    // void changeDropboxFolder();
+    void changeDropboxFolder();
     void loadIcons(const QString &iconset=QString());
     void useP2PToggle(bool checked);
     /*void downloadRadioToggle();

@@ -23,8 +23,8 @@ Configuration::~Configuration()
 
 void Configuration::initConfigurationFile()
 {
-    generalGroup->writeEntry("Browser", "rekonq"); //! @todo do nothing
-    generalGroup->writeEntry("FileManager", "dolphin"); //! @todo do nothing
+    generalGroup->writeEntry("Browser", "rekonq");
+    generalGroup->writeEntry("FileManager", "dolphin");
     generalGroup->writeEntry("IconSet", "default");
     generalGroup->writeEntry("ShowNotifications", true);
     generalGroup->writeEntry("AutoStart", true);
