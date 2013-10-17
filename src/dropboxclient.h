@@ -9,6 +9,7 @@
 #include <QString>
 #include <QStringList>
 #include <QTimer>
+#include <QWaitCondition>
 #include <qjson/parser.h>
 
 #include "notification.h"
@@ -29,6 +30,7 @@ public:
 
     //! This functions not strongly related to this class..
     bool isRunning();
+    bool isGtkUiDisabled();
     void hideGtkUi(bool hide);
     void setP2PEnabled(bool enabled);
     bool static isInstalled();
@@ -42,16 +44,16 @@ public:
     void setShowAuthUrlNotification(bool show) { m_showAuthUrlNotification = show; }
 
 private:
+    bool m_showAuthUrlNotification;
+    DropboxStatus m_status;
     QTimer* m_timer;
     QProcess* m_ps;
     QString m_message;
     QString m_authUrl;
     QDir m_distDir;
     QDir m_configDir;
-    DropboxStatus m_prevStatus;
     QStringList m_recentlyChanged;
     QByteArray m_recentlyChangedBlob;
-    bool m_showAuthUrlNotification;
 
     SynchronousDropboxConnection* dc;
     ConfigurationDBDriver* dropbox_db;
@@ -74,7 +76,7 @@ public slots:
         return sendCommand(QString("get_folder_tag\npath\t%1").arg(command)).remove("tag\t");
     }
 
-    DropboxStatus getStatus() const {return m_prevStatus;}
+    DropboxStatus getStatus() const {return m_status;}
 
     QString getStatusMessage() const {return m_message;}
 

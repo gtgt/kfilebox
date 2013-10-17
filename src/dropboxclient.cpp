@@ -1,15 +1,14 @@
 #include "dropboxclient.h"
 
 DropboxClient::DropboxClient(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    m_showAuthUrlNotification(true),
+    m_status(DropboxUnknown)
 {
     m_ps = new QProcess(this);
     m_timer = new QTimer(this);
     dc = new SynchronousDropboxConnection(this);
     dropbox_db = Singleton::instance();
-    m_prevStatus = DropboxUnknown;
-    m_message = m_authUrl = "";
-    m_showAuthUrlNotification = true;
 
     Configuration conf;
     m_distDir.setPath(conf.getValue("DistDir").toString());
@@ -22,7 +21,7 @@ DropboxClient::DropboxClient(QObject *parent) :
 
 DropboxClient::~DropboxClient()
 {
-    if(m_ps->isOpen())
+    if (m_ps->isOpen())
         m_ps->close();
     dropbox_db = 0;
     Singleton::drop();
@@ -30,7 +29,7 @@ DropboxClient::~DropboxClient()
 
 void DropboxClient::start()
 {
-    if(!isRunning()) {
+    if (!isRunning()) {
         m_ps->start(m_distDir.filePath("dropboxd"));
     }
 }
@@ -38,48 +37,62 @@ void DropboxClient::start()
 void DropboxClient::stop()
 {
     sendCommand("tray_action_hard_exit");
-    m_ps->waitForFinished();
+
+    if (m_ps->state() != QProcess::NotRunning) {
+        m_ps->waitForFinished();
+    } else {
+        // if process was self-restarted
+        QMutex dummy;
+        dummy.lock();
+        QWaitCondition().wait(&dummy, 5000);
+    }
 }
 
 void DropboxClient::getDropboxStatus()
 {
     QString message = sendCommand("get_dropbox_status");
+    DropboxStatus status = DropboxUnknown;
 
-    if(message.isEmpty()) {
+    if (message.isEmpty()) {
         message = "Dropbox daemon isn't running";
+        status = DropboxStopped;
     }
-    DropboxStatus m_status = DropboxUnknown;
-
-    //! @todo coment first if{} block(or modify) if you want disable tray icon blinking on startup in green and blue color(default icons scheme)
-    if (message == "Idle") {
-        m_status = DropboxIdle;
+    else if (message == "Idle") {
+        status = DropboxIdle;
     }
     else if (message.contains("dopped")) {
-        m_status = DropboxError;
+        status = DropboxError;
     }
-    else if (message.contains("Initializing") || message.contains("Starting") || message.contains("isn't")) {
-        m_status = DropboxStopped;
-    }
-    else if (message.contains("Syncing paused") || message.contains("Connecting") || message.contains("Waiting to be linked") || message.contains("couldn't")) {
-        m_status = DropboxDisconnected;
+    else if (message.contains("Initializing") || message.contains("Starting") || message.contains("isn't") || message.contains("Syncing paused") || message.contains("Connecting") || message.contains("Waiting to be linked") || message.contains("couldn't")) {
+        status = DropboxDisconnected;
     }
     else if (message.contains("Indexing")) {
-        m_status = DropboxIndexing;
+        status = DropboxIndexing;
     }
     else if (message.contains("Saving")) {
-        m_status = DropboxSaving;
+        status = DropboxSaving;
     }
     else if (message.contains("Downloading")) {
-        m_status = DropboxDownloading;
+        status = DropboxDownloading;
     }
     else if (message.contains("Updating") || message.contains("Uploading")) {
-        m_status = DropboxUploading;
+        status = DropboxUploading;
     }
 
-    if((m_prevStatus != m_status) || (m_message != message)) {
-        m_prevStatus = m_status;
+    if (m_status != status && m_status == DropboxStopped && m_ps->state() == QProcess::NotRunning) {
+        // process was self-restarted
+        stop();
+        if (Configuration().getValue("GtkUiDisabled").toBool() && !isGtkUiDisabled()) {
+            hideGtkUi(true);
+        }
+        start();
+    }
+
+    if (m_status != status || m_message != message) {
+        m_status = status;
         m_message = message;
-        emit updateStatus(m_status, message);
+
+        emit updateStatus(status, message);
         updateRecentlyChangedFiles();
     }
 }
@@ -126,14 +139,19 @@ bool DropboxClient::isInstalled()
     return QFileInfo(QDir(Configuration().getValue("DistDir").toString()), "dropbox").exists();
 }
 
+bool DropboxClient::isGtkUiDisabled()
+{
+    return !QFileInfo(m_distDir.filePath("wx._controls_.so")).exists();
+}
+
 void DropboxClient::hideGtkUi(bool hide)
 {
     QString src = m_distDir.filePath("wx._controls_.so"), dst = m_distDir.filePath("wx._controls_orig.so");
-    if(hide && QFile(src).exists()) {
+    if (hide && QFileInfo(src).exists()) {
         QDir().rename(src, dst);
         return;
     }
-    if(!hide && QFile(dst).exists()){
+    if (!hide && QFileInfo(dst).exists()){
         QDir().rename(dst, src);
     }
 }

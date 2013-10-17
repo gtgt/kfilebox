@@ -185,61 +185,58 @@ void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
 
 void MainWindow::applySettings()
 {
-    dc->stop();
-    // loadIcons(); //! already loaded by signal
+    Configuration conf;
 
-    //! to destroy conf..
-    {
-        Configuration conf;
-
-        conf.setValue("ShowNotifications", ui->showNotifications->isChecked());
-        conf.setValue("StartDaemon", ui->startDaemon->isChecked());
-        conf.setValue("AutoStart", ui->startDaemon->isChecked());
+    if (conf.getValue("GtkUiDisabled").toBool() != ui->hideGtkUI->isChecked()) {
         conf.setValue("GtkUiDisabled", ui->hideGtkUI->isChecked());
-        conf.setValue("P2PEnabled", ui->useP2P->isChecked());
-        conf.setValue("Browser", ui->browser->text());
-        conf.setValue("FileManager", ui->fileManager->currentText());
-        conf.setValue("IconSet", iconsetList->at(ui->cbIconSet->currentIndex()));
 
-        if (conf.getValue("SyncDir").toString() != ui->dropboxFolder->text()) {
-            conf.setValue("SyncDir", ui->dropboxFolder->text());
-        }
-
+        dc->stop();
         dc->hideGtkUi(ui->hideGtkUI->isChecked());
-
-        //! @todo doesn't work with newer dropbox daemon
-        // Network
-		/*db->setValue("throttle_download_style", (ui->downloadLimitRate->isChecked()?2:0));
-		db->setValue("throttle_download_speed", QString::number(ui->downloadLimitValue->value()).append(".0"));
-
-        int _swap = 0;
-        if(ui->uploadAutoLimitRate->isChecked()) {
-            _swap = 1;
-        } else if (ui->uploadLimitRate->isChecked()) {
-            _swap = 2;
-        }
-		db->setValue("throttle_upload_style", _swap);
-		db->setValue("throttle_upload_speed", QString::number(ui->uploadLimitValue->value()).append(".0"));
-
-        _swap = 0;
-        if(ui->proxyAutoDetect->isChecked()) {
-            _swap = 1;
-        } else if (ui->proxySetManually->isChecked()) {
-            _swap = 2;
-
-            QStringList proxyType;
-            proxyType << "HTTP" << "SOCKS4" << "SOCKS5";
-
-			db->setValue("proxy_type", "'"+proxyType.value(ui->proxyType->currentIndex())+"'");
-			db->setValue("proxy_server", "'"+ui->proxyServer->text()+"'");
-			db->setValue("proxy_port", ui->proxyPort->value());
-			db->setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
-			db->setValue("proxy_username", "'"+ui->proxyUsername->text()+"'");
-        }
-		db->setValue("proxy_mode", _swap);*/
+        dc->start();
     }
 
-    dc->start();
+    if (conf.getValue("SyncDir").toString() != ui->dropboxFolder->text()) {
+        conf.setValue("SyncDir", ui->dropboxFolder->text());
+    }
+
+    conf.setValue("ShowNotifications", ui->showNotifications->isChecked());
+    conf.setValue("StartDaemon", ui->startDaemon->isChecked());
+    conf.setValue("AutoStart", ui->startDaemon->isChecked());
+    conf.setValue("P2PEnabled", ui->useP2P->isChecked());
+    conf.setValue("Browser", ui->browser->text());
+    conf.setValue("FileManager", ui->fileManager->currentText());
+    conf.setValue("IconSet", iconsetList->at(ui->cbIconSet->currentIndex()));
+
+    //! @todo doesn't work with newer dropbox daemon
+    // Network
+    /*db->setValue("throttle_download_style", (ui->downloadLimitRate->isChecked()?2:0));
+    db->setValue("throttle_download_speed", QString::number(ui->downloadLimitValue->value()).append(".0"));
+
+    int _swap = 0;
+    if(ui->uploadAutoLimitRate->isChecked()) {
+        _swap = 1;
+    } else if (ui->uploadLimitRate->isChecked()) {
+        _swap = 2;
+    }
+    db->setValue("throttle_upload_style", _swap);
+    db->setValue("throttle_upload_speed", QString::number(ui->uploadLimitValue->value()).append(".0"));
+
+    _swap = 0;
+    if(ui->proxyAutoDetect->isChecked()) {
+        _swap = 1;
+    } else if (ui->proxySetManually->isChecked()) {
+        _swap = 2;
+
+        QStringList proxyType;
+        proxyType << "HTTP" << "SOCKS4" << "SOCKS5";
+
+        db->setValue("proxy_type", "'"+proxyType.value(ui->proxyType->currentIndex())+"'");
+        db->setValue("proxy_server", "'"+ui->proxyServer->text()+"'");
+        db->setValue("proxy_port", ui->proxyPort->value());
+        db->setValue("proxy_requires_auth", QVariant(ui->proxyRequiresAuth->isChecked()).toInt());
+        db->setValue("proxy_username", "'"+ui->proxyUsername->text()+"'");
+    }
+    db->setValue("proxy_mode", _swap);*/
 }
 
 void MainWindow::loadSettings()
@@ -388,24 +385,24 @@ void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
 void MainWindow::updateTrayIcon()
 {
     switch (status) {
-        case DropboxIdle:
-            trayIcon->setIconByPixmap(idleIcon);
-            break;
-        case DropboxBussy:
-        case DropboxUploading:
-        case DropboxDownloading:
-        case DropboxSaving:
-        case DropboxIndexing:
-            trayIcon->setIconByPixmap(bussyIcon);
-            break;
-        case DropboxError:
-            trayIcon->setIconByPixmap(errorIcon);
-            break;
-        case DropboxUnknown:
-        case DropboxStopped:
-        case DropboxDisconnected:
-        default:
-            trayIcon->setIconByPixmap(defaultIcon);
+    case DropboxIdle:
+        trayIcon->setIconByPixmap(idleIcon);
+        break;
+    case DropboxBussy:
+    case DropboxUploading:
+    case DropboxDownloading:
+    case DropboxSaving:
+    case DropboxIndexing:
+        trayIcon->setIconByPixmap(bussyIcon);
+        break;
+    case DropboxError:
+        trayIcon->setIconByPixmap(errorIcon);
+        break;
+    case DropboxUnknown:
+    case DropboxStopped:
+    case DropboxDisconnected:
+    default:
+        trayIcon->setIconByPixmap(defaultIcon);
     }
 }
 

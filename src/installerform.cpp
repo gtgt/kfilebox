@@ -7,7 +7,6 @@ InstallerForm::InstallerForm(QWidget *parent) :
 {
     ui->setupUi(this);
     setModal(true);
-    //    setWindowModality(Qt::ApplicationModal);
     ui->launchBrowser->setVisible(false);
     ui->showWizard->setVisible(false);
 
