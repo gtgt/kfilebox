@@ -15,7 +15,6 @@
 #include "dropboxclient.h"
 #include "dropboxclientadaptor.h"
 #include "configuration.h"
-//#include "configurationdbdriver.h"
 #include "installerform.h"
 
 namespace Ui {
@@ -40,7 +39,6 @@ private:
     Ui::MainWindow* ui;
     DropboxClient* dc;
     DropboxClientAdaptor* adaptor;
-//	ConfigurationDBDriver* db;
     DropboxStatus status;
 
     QSignalMapper* actionMapper;
@@ -53,11 +51,6 @@ private:
     QStringList* iconsetList;
 
     QAction *openDropboxWebsite;
-    QAction *action0;
-    QAction *action1;
-    QAction *action2;
-    QAction *action3;
-    QAction *action4;
     QAction *statusAction;
     QAction *openHelpCenter;
     QAction *openTour;

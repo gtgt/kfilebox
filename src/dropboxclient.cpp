@@ -42,6 +42,7 @@ void DropboxClient::stop()
         m_ps->waitForFinished();
     } else {
         // if process was self-restarted
+        //! @todo kill process using POSIX API?
         QMutex dummy;
         dummy.lock();
         QWaitCondition().wait(&dummy, 5000);
@@ -82,9 +83,7 @@ void DropboxClient::getDropboxStatus()
     if (m_status != status && m_status == DropboxStopped && m_ps->state() == QProcess::NotRunning) {
         // process was self-restarted
         stop();
-        if (Configuration().getValue("GtkUiDisabled").toBool() && !isGtkUiDisabled()) {
-            hideGtkUi(true);
-        }
+        hideGtkUi(Configuration().getValue("GtkUiDisabled").toBool());
         start();
     }
 
@@ -139,20 +138,22 @@ bool DropboxClient::isInstalled()
     return QFileInfo(QDir(Configuration().getValue("DistDir").toString()), "dropbox").exists();
 }
 
-bool DropboxClient::isGtkUiDisabled()
-{
-    return !QFileInfo(m_distDir.filePath("wx._controls_.so")).exists();
-}
-
 void DropboxClient::hideGtkUi(bool hide)
 {
-    QString src = m_distDir.filePath("wx._controls_.so"), dst = m_distDir.filePath("wx._controls_orig.so");
+    const QString src = m_distDir.filePath("wx._controls_.so"), dst = m_distDir.filePath("wx._controls_orig.so");
+
     if (hide && QFileInfo(src).exists()) {
-        QDir().rename(src, dst);
+        if (QFileInfo(dst).exists())
+            QFile::remove(dst);
+        QFile::rename(src, dst);
         return;
     }
-    if (!hide && QFileInfo(dst).exists()){
-        QDir().rename(dst, src);
+
+    if (!hide && QFileInfo(dst).exists()) {
+        if (QFileInfo(src).exists())
+            QFile::remove(dst);
+        else
+            QFile::rename(dst, src);
     }
 }
 

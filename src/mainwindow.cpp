@@ -15,25 +15,30 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     dc = new DropboxClient(this);
-//	db = Singleton::instance();
-    if(Configuration().getValue("StartDaemon").toBool())
+    if (Configuration().getValue("StartDaemon").toBool())
         dc->start();
 
     //! []
-    openDropboxWebsite = new QAction(tr("Launch Dropbox Website"), this);
-    statusAction = new QAction("connecting", this);
-    statusAction->setEnabled(false);
-    openHelpCenter = new QAction(tr("Help Center"), this);
-    openTour = new QAction(tr("Tour"), this);
-    openForums = new QAction(tr("Forums"), this);
-    openGetMoreSpace = new QAction(tr("Get More Space"), this);
-    openPrefs = new QAction(tr("Preferences"), this);
-    startAction = new QAction(tr("Start Dropbox"), this);
-    stopAction = new QAction(tr("Stop Dropbox"), this);
-    openDir = new QAction(tr("Open Dropbox Folder"), this);
     trayIconMenu = new KMenu("tray menu", this);
-    chFiles = new QMenu(tr("Recently changed files"), this);
-    helpMenu = new QMenu(tr("Help"), this);
+
+    openDropboxWebsite = new QAction(tr("Launch Dropbox Website"), trayIconMenu);
+    statusAction = new QAction("connecting", trayIconMenu);
+    statusAction->setEnabled(false);
+    openGetMoreSpace = new QAction(tr("Get More Space"), trayIconMenu);
+    openPrefs = new QAction(tr("Preferences"), trayIconMenu);
+    startAction = new QAction(tr("Start Dropbox"), trayIconMenu);
+    stopAction = new QAction(tr("Stop Dropbox"), trayIconMenu);
+    openDir = new QAction(tr("Open Dropbox Folder"), trayIconMenu);
+    chFiles = new QMenu(tr("Recently changed files"), trayIconMenu);
+
+    helpMenu = new QMenu(tr("Help"), trayIconMenu);
+    openHelpCenter = new QAction(tr("Help Center"), helpMenu);
+    openTour = new QAction(tr("Tour"), helpMenu);
+    openForums = new QAction(tr("Forums"), helpMenu);
+
+    helpMenu->addAction(openHelpCenter);
+    helpMenu->addAction(openTour);
+    helpMenu->addAction(openForums);
 
     trayIconMenu->addAction(openDir);
     trayIconMenu->addAction(openDropboxWebsite);
@@ -46,9 +51,9 @@ MainWindow::MainWindow(QWidget *parent) :
     trayIconMenu->addAction(openPrefs);
     trayIconMenu->addAction(startAction);
     trayIconMenu->addAction(stopAction);
-    helpMenu->addAction(openHelpCenter);
-    helpMenu->addAction(openTour);
-    helpMenu->addAction(openForums);
+
+    actionMapper = new QSignalMapper(chFiles);
+    connect(actionMapper, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
     //! [/] and +
 
     connect(ui->dialogButtonBox, SIGNAL(clicked(QAbstractButton*)), SLOT(dialogButtonBoxTriggered(QAbstractButton*)));
@@ -93,9 +98,6 @@ MainWindow::MainWindow(QWidget *parent) :
     iconsetList->push_back("white");
 
     loadSettings();
-
-    actionMapper = new QSignalMapper(this);
-    connect(actionMapper, SIGNAL(mapped(const QString &)), this, SLOT(openFileBrowser(const QString &)));
 
     initializeDBus();
 }
@@ -412,6 +414,7 @@ void MainWindow::prepareLastChangedFiles()
     {
         disconnect(action, SIGNAL(triggered()), actionMapper, SLOT(map()));
         actionMapper->removeMappings(action);
+        delete action;
     }
     chFiles->clear();
 
@@ -421,8 +424,7 @@ void MainWindow::prepareLastChangedFiles()
     {
         fileInfo.setFile(files[i]);
 
-        QAction *action = new QAction(fileInfo.fileName(), this);
-//        action->setEnabled(fileInfo.exists());
+        QAction *action = new QAction(fileInfo.fileName(), chFiles);
 
         connect(action, SIGNAL(triggered()), actionMapper, SLOT(map()));
         actionMapper->setMapping(action, fileInfo.path());
