@@ -204,7 +204,7 @@ msgid "Enable LAN sync"
 msgstr ""
 
 #: rc.cpp:33 rc.cpp:225
-msgid "hide Gtk UI from tray"
+msgid "Hide Gtk UI from tray"
 msgstr ""
 
 #: rc.cpp:36 rc.cpp:48 rc.cpp:228 rc.cpp:240

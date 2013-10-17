@@ -203,7 +203,7 @@ msgid "Enable LAN sync"
 msgstr "Разрешить более быструю синхонизацию"
 
 #: rc.cpp:33 rc.cpp:225 rc.cpp:417
-msgid "hide Gtk UI from tray"
+msgid "Hide Gtk UI from tray"
 msgstr "Скрыть Gtk интерфейс"
 
 #: rc.cpp:36 rc.cpp:48 rc.cpp:228 rc.cpp:240 rc.cpp:420 rc.cpp:432

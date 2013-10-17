@@ -109,7 +109,7 @@
         <item>
          <widget class="QCheckBox" name="hideGtkUI">
           <property name="text">
-           <string>hide Gtk UI from tray</string>
+           <string>Hide Gtk UI from tray</string>
           </property>
           <property name="checked">
            <bool>true</bool>
