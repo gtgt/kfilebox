@@ -14,7 +14,7 @@ void Notification::send(const QString &message) const
 		return;
 	}
 
-    const QString service = "org.freedesktop.Notifications",
+    static const QString service = "org.freedesktop.Notifications",
             path = "/org/freedesktop/Notifications",
             interface = "org.freedesktop.Notifications",
             method = "Notify";

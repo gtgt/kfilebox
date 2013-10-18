@@ -379,7 +379,8 @@ void MainWindow::updateStatus(DropboxStatus newStatus, const QString &message)
         stopAction->setVisible(true);
     }
 
-    statusAction->setText(message);
+    static const QRegExp reClear("[\\n\\r\\t]");
+    statusAction->setText(message.section(reClear, 0, 0));
     trayIcon->setToolTipSubTitle(message);
 
     updateTrayIcon();

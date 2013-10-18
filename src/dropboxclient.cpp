@@ -249,7 +249,7 @@ void DropboxClient::updateRecentlyChangedFiles() {
 
     QStringList newRecentlyChanged;
     QString cleanPath;
-    const QRegExp reRemoveId("^\\d+:");
+    static const QRegExp reRemoveId("^\\d+:");
     foreach (const FilePair &pair, files)
     {
         cleanPath = QString(pair.second).remove(reRemoveId);
