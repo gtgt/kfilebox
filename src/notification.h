@@ -2,7 +2,6 @@
 #define NOTIFICATION_H
 
 #include <QDBusMessage>
-//#include <QDBusPendingReply>
 #include <QDBusConnection>
 #include <QObject>
 #include <QString>
@@ -18,7 +17,7 @@ class Notification : public QObject
     bool ShowNotifications;
 public:
     explicit Notification(QObject *parent = 0);
-	~Notification() {}
+    ~Notification() {}
     void send(const QString &message) const;
 
 signals:

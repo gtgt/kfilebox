@@ -9,10 +9,10 @@ Notification::Notification(QObject *parent) :
 
 void Notification::send(const QString &message) const
 {
-	if(!ShowNotifications) {
-		qDebug() << "Notification: " << message;
-		return;
-	}
+    if(!ShowNotifications) {
+        qDebug() << "Notification: " << message;
+        return;
+    }
 
     static const QString service = "org.freedesktop.Notifications",
             path = "/org/freedesktop/Notifications",
@@ -29,7 +29,7 @@ void Notification::send(const QString &message) const
             << QVariant(QVariantMap())
             << QVariant((int)0);
 
-	QDBusMessage msg = QDBusMessage::createMethodCall(service, path, interface, method);
-	msg.setArguments(arguments);
-	QDBusConnection::sessionBus().call(msg);
+    QDBusMessage msg = QDBusMessage::createMethodCall(service, path, interface, method);
+    msg.setArguments(arguments);
+    QDBusConnection::sessionBus().call(msg);
 }

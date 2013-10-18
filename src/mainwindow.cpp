@@ -9,7 +9,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     move(QApplication::desktop()->screenGeometry().center() - rect().center());
 
-    if(!DropboxClient::isInstalled()) {
+    if (!DropboxClient::isInstalled()) {
         InstallerForm di(this);
         di.exec();
     }
@@ -104,9 +104,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-//	db = 0;
     delete ui;
-	delete iconsetList;
+    delete iconsetList;
 }
 
 void MainWindow::show()
@@ -258,13 +257,13 @@ void MainWindow::loadSettings()
     trayIcon->setToolTipTitle("Kfilebox");
     trayIcon->setAssociatedWidget(trayIconMenu);
 
-	ui->dropboxFolder->setText(conf.getValue("SyncDir").toString());
+    ui->dropboxFolder->setText(conf.getValue("SyncDir").toString());
     ui->fileManager->setCurrentIndex(ui->fileManager->findText(conf.getValue("FileManager").toString()));
     ui->browser->setText(conf.getValue("Browser").toString());
     ui->showNotifications->setChecked(conf.getValue("ShowNotifications").toBool());
     ui->startDaemon->setChecked(conf.getValue("StartDaemon").toBool());
 
-	ui->displayAccount->setText("");
+    ui->displayAccount->setText("");
     ui->useP2P->setChecked(conf.getValue("P2PEnabled").toBool());
     dc->setP2PEnabled(ui->useP2P->isChecked());
     ui->hideGtkUI->setChecked(conf.getValue("GtkUiDisabled").toBool());
@@ -272,32 +271,32 @@ void MainWindow::loadSettings()
     //! @todo doesn't work with newer dropbox daemon
     // Network
     // (0: false, 1: auto, 2: true)
-	/*int _swap = db->getValue("throttle_download_style", 0).toInt();
+    /*int _swap = db->getValue("throttle_download_style", 0).toInt();
     ui->downloadDontLimitRate->setChecked(_swap == 0);
     ui->downloadLimitRate->setChecked(_swap == 2);
-	ui->downloadLimitValue->setValue(db->getValue("throttle_download_speed", 50).toInt());
+    ui->downloadLimitValue->setValue(db->getValue("throttle_download_speed", 50).toInt());
     ui->downloadLimitValue->setEnabled(ui->downloadLimitRate->isChecked());
 
-	_swap = db->getValue("throttle_upload_style", 1).toInt();
+    _swap = db->getValue("throttle_upload_style", 1).toInt();
     ui->uploadDontLimitRate->setChecked(_swap == 0);
     ui->uploadAutoLimitRate->setChecked(_swap == 1);
     ui->uploadLimitRate->setChecked(_swap == 2);
-	ui->uploadLimitValue->setValue(db->getValue("throttle_upload_speed", 10).toInt());
+    ui->uploadLimitValue->setValue(db->getValue("throttle_upload_speed", 10).toInt());
     ui->uploadLimitValue->setEnabled(ui->uploadLimitRate->isChecked());
 
-	_swap = db->getValue("proxy_mode").toInt();
+    _swap = db->getValue("proxy_mode").toInt();
     ui->proxyDontUse->setChecked(_swap == 0);
     ui->proxyAutoDetect->setChecked(_swap == 1);
     ui->proxySetManually->setChecked(_swap == 2);
-	ui->proxyType->setCurrentIndex(ui->proxyType->findText(db->getValue("proxy_type").toString()));
+    ui->proxyType->setCurrentIndex(ui->proxyType->findText(db->getValue("proxy_type").toString()));
     ui->proxyType->setEnabled(ui->proxySetManually->isChecked());
-	ui->proxyServer->setText(db->getValue("proxy_server").toString());
+    ui->proxyServer->setText(db->getValue("proxy_server").toString());
     ui->proxyServer->setEnabled(ui->proxySetManually->isChecked());
-	ui->proxyPort->setValue(db->getValue("proxy_port").toInt());
+    ui->proxyPort->setValue(db->getValue("proxy_port").toInt());
     ui->proxyPort->setEnabled(ui->proxySetManually->isChecked());
     ui->proxyRequiresAuth->setEnabled(ui->proxySetManually->isChecked());
-	ui->proxyRequiresAuth->setChecked(db->getValue("proxy_requires_auth").toBool());
-	ui->proxyUsername->setText(db->getValue("proxy_username").toString());
+    ui->proxyRequiresAuth->setChecked(db->getValue("proxy_requires_auth").toBool());
+    ui->proxyUsername->setText(db->getValue("proxy_username").toString());
     ui->proxyUsername->setEnabled(ui->proxyRequiresAuth->isChecked());
     ui->proxyPassword->setEnabled(ui->proxyRequiresAuth->isChecked());*/
 }
