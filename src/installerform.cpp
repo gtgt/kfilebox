@@ -113,7 +113,7 @@ void InstallerForm::runGtkInstaller()
 void InstallerForm::downloadFinished()
 {
     file.close();
-    QVariant possible_redirect=reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
+    const QVariant possible_redirect = reply->attribute(QNetworkRequest::RedirectionTargetAttribute);
     if (!possible_redirect.toString().isEmpty() && possible_redirect.toString()!=daemonUrl) {
         daemonUrl = possible_redirect.toUrl().toString();
         downloadDaemon();
@@ -128,6 +128,6 @@ void InstallerForm::downloadReadyRead()
     file.write(reply->readAll());
 }
 
-void InstallerForm::displayError(QNetworkReply::NetworkError err){
+void InstallerForm::displayError(QNetworkReply::NetworkError err) const {
     qDebug() << err << tr("Error downloading file");
 }

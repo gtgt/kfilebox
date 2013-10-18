@@ -50,8 +50,7 @@ public slots:
     void setProgressValue(qint64, qint64);
     void downloadFinished();
     void downloadReadyRead();
-    void displayError(QNetworkReply::NetworkError);
-
+    void displayError(QNetworkReply::NetworkError) const;
 };
 
 #endif // INSTALLERFORM_H

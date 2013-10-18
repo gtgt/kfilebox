@@ -10,7 +10,7 @@ DropboxClient::DropboxClient(QObject *parent) :
     dc = new SynchronousDropboxConnection(this);
     dropbox_db = Singleton::instance();
 
-    Configuration conf;
+    const Configuration conf;
     m_distDir.setPath(conf.getValue("DistDir").toString());
     m_configDir.setPath(conf.getValue("ConfigDir").toString());
 
@@ -105,13 +105,14 @@ void DropboxClient::readDaemonOutput()
 {
     QString swap = m_ps->readAllStandardOutput();
     if (swap.contains("https://www.dropbox.com/cli_link?host_id=")) {
-        QString prevAuthUrl = m_authUrl;
+        const QString prevAuthUrl = m_authUrl;
         m_authUrl = swap.remove("Please visit ").remove(" to link this machine.").remove("This client is not linked to any account...").trimmed();
-        if(m_showAuthUrlNotification && (prevAuthUrl.isEmpty() || prevAuthUrl!=m_authUrl)) Notification().send(tr("Please visit <a href=\"%1\">url</a> to link this machine.").arg(m_authUrl));
+        if (m_showAuthUrlNotification && (prevAuthUrl.isEmpty() || prevAuthUrl != m_authUrl))
+            Notification().send(tr("Please visit <a href=\"%1\">url</a> to link this machine.").arg(m_authUrl));
     }
 }
 
-bool DropboxClient::isRunning()
+bool DropboxClient::isRunning() const
 {
     QFile pid_file(m_configDir.filePath("dropbox.pid"));
     if (!pid_file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -127,7 +128,7 @@ bool DropboxClient::isRunning()
         return false;
 
     QTextStream stat_in(&stat_file);
-    QString stat = stat_in.readAll();
+    const QString stat = stat_in.readAll();
     stat_file.close();
 
     return stat.contains("(dropbox)");
@@ -140,7 +141,8 @@ bool DropboxClient::isInstalled()
 
 void DropboxClient::hideGtkUi(bool hide)
 {
-    const QString src = m_distDir.filePath("wx._controls_.so"), dst = m_distDir.filePath("wx._controls_orig.so");
+    const QString src = m_distDir.filePath("wx._controls_.so"),
+            dst = m_distDir.filePath("wx._controls_orig.so");
 
     if (hide && QFileInfo(src).exists()) {
         if (QFileInfo(dst).exists())
@@ -162,13 +164,13 @@ void DropboxClient::setP2PEnabled(bool enabled)
     sendCommand(QString("set_lan_sync\nlansync\t%1").arg(enabled ? "enabled" : "disabled"));
 }
 
-QString DropboxClient::getVersion()
+QString DropboxClient::getVersion() const
 {
     QFile file(m_distDir.filePath("VERSION"));
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return QString();
 
-    QString contents = "";
+    QString contents;
     QTextStream in(&file);
     in >> contents;
     file.close();
@@ -182,12 +184,9 @@ QString DropboxClient::getVersion()
   */
 QStringList DropboxClient::getSharedFolders()
 {
-    //reply: (shared, dropbox, public, photos, "")
-    QString reply;
-    QStringList shared_folders;
-    QStringList entries;
-    QStringList sub_entries;
-    QString dir;
+    // reply: (shared, dropbox, public, photos, "")
+    QString reply, dir;
+    QStringList shared_folders, entries, sub_entries;
 
     sub_entries.append(Configuration().getValue("SyncDir").toString());
     while(!sub_entries.isEmpty()){
@@ -210,7 +209,7 @@ QStringList DropboxClient::getSharedFolders()
     return shared_folders;
 }
 
-void DropboxClient::buildFileTree(const QDir &root, QStringList &tree)
+void DropboxClient::buildFileTree(const QDir &root, QStringList &tree) const
 {
     foreach (const QString &file, root.entryList(QDir::Files))
     {
@@ -230,7 +229,7 @@ void DropboxClient::updateRecentlyChangedFiles() {
     m_recentlyChangedBlob = blob;
 
     bool ok;
-    QVariant result = jsonParser.parse(blob, &ok);
+    const QVariant result = jsonParser.parse(blob, &ok);
     if (!ok) return;
 
     typedef QPair<double, QString> FilePair;
@@ -264,19 +263,17 @@ void DropboxClient::updateRecentlyChangedFiles() {
     }
 
     if (!m_recentlyChanged.isEmpty()) {
-        Notification notify;
+        const Notification notify;
         QFileInfo fileInfo;
         QString reply;
         foreach (const QString &file, newRecentlyChanged) {
             if (!m_recentlyChanged.contains(file)) {
                 fileInfo.setFile(file);
-//                if (fileInfo.exists()) {
-                    reply = getFolderTag(fileInfo.path());
-                    if (!reply.isEmpty() && reply != "dropbox") {
-                        notify.send(tr("File updated: <a href=\"file://%1\">%1</a>").arg(file));
-                        emit newFileAdded(file);
-                    }
-//                }
+                reply = getFolderTag(fileInfo.path());
+                if (!reply.isEmpty() && reply != "dropbox") {
+                    notify.send(tr("File updated: <a href=\"file://%1\">%1</a>").arg(file));
+                    emit newFileAdded(file);
+                }
             }
         }
     }

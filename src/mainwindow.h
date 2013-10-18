@@ -79,12 +79,12 @@ public slots:
 
     void updateStatus(DropboxStatus newStatus, const QString &message);
 
-    void openFileBrowser(const QString &path="");
-    void openHelpCenterURL();
-    void openTourURL();
-    void openForumsURL();
-    void openDropboxWebsiteURL();
-    void openGetMoreSpaceURL();
+    void openFileBrowser(const QString &path="") const;
+    void openHelpCenterURL() const;
+    void openTourURL() const;
+    void openForumsURL() const;
+    void openDropboxWebsiteURL() const;
+    void openGetMoreSpaceURL() const;
     void prepareLastChangedFiles();
 };
 

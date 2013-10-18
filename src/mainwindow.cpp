@@ -134,7 +134,7 @@ void MainWindow::initializeDBus()
 
 void MainWindow::changeDropboxFolder()
 {
-    QString dir = QFileDialog::getExistingDirectory(this, tr("Dropbox folder"), ui->dropboxFolder->text(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    const QString dir = QFileDialog::getExistingDirectory(this, tr("Dropbox folder"), ui->dropboxFolder->text(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 
     if (!dir.isEmpty() && ui->dropboxFolder->text() != dir)
         ui->dropboxFolder->setText(dir);
@@ -173,7 +173,7 @@ void MainWindow::proxyAuthRadioToggle()
 
 void MainWindow::dialogButtonBoxTriggered(QAbstractButton* button)
 {
-    QDialogButtonBox::StandardButton m_type = ui->dialogButtonBox->standardButton(button);
+    const QDialogButtonBox::StandardButton m_type = ui->dialogButtonBox->standardButton(button);
     if (m_type == QDialogButtonBox::Ok) {
         applySettings();
         hide();
@@ -243,11 +243,11 @@ void MainWindow::applySettings()
 
 void MainWindow::loadSettings()
 {
-    Configuration conf;
+    const Configuration conf;
 
-    QString iconset=conf.getValue("IconSet").toString();
+    QString iconset = conf.getValue("IconSet").toString();
     if (iconset.isEmpty())
-        iconset="default";
+        iconset = "default";
 
     ui->cbIconSet->setCurrentIndex(iconsetList->indexOf(iconset));
 
@@ -328,40 +328,41 @@ void MainWindow::loadIcons(const QString &iconset)
 }
 
 //! if path is file - open parent folder for it; if is empty - open Dropbox location
-void MainWindow::openFileBrowser(const QString &path)
+void MainWindow::openFileBrowser(const QString &path) const
 {
     QString dirName = path;
-    if(path.isEmpty())
+    if (path.isEmpty())
         dirName = ui->dropboxFolder->text();
 
-    QFileInfo fileInfo(dirName);
-    if(fileInfo.isFile())
+    const QFileInfo fileInfo(dirName);
+    if (fileInfo.isFile())
         dirName = fileInfo.path();
 
     QDesktopServices::openUrl(QUrl(dirName));
 }
 
 //! @todo create layer: to use system wide or predeffined
-void MainWindow::openHelpCenterURL()
+void MainWindow::openHelpCenterURL() const
 {
     QDesktopServices::openUrl(QUrl("https://www.dropbox.com/help"));
 }
 
-void MainWindow::openTourURL()
+void MainWindow::openTourURL() const
 {
     QDesktopServices::openUrl(QUrl("https://www.dropbox.com/tour"));
 }
 
-void MainWindow::openForumsURL()
+void MainWindow::openForumsURL() const
 {
     QDesktopServices::openUrl(QUrl("https://forums.dropbox.com/"));
 }
 
-void MainWindow::openDropboxWebsiteURL()
+void MainWindow::openDropboxWebsiteURL() const
 {
     QDesktopServices::openUrl(QUrl("https://www.dropbox.com/home"));
 }
-void MainWindow::openGetMoreSpaceURL()
+
+void MainWindow::openGetMoreSpaceURL() const
 {
     QDesktopServices::openUrl(QUrl("https://www.dropbox.com/plans"));
 }
@@ -410,7 +411,8 @@ void MainWindow::updateTrayIcon()
 
 void MainWindow::prepareLastChangedFiles()
 {
-    foreach (QAction *action, chFiles->actions())
+    QAction *action;
+    foreach (action, chFiles->actions())
     {
         disconnect(action, SIGNAL(triggered()), actionMapper, SLOT(map()));
         actionMapper->removeMappings(action);
@@ -418,14 +420,20 @@ void MainWindow::prepareLastChangedFiles()
     }
     chFiles->clear();
 
-    QStringList files = dc->getRecentlyChangedFiles();
+    const QStringList files = dc->getRecentlyChangedFiles();
     QFileInfo fileInfo;
+    QString name;
     for (QStringList::size_type i = files.size() - 1, j = 0; i >= 0 && j < 3; --i, ++j)
     {
-        fileInfo.setFile(files[i]);
+        fileInfo.setFile(files.at(i));
+        if (fileInfo.fileName().length() > 30) {
+            name = fileInfo.fileName().left(17) + "…" + fileInfo.fileName().right(10);
+        }
+        else {
+            name = fileInfo.fileName();
+        }
 
-        QAction *action = new QAction(fileInfo.fileName(), chFiles);
-
+        action = new QAction(name, chFiles);
         connect(action, SIGNAL(triggered()), actionMapper, SLOT(map()));
         actionMapper->setMapping(action, fileInfo.path());
         chFiles->addAction(action);

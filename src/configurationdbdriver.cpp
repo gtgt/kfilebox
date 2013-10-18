@@ -7,7 +7,7 @@ ConfigurationDBDriver::ConfigurationDBDriver(QObject *parent) :
     QObject(parent),
     dbVersion(DropboxDBUnknown)
 {
-    QString dbFilename = QDir(Configuration().getValue("ConfigDir").toString()).filePath("aggregation.dbx");
+    const QString dbFilename = QDir(Configuration().getValue("ConfigDir").toString()).filePath("aggregation.dbx");
     if (QFileInfo(dbFilename).exists())
     {
         db = new QSqlDatabase(QSqlDatabase::addDatabase("QSQLITE", "DROPBOX_CONF"));
@@ -28,14 +28,14 @@ ConfigurationDBDriver::~ConfigurationDBDriver()
     if (dbVersion != DropboxDBAggregation)
         return;
 
-    QString connectionName = db->connectionName();
+    const QString connectionName = db->connectionName();
     db->close();
     delete db;
     db = 0;
     QSqlDatabase::removeDatabase(connectionName);
 }
 
-bool ConfigurationDBDriver::hasKey(const QString& key) {
+bool ConfigurationDBDriver::hasKey(const QString& key) const {
     QSqlQuery query = justQuery(QString("SELECT COUNT(`key`) FROM `snapshot` WHERE `key`='%1'").arg(key));
     if (query.next()) {
         if (query.value(0).toInt() == 1)
@@ -44,7 +44,7 @@ bool ConfigurationDBDriver::hasKey(const QString& key) {
     return false;
 }
 
-QVariant ConfigurationDBDriver::getValue(const QString& key, QVariant defaultValue) {
+QVariant ConfigurationDBDriver::getValue(const QString& key, QVariant defaultValue) const {
     QSqlQuery query = justQuery(QString("SELECT `value` FROM `snapshot` WHERE `key`='%1' LIMIT 1").arg(key));
     if (query.next()) {
         return query.value(0);

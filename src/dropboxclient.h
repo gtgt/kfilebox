@@ -29,11 +29,11 @@ public:
     ~DropboxClient();
 
     //! This functions not strongly related to this class..
-    bool isRunning();
+    bool isRunning() const;
     void hideGtkUi(bool hide);
     void setP2PEnabled(bool enabled);
     bool static isInstalled();
-    QString getVersion();
+    QString getVersion() const;
 
     inline QString getAuthUrl() const {return m_authUrl;}
     QStringList getSharedFolders();
@@ -58,7 +58,7 @@ private:
     ConfigurationDBDriver* dropbox_db;
     QJson::Parser jsonParser;
 
-    void buildFileTree(const QDir &root, QStringList &tree);
+    void buildFileTree(const QDir &root, QStringList &tree) const;
     void updateRecentlyChangedFiles();
 
 public slots:

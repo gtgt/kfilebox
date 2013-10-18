@@ -30,19 +30,19 @@ public:
 
 	QStringList listKeys() const;
 
-	bool hasKey(const QString& key);
-	QVariant getValue(const QString& key, QVariant defaultValue=QVariant());
+    bool hasKey(const QString& key) const;
+    QVariant getValue(const QString& key, QVariant defaultValue=QVariant()) const;
 	//! disabled for safety
 	/*void setValue(const QString &key, const QVariant& value);
 	void deleteValue(const QString& key);*/
 
 private:
-	inline QSqlQuery justQuery(const QString& query)
+    inline QSqlQuery justQuery(const QString& query) const
 	{
 		if (dbVersion != DropboxDBAggregation)
 			return QSqlQuery();
 
-		QSqlQuery result = db->exec(query);
+        const QSqlQuery result = db->exec(query);
 		if (db->lastError().isValid())
 			qDebug() << db->lastError() << "\nquery:" << query;
 		return result;

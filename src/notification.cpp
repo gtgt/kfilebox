@@ -7,27 +7,27 @@ Notification::Notification(QObject *parent) :
     ShowNotifications = conf.getValue("ShowNotifications").toBool();
 }
 
-void Notification::send(const QString &message)
+void Notification::send(const QString &message) const
 {
 	if(!ShowNotifications) {
 		qDebug() << "Notification: " << message;
 		return;
 	}
 
-	QString service = "org.freedesktop.Notifications";
-	QString path = "/org/freedesktop/Notifications";
-	QString interface = "org.freedesktop.Notifications";
-	QString method = "Notify";
+    const QString service = "org.freedesktop.Notifications",
+            path = "/org/freedesktop/Notifications",
+            interface = "org.freedesktop.Notifications",
+            method = "Notify";
 
-	QList<QVariant> arguments;
-	arguments.append(QVariant(QString("Kfilebox")));
-	arguments.append(QVariant(quint32(0)));
-	arguments.append(QVariant(QString("kfilebox")));
-	arguments.append(QVariant("Kfilebox"));
-	arguments.append(QVariant(message));
-	arguments.append(QVariant(QStringList()));
-	arguments.append(QVariant(QVariantMap()));
-	arguments.append(QVariant((int)0));
+    const QVariantList arguments = QVariantList()
+            << QVariant(QString("Kfilebox"))
+            << QVariant(quint32(0))
+            << QVariant(QString("kfilebox"))
+            << QVariant("Kfilebox")
+            << QVariant(message)
+            << QVariant(QStringList())
+            << QVariant(QVariantMap())
+            << QVariant((int)0);
 
 	QDBusMessage msg = QDBusMessage::createMethodCall(service, path, interface, method);
 	msg.setArguments(arguments);
