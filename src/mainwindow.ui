@@ -162,7 +162,7 @@
         <item>
          <widget class="QLabel" name="displayVersion">
           <property name="text">
-           <string>Dropbox v1.0.20</string>
+           <string>version</string>
           </property>
          </widget>
         </item>
