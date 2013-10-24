@@ -10,6 +10,7 @@
 #include <QStringList>
 #include <QTimer>
 #include <QWaitCondition>
+#include <QElapsedTimer>
 #include <qjson/parser.h>
 
 #include "notification.h"

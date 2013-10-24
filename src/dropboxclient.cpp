@@ -42,11 +42,15 @@ void DropboxClient::stop()
         m_ps->waitForFinished();
     } else {
         // if process was self-restarted
-        //! @todo kill process using POSIX API?
         QMutex dummy;
+        QElapsedTimer timer;
         dummy.lock();
-        QWaitCondition().wait(&dummy, 5000);
+        timer.start();
+        while (isRunning() && timer.elapsed() < 30000) {
+            QWaitCondition().wait(&dummy, 500);
+        }
     }
+    //! @todo should we kill a process if it still running?
 }
 
 void DropboxClient::getDropboxStatus()
