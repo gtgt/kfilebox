@@ -1,8 +1,8 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=kfilebox
-GenericName=kfilebox
-Comment=KDE front end for Dropbox
+Name=Kfilebox
+GenericName=Kfilebox
+Comment=Dropbox KDE frontend
 Exec=/usr/bin/kfilebox
 Icon=/usr/share/kfilebox/kfilebox.png
 Terminal=false
