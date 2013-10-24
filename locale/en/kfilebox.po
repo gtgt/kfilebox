@@ -15,310 +15,249 @@ msgstr ""
 "X-Generator: Poedit 1.5.4\n"
 
 #: /home/lord_d/projects/kfilebox/src/installerform.ui:14
-msgctxt "InstallerForm|"
 msgid "Dialog"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/installerform.ui:20
-msgctxt "InstallerForm|"
 msgid "Downloading Dropbox Daemon..."
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/installerform.ui:36
-msgctxt "InstallerForm|"
 msgid "Run gtk based installer"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/installerform.ui:56
-msgctxt "InstallerForm|"
 msgid "Or simply link account"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:14
-msgctxt "MainWindow|"
 msgid "Dropbox Preferences"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:35
-msgctxt "MainWindow|"
 msgid "General"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:53
-msgctxt "MainWindow|"
 msgid "Desktop integration"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:79
-msgctxt "MainWindow|"
 msgid "Show system tray notifications"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:92
-msgctxt "MainWindow|"
 msgid "Start Dropbox on system startup"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:102
-msgctxt "MainWindow|"
 msgid "Enable LAN sync"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:112
-msgctxt "MainWindow|"
 msgid "Hide Gtk UI from tray"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:123
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:181
-msgctxt "MainWindow|"
 msgid "Account"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:129
-msgctxt "MainWindow|"
 msgid "Account information for this computer"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:158
-msgctxt "MainWindow|"
 msgid "Version"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:165
-msgctxt "MainWindow|"
 msgid "version"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:191
-msgctxt "MainWindow|"
 msgid "email"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:198
-msgctxt "MainWindow|"
 msgid "Dropbox folder location"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:217
-msgctxt "MainWindow|"
 msgid "Move..."
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:227
-msgctxt "MainWindow|"
 msgid "Network"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:249
-msgctxt "MainWindow|"
 msgid "Download"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:255
-msgctxt "MainWindow|"
 msgid "Don't limit download rate"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:270
-msgctxt "MainWindow|"
 msgid "Limit download rate to:"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:300
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:370
-msgctxt "MainWindow|"
 msgid "kB/s"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:315
-msgctxt "MainWindow|"
 msgid "Upload"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:321
-msgctxt "MainWindow|"
 msgid "Don't limit upload rate"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:328
-msgctxt "MainWindow|"
 msgid "Limit upload rate automatically"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:340
-msgctxt "MainWindow|"
 msgid "Limit upload rate to:"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:383
-msgctxt "MainWindow|"
 msgid "Proxy"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:405
-msgctxt "MainWindow|"
 msgid "Without proxy"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:418
-msgctxt "MainWindow|"
 msgid "Auto detected"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:428
-msgctxt "MainWindow|"
 msgid "Manually"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:445
-msgctxt "MainWindow|"
 msgid "HTTP"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:450
-msgctxt "MainWindow|"
 msgid "Socks4"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:455
-msgctxt "MainWindow|"
 msgid "Socks5"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:490
-msgctxt "MainWindow|"
 msgid "required password"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:512
-msgctxt "MainWindow|"
 msgid "Misc"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:518
-msgctxt "MainWindow|"
 msgid "File Manager"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:535
-msgctxt "MainWindow|"
 msgid "dolphin"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:540
-msgctxt "MainWindow|"
 msgid "konqueror"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:548
-msgctxt "MainWindow|"
 msgid "Browser"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:565
-msgctxt "MainWindow|"
 msgid "Iconset"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:575
-msgctxt "MainWindow|"
 msgid "default"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:580
-msgctxt "MainWindow|"
 msgid "monochrome"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.ui:585
-msgctxt "MainWindow|"
 msgid "white"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/dropboxclient.cpp:115
 #, qt-format
-msgctxt "DropboxClient|"
 msgid "Please visit <a href=\"%1\">url</a> to link this machine."
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/dropboxclient.cpp:278
 #, qt-format
-msgctxt "DropboxClient|"
 msgid "File updated: <a href=\"file://%1\">%1</a>"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/installerform.cpp:73
-msgctxt "InstallerForm|"
 msgid "unpacking downloaded file"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/installerform.cpp:93
-msgctxt "InstallerForm|"
 msgid "Choose action"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/installerform.cpp:132
-msgctxt "InstallerForm|"
 msgid "Error downloading file"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:24
-msgctxt "MainWindow|"
 msgid "Launch Dropbox Website"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:27
-msgctxt "MainWindow|"
 msgid "Get More Space"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:28
-msgctxt "MainWindow|"
 msgid "Preferences"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:29
-msgctxt "MainWindow|"
 msgid "Start Dropbox"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:30
-msgctxt "MainWindow|"
 msgid "Stop Dropbox"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:31
-msgctxt "MainWindow|"
 msgid "Open Dropbox Folder"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:32
-msgctxt "MainWindow|"
 msgid "Recently changed files"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:34
-msgctxt "MainWindow|"
 msgid "Help"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:35
-msgctxt "MainWindow|"
 msgid "Help Center"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:36
-msgctxt "MainWindow|"
 msgid "Tour"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:37
-msgctxt "MainWindow|"
 msgid "Forums"
 msgstr ""
 
 #: /home/lord_d/projects/kfilebox/src/mainwindow.cpp:136
-msgctxt "MainWindow|"
 msgid "Dropbox folder"
 msgstr ""
