@@ -274,7 +274,7 @@ void DropboxClient::updateRecentlyChangedFiles() {
             if (!m_recentlyChanged.contains(file)) {
                 fileInfo.setFile(file);
                 reply = getFolderTag(fileInfo.path());
-                if (!reply.isEmpty() && reply != "dropbox") {
+                if (reply == "shared") {
                     notify.send(tr("File updated: <a href=\"file://%1\">%1</a>").arg(file));
                     emit newFileAdded(file);
                 }
