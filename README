@@ -2,6 +2,7 @@ about:
 Kfilebox is a KDE dropbox frontend. Previously known as kdropbox. Writen on C++ uses Qt/KDE.
 Originally writen by Guillermo Amat. Now supported by nib952051(mailto:nib952051@gmail.com).
 Debian mainteiner Andriy Senkovych(mailto:jolly_roger@itblog.org.ua).
+0.4.10+ fixes: Thomas Gere (mailto:gt[-a-t-]kani[-d-o-t-]hu)
 
 features list:
 configure dropbox download/upload speed, most of proxy settings
