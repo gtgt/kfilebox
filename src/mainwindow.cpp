@@ -399,11 +399,11 @@ void MainWindow::updateTrayIcon()
         trayIcon->setIconByPixmap(bussyIcon);
         break;
     case DropboxError:
+    case DropboxUnknown:
+    case DropboxDisconnected:
         trayIcon->setIconByPixmap(errorIcon);
         break;
-    case DropboxUnknown:
     case DropboxStopped:
-    case DropboxDisconnected:
     default:
         trayIcon->setIconByPixmap(defaultIcon);
     }

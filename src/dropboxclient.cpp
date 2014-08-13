@@ -62,16 +62,16 @@ void DropboxClient::getDropboxStatus()
         message = "Dropbox daemon isn't running";
         status = DropboxStopped;
     }
-    else if (message == "Idle") {
+    else if (message == "Idle" || message.contains("Up to date")) {
         status = DropboxIdle;
     }
     else if (message.contains("dopped")) {
         status = DropboxError;
     }
-    else if (message.contains("Initializing") || message.contains("Starting") || message.contains("isn't") || message.contains("Syncing paused") || message.contains("Connecting") || message.contains("Waiting to be linked") || message.contains("couldn't")) {
+    else if (message.contains("isn't") || message.contains("Syncing paused") || message.contains("Connecting") || message.contains("Waiting to be linked") || message.contains("couldn't")) {
         status = DropboxDisconnected;
     }
-    else if (message.contains("Indexing")) {
+    else if (message.contains("Indexing") || message.contains("Initializing") || message.contains("Starting")) {
         status = DropboxIndexing;
     }
     else if (message.contains("Saving")) {
@@ -140,7 +140,7 @@ bool DropboxClient::isRunning() const
 
 bool DropboxClient::isInstalled()
 {
-    return QFileInfo(QDir(Configuration().getValue("DistDir").toString()), "dropbox").exists();
+    return QFileInfo(QDir(Configuration().getValue("DistDir").toString()), "dropboxd").exists();
 }
 
 void DropboxClient::hideGtkUi(bool hide)
