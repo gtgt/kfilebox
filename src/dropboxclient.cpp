@@ -228,23 +228,29 @@ void DropboxClient::buildFileTree(const QDir &root, QStringList &tree) const
 }
 
 void DropboxClient::updateRecentlyChangedFiles() {
-    const QByteArray blob = dropbox_db->getValue("recent").toByteArray();
+    /*
+     * NOTE: getValue("recent") returns nothing due to internal Dropbox changes.
+     */
+
+    /*const QByteArray blob = dropbox_db->getValue("recent").toByteArray();
     if (blob == m_recentlyChangedBlob) return;
     m_recentlyChangedBlob = blob;
 
     bool ok;
     const QVariant result = jsonParser.parse(blob, &ok);
-    if (!ok) return;
+    if (!ok) return;*/
+
+	//jsonObject = dropbox_db->getValue("recent").toJsonObject();
 
     typedef QPair<double, QString> FilePair;
     QList<FilePair> files;
-    foreach (const QVariant &e, result.toList())
+    /*foreach (const QVariant &e, result.toList())
     {
         const QVariantMap file = e.toMap();
         if (file.contains("timestamp") && file.contains("server_path")) {
             files.append(qMakePair(file["timestamp"].toDouble(), file["server_path"].toString()));
         }
-    }
+    }*/
     if (files.isEmpty()) return;
     qSort(files);
 
