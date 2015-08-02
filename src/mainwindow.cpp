@@ -1,3 +1,5 @@
+#include <KLocalizedString>
+
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -19,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent) :
         dc->start();
 
     //! []
-    trayIconMenu = new KMenu("tray menu", this);
+    trayIconMenu = new QMenu(this);
 
     openDropboxWebsite = new QAction(tr("Launch Dropbox Website"), trayIconMenu);
     statusAction = new QAction("connecting", trayIconMenu);
