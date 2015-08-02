@@ -1,0 +1,190 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:39+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "Archivo descomprimido"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Preferencias Dropbox"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Información de la cuenta para este ordenador"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Desvincular este ordenador..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Ruta al directorio Dropbox"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Mover..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Integración con el escritorio"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Ver notificaciones de sistema"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Iniciar Dropbox con el sistema"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "General"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "Navegador de archivos"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Navegador web"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Varios"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "Ok"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Aplicar"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Directorio Dropbox"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+"No se encuenrtra el servidor. Por favor comprueba la instalación del demonio "
+"Dropbox."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"La conexión fue rechazada. Asegurate de que el demonio Dropbox está en "
+"ejecución y verifica que la configuración es correcta."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "Ha ocurrido el siguiente error: %1."
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Directorio Dropbox"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "No fue posible iniciar el demonio Dropbox"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Abrir el directorio Dropbox"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Centro de ayuda"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr "Ir a mi sitio web en Dropbox"
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr "Obtener más espacio"
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Tour"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Foros"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Preferencias..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Iniciar Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Detener Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Ayuda"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Archivos modificados recientemente"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "Error descargando el archivo"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "Instalador del demonio Dropbox"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "Descargando el demonio Dropbox..."
+
+#~ msgid "&Exit"
+#~ msgstr "&Salir"
+
+#~ msgid "Dropbox.py location"
+#~ msgstr "Ruta de dropbox.py"
+
+#~ msgid "Files (*.py)"
+#~ msgstr "Archivos (*.py)"
+
+#~ msgid "..."
+#~ msgstr "..."
+
+#~ msgid "Systray"
+#~ msgstr "Systray"
+
+#~ msgid "I couldn't detect any system tray on this system."
+#~ msgstr "No puedo detectar ningún system tray en este sistema."

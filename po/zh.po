@@ -1,0 +1,186 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:22+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "文件提取完毕"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Dropbox 配置"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "本机账号信息"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "取消本机链接..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Dropbox 文件夹位置"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "移动..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "桌面集成"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "显示系统托盘提示"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "开机时启动 Dropbox"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "常规"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "文件管理器"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "浏览器"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "杂项"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "确定"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "应用"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "取消"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Dropbox 文件夹"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr "无法找到主机，请检查 Dropbox 守护进程。"
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr "连接被对方拒绝，请确认已运行 Dropbox 守护进程，并且检查设置是否正确。"
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "发生以下错误： %1。"
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Dropbox 文件夹"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "无法启动 Dropbox 守护进程"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "打开 Dropbox 文件夹"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "帮助中心"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "浏览"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "论坛"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "配置..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "启动 Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "停止 Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "帮助"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "最近修改文件"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "下载文件时出错"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "守护进程安装器"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "正在下载 Dropbox 守护进程..."
+
+#~ msgid "Dropbox.py location"
+#~ msgstr "Dropbox.py 位置"
+
+#~ msgid "..."
+#~ msgstr "..."
+
+#~ msgid "&Exit"
+#~ msgstr "退出(&E)"
+
+#~ msgid "Files (*.py)"
+#~ msgstr "文件 (*.py)"
+
+#~ msgid "Systray"
+#~ msgstr "托盘"
+
+#~ msgid "I couldn't detect any system tray on this system."
+#~ msgstr "在这个系统无法找到托盘区。"

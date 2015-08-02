@@ -1,0 +1,186 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:22+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr ""
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Dropbox Tercihleri"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Bu bilgisayar için hesap bilgileri"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Bu bilgisayarın bağlantısını ayır..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Dropbox dizininin konumu"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Taşı..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Masaüstü bütünleşmesi"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Sistem çekmecesi bilgilendirmelerini göster"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Dropbox'u sistem açılışında başlat"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "Genel"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "Dosya Yöneticisi"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Tarayıcı"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Çeşitli"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "Tamam"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Uygula"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "İptal"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Dropbox dizini"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr ""
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Dropbox dizini"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr ""
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Dropbox Dizinini Aç"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Yardım Merkezi"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Tur"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Forum"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Tercihler..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Dropbox'u Başlat"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Dropbox'u Durdur"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Yardım"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Değişiklik yapılan son dosyalar"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr ""
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr ""
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr ""
+
+#~ msgid "&Exit"
+#~ msgstr "&Çıkış"
+
+#~ msgid "Dropbox.py location"
+#~ msgstr "Dropbox.py'nin konumu"
+
+#~ msgid "Files (*.py)"
+#~ msgstr "Dosyalar (*.py)"
+
+#~ msgid "..."
+#~ msgstr "..."
+
+#~ msgid "Systray"
+#~ msgstr "Sistem Çekmecesi"
+
+#~ msgid "I couldn't detect any system tray on this system."
+#~ msgstr "Bu sistemde hiçbir sistem çemecesi tespit edemedim."
