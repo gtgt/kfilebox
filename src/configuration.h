@@ -5,9 +5,8 @@
 #include <QDir>
 #include <QObject>
 #include <QVariant>
-
-#include <kconfig.h>
-#include <kconfiggroup.h>
+#include <KConfig>
+#include <KConfigGroup>
 
 class Configuration : public QObject
 {

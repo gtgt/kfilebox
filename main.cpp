@@ -1,46 +1,67 @@
-#include <QObject>
-
-#include "kuniqueapplication.h"
-/* for debugging...
-#include "kapplication.h"
-*/
-
-#include "kaboutdata.h"
-#include "kcmdlineargs.h"
-//#include "klocale.h"
-//! @todo should I replace all tr() calls to ki18n()?
+#include <QApplication>
+#include <KAboutData>
+#include <KLocalizedString>
 
 #include "src/mainwindow.h"
 
-
 int main(int argc, char** argv)
 {
-    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+    //QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
-    KAboutData aboutData("kfilebox",
-                         0,
-                         ki18n("kfilebox"),
-                         "0.4.10",
-                         ki18n("KDE Dropbox frontend"),
-                         KAboutData::License_GPL_V3,
-                         ki18n("(c) 2011"),
-                         ki18n("Kfilebox is a KDE frontend to Dropbox"),
-                         "http://sourceforge.net/projects/kdropbox/",
-                         "nib952051@gmail.com - fixes by GT (https://github.com/gtgt)");
+    /*
+     * Create the application
+     */
+    QApplication app(argc, argv);
 
+    /*
+     * Connect application with translation catalogs
+     */
+    KLocalizedString::setApplicationDomain("kfilebox");
+
+    /*
+     * Construct about data for kfilebox
+     */
+    KAboutData aboutData(QStringLiteral("kfilebox"),
+                         i18n("Kfilebox"),
+                         QStringLiteral("0.4.95"),
+                         i18n("KDE Dropbox frontend"),
+                         KAboutLicense::GPL_V3,
+                         i18n("Copyright (C) 2011-2015"),
+                         QString(),
+                         QStringLiteral("https://github.com/gtgt/kfilebox"));
+                         //"nib952051@gmail.com - fixes by GT (https://github.com/gtgt)");
+
+    //aboutData.setOrganizationDomain("kde.org");
     aboutData.setBugAddress("https://github.com/gtgt/kfilebox/issues");
-    KCmdLineArgs::init( argc, argv, &aboutData );
-    KUniqueApplication a;
-    KUniqueApplication::setQuitOnLastWindowClosed(false);
+    aboutData.addAuthor(i18n("Guillermo Amat"), QString(), QString(), QString(), QString());
 
-    /* for debugging...
-     KApplication a;
-     KApplication::setQuitOnLastWindowClosed(false);
-    */
+    /*
+     * Register about data
+     */
+    KAboutData::setApplicationData(aboutData);
 
+    /*
+     * Set app settings from KAboutData
+     */
+    app.setApplicationName(aboutData.componentName());
+    app.setApplicationDisplayName(aboutData.displayName());
+    app.setOrganizationDomain(aboutData.organizationDomain());
+    app.setApplicationVersion(aboutData.version());
+    app.setQuitOnLastWindowClosed(false);
+
+    /*
+     * Create command line parser and handle standard options
+     */
+    QCommandLineParser parser;
+    aboutData.setupCommandLine(&parser);
+    parser.setApplicationDescription(aboutData.shortDescription());
+    parser.addHelpOption();
+    parser.addVersionOption();
+    parser.process(app);
+    aboutData.processCommandLine(&parser);
 
     MainWindow w;
     Q_UNUSED(w);
 
-    return a.exec();
+    return app.exec();
 }

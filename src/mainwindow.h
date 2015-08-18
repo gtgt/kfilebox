@@ -8,9 +8,9 @@
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QSignalMapper>
+#include <QMenu>
 
 #include <kstatusnotifieritem.h>
-#include <kmenu.h>
 
 #include "dropboxclient.h"
 #include "dropboxclientadaptor.h"
@@ -60,7 +60,7 @@ private:
     QAction *startAction;
     QAction *stopAction;
     QAction *openDir;
-    KMenu *trayIconMenu;
+    QMenu *trayIconMenu;
     QMenu *chFiles;
     QMenu *helpMenu;
 

@@ -11,7 +11,8 @@
 #include <QTimer>
 #include <QWaitCondition>
 #include <QElapsedTimer>
-#include <qjson/parser.h>
+#include <QJsonObject>
+//#include <qjson/parser.h>
 
 #include "notification.h"
 #include "configuration.h"
@@ -57,7 +58,7 @@ private:
 
     SynchronousDropboxConnection* dc;
     ConfigurationDBDriver* dropbox_db;
-    QJson::Parser jsonParser;
+    QJsonObject jsonObject;
 
     void buildFileTree(const QDir &root, QStringList &tree) const;
     void updateRecentlyChangedFiles();

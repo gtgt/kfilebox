@@ -1,0 +1,177 @@
+# Kees Huiberts <itissohardtothinkofagoodemail@gmail.com>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:22+0200\n"
+"PO-Revision-Date: 2010-07-14 19:14+0200\n"
+"Last-Translator: Kees Huiberts <itissohardtothinkofagoodemail@gmail.com>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.1\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "Bestand uitgepakt"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "Dropbox instellingen"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "Account details voor deze computer"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "Verbinding verbreken"
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "Dropbox map locatie"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "Verplaatsen"
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "Desktop integratie"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "Systeem notificaties tonen"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "Dropbox starten met computer"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "Algemeen"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "Bestandsbeheer"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "Browser"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "Overige"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "Oke"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "Toepassen"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "Stoppen"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "Dropbox map"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+"De server is niet gevonden. Controlleer alstublieft de Dropbox daemon "
+"installatie."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"De verbinding is geweigerd bij de Peer. Controlleer of de Dropbox daemon "
+"loopt, en controlleer de instellingen."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "De volgende fout is opgetreden: %1."
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "Dropbox map"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "Kan de Dropbox daemon niet starten"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "Open Dropbox map"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "Help Centrum"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "Rondleiding"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "Fora"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "Instellingen"
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "Start Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "Stop Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "Hulp"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "Recent veranderde bestanden"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "Fout bij downloaden bestand"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "Daemon installeren"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "Downloaden van Dropbox Daemon..."
+
+#~ msgid "&Exit"
+#~ msgstr "Sluiten"

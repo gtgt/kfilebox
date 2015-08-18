@@ -1,35 +1,68 @@
-PROJECT(kfilebox)
-FIND_PACKAGE(KDE4 REQUIRED)
-include_directories( ${QT_INCLUDES} ${KDE4_INCLUDES})
+cmake_minimum_required(VERSION 2.8.12)
 
-SET(QT_USE_QTNETWORK TRUE)
-SET(QT_USE_QTSQL TRUE)
-SET(QT_USE_QTDBUS TRUE)
+project(kfilebox)
 
-SET(kfilebox_cpp main.cpp src/configuration.cpp src/dropboxclientadaptor.cpp src/installerform.cpp src/notification.cpp src/configurationdbdriver.cpp src/dropboxclient.cpp src/mainwindow.cpp)
-SET(kfilebox_h src/configurationdbdriver.h src/dropboxclientadaptor.h src/installerform.h src/notification.h src/configuration.h src/dropboxclient.h src/mainwindow.h)
-SET(kfilebox_ui src/mainwindow.ui src/installerform.ui)
-SET(kfilebox_qrc DropboxIcons.qrc)
+# Require extra-cmake-modules
+find_package(ECM REQUIRED NO_MODULE)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
-INCLUDE(${QT_USE_FILE})
+# Automatically handle the usual Qt5 tasks
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+set(CMAKE_AUTORCC ON)
 
-OPTION(ENABLE_DBUS "Add dbus communication layer" ON)
+# Helper modules provided by extra-cmake-modules
+include(ECMInstallIcons)
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDECompilerSettings)
 
-#CONFIGURE_FILE(config.h.in config.h)
+find_package(Qt5 REQUIRED COMPONENTS
+    Core
+    Widgets
+    Network
+    DBus
+    Sql
+)
 
-QT4_WRAP_CPP(kfilebox_moc_cpp ${kfilebox_h})
-QT4_WRAP_UI(kfilebox_ui_h ${kfilebox_ui})
-QT4_ADD_RESOURCES(kfilebox_resources_rcc ${kfilebox_qrc})
+find_package(KF5 REQUIRED COMPONENTS
+    Config
+    CoreAddons
+    I18n
+    Notifications
+)
 
-ADD_SUBDIRECTORY(locale)
+set(kfilebox_sources
+    main.cpp
+    DropboxIcons.qrc
+    src/configuration.cpp
+    src/configurationdbdriver.cpp
+    src/dropboxclientadaptor.cpp
+    src/installerform.cpp
+    src/notification.cpp
+    src/dropboxclient.cpp
+    src/mainwindow.cpp
+)
 
-ADD_EXECUTABLE(kfilebox ${kfilebox_cpp} ${kfilebox_moc_cpp} ${kfilebox_ui_h} ${kfilebox_resources_rcc})
+option(ENABLE_DBUS "Add dbus communication layer" ON)
 
-INCLUDE_DIRECTORIES(${CMAKE_CURRENT_BINARY_DIR})
+add_subdirectory(po)
+add_subdirectory(icons)
 
-TARGET_LINK_LIBRARIES(kfilebox ${QT_LIBRARIES} ${KDE4_KDEUI_LIBS} ${KDE4_KDECORE_LIBS} )
+add_executable(kfilebox ${kfilebox_sources})
 
-INSTALL(TARGETS kfilebox DESTINATION bin)
+target_link_libraries(kfilebox 
+    Qt5::Widgets
+    Qt5::Network
+    Qt5::DBus
+    Qt5::Sql
+    KF5::ConfigCore
+    KF5::ConfigGui
+    KF5::CoreAddons
+    KF5::I18n
+    KF5::Notifications)
 
-# install icons and some stuff
-#translations
+install(TARGETS kfilebox ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(PROGRAMS kfilebox.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES kfilebox.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFY5RCDIR})

@@ -1,0 +1,177 @@
+# Fahad Alduraibi, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: KFilebox 0.4.1\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-09-23 18:22+0200\n"
+"PO-Revision-Date: 2010-09-16 10:29-0400\n"
+"Last-Translator: Fahad Alduraibi\n"
+"Language-Team: Saudi Arabia Arabic <kde-i18n-ar@kde.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 1.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Language: ar\n"
+
+#: installer/Daemoninstaller.cpp:94
+msgid "File extracted"
+msgstr "تم فك الملف"
+
+#: ui_mainwindow.h:259
+msgid "Dropbox Preferences"
+msgstr "اعدادات Dropbox"
+
+#: ui_mainwindow.h:260
+msgid "Account information for this computer"
+msgstr "معلومات الحساب لهذا الجهاز"
+
+#: ui_mainwindow.h:261
+msgid "Unlink this computer..."
+msgstr "فك ربط هذا الجهاز..."
+
+#: ui_mainwindow.h:262
+msgid "Dropbox folder location"
+msgstr "موقع مجلد Dropbox"
+
+#: ui_mainwindow.h:263
+msgid "Move..."
+msgstr "نقل..."
+
+#: ui_mainwindow.h:264
+msgid "Desktop integration"
+msgstr "الدمج مع سطح المكتب"
+
+#: ui_mainwindow.h:265
+msgid "Show system tray notifications"
+msgstr "عرض التنبيهات في شريط النظام"
+
+#: ui_mainwindow.h:266
+msgid "Start Dropbox on system startup"
+msgstr "تشغيل البرنامج مع بدء النظام"
+
+#: ui_mainwindow.h:267
+msgid "General"
+msgstr "عام"
+
+#: ui_mainwindow.h:268
+msgid "File Manager"
+msgstr "مدير الملفات"
+
+#: ui_mainwindow.h:269
+msgid "Browser"
+msgstr "المتصفح"
+
+#: ui_mainwindow.h:272
+msgid "dolphin"
+msgstr ""
+
+#: ui_mainwindow.h:273
+msgid "konqueror"
+msgstr ""
+
+#: ui_mainwindow.h:275
+msgid "Misc"
+msgstr "اخرى"
+
+#: ui_mainwindow.h:276
+msgid "OK"
+msgstr "موافق"
+
+#: ui_mainwindow.h:277
+msgid "Apply"
+msgstr "تطبيق"
+
+#: ui_mainwindow.h:278
+msgid "Cancel"
+msgstr "الغاء"
+
+#: mainwindow.cpp:71
+msgid "Dropbox folder"
+msgstr "مجلد Dropbox"
+
+#: core/DaemonConnection.cpp:66
+msgid "The host was not found. Please check Dropbox daemon installation."
+msgstr ""
+"لم يتمكن البرنامج من ايجاد المضيف، الرجاء التاكد من عملية تنصيب خادم Dropbox."
+
+#: core/DaemonConnection.cpp:69
+msgid ""
+"The connection was refused by the peer. Make sure the Dropbox daemon is "
+"running, and check that the settings are correct."
+msgstr ""
+"تم رفض عملية الارتباط. الرجاء التاكد من اذا كان الخادم يعمل وأن الاعدادات "
+"صحيحة."
+
+#: core/DaemonConnection.cpp:76
+#, kde-format
+msgid "The following error occurred: %1."
+msgstr "حصل هذا الخطأ: %1."
+
+#: core/DropboxClient.cpp:37
+#, fuzzy
+msgid "Dropbox daemon started"
+msgstr "مجلد Dropbox"
+
+#: core/DropboxClient.cpp:40 core/DropboxClient.cpp:41
+msgid "Unable to start Dropbox daemon"
+msgstr "لم ينكمن الرنامج من تشغيل خادم Dropbox"
+
+#: core/trayicon.cpp:41
+msgid "Open Dropbox Folder"
+msgstr "افتح مجلد Dropbox"
+
+#: core/trayicon.cpp:44
+msgid "Help Center"
+msgstr "مركز المساعدة"
+
+#: core/trayicon.cpp:47
+msgid "Launch Dropbox Website"
+msgstr ""
+
+#: core/trayicon.cpp:50
+msgid "Get More Space"
+msgstr ""
+
+#: core/trayicon.cpp:53
+msgid "Tour"
+msgstr "جولة"
+
+#: core/trayicon.cpp:56
+msgid "Forums"
+msgstr "المنتدى"
+
+#: core/trayicon.cpp:59
+msgid "Preferences..."
+msgstr "الاعدادات..."
+
+#: core/trayicon.cpp:62 core/trayicon.cpp:202
+msgid "Start Dropbox"
+msgstr "تشغيل Dropbox"
+
+#: core/trayicon.cpp:65 core/trayicon.cpp:211
+msgid "Stop Dropbox"
+msgstr "ايقاف Dropbox"
+
+#: core/trayicon.cpp:77
+msgid "Help"
+msgstr "مساعدة"
+
+#: core/trayicon.cpp:82
+msgid "Recently changed files"
+msgstr "الملفات المحدثة مؤخرا"
+
+#: util/Downloader.cpp:76
+msgid "Error downloading file"
+msgstr "خطأ في تحميل الملف"
+
+#: ui_installerform.h:69
+msgid "Daemon installer"
+msgstr "مثبت الخادم"
+
+#: ui_installerform.h:70
+msgid "Downloading Dropbox Daemon..."
+msgstr "تحميل خادم Dropbox..."
+
+#~ msgid "&Exit"
+#~ msgstr "&خروج"
